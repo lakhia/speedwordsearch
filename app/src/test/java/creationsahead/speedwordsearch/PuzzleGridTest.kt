@@ -10,6 +10,17 @@ import org.junit.Assert.assertFalse
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class PuzzleGridTest {
+    fun fill_grid(): PuzzleGrid {
+        val grid = PuzzleGrid(4, 4)
+        grid.addWord(0,0, Direction.EAST, "test")
+        grid.addWord(3,0, Direction.SOUTH, "tart")
+        grid.addWord(3,3, Direction.WEST, "take")
+        grid.addWord(0,3, Direction.NORTH, "east")
+        grid.addWord(0,1, Direction.EAST, "saga")
+        grid.addWord(0,2, Direction.EAST, "afar")
+        return grid
+    }
+
     @Test
     fun test_01_print_grid() {
         val grid = PuzzleGrid(6, 3)
@@ -22,13 +33,7 @@ class PuzzleGridTest {
 
     @Test
     fun test_02_insert_straight() {
-        val grid = PuzzleGrid(4, 4)
-        grid.addWord(0,0, Direction.EAST, "test")
-        grid.addWord(3,0, Direction.SOUTH, "tart")
-        grid.addWord(3,3, Direction.WEST, "take")
-        grid.addWord(0,3, Direction.NORTH, "east")
-        grid.addWord(0,1, Direction.EAST, "saga")
-        grid.addWord(0,2, Direction.EAST, "afar")
+        val grid = fill_grid()
         var string = grid.toString()
         assertEquals(
                 "t e s t \n" +
@@ -97,6 +102,30 @@ class PuzzleGridTest {
                 ". . . . \n" +
                 ". . . . \n" +
                 ". . . . \n", string)
+    }
+
+    @Test
+    fun test_05_vacant_cell() {
+        val grid = fill_grid()
+        val seq = Sequencer(1, 4)
+
+        // No vacant cells
+        var pos = grid.findEmptyCell(seq)
+        assertEquals(null, pos)
+
+        // Remove one word that does not clear any cells
+        grid.removeWord("tart")
+        println(grid.toString())
+        pos = grid.findEmptyCell(seq)
+        assertEquals(null, pos)
+
+        // Remove one word that does not clear any cells
+        grid.removeWord("afar")
+        println(grid.toString())
+
+        pos = grid.findEmptyCell(seq)
+        assertEquals(3, pos.x)
+        assertEquals(2, pos.y)
     }
 
 }

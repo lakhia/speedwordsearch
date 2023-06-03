@@ -2,6 +2,9 @@ package creationsahead.speedwordsearch;
 
 /**
  * Trie to store dictionary words for quick searching
+ *
+ * Loosely based on:
+ * http://www.programcreek.com/2014/05/leetcode-implement-trie-prefix-tree-java/
  */
 public class Trie {
     private TrieNode root;

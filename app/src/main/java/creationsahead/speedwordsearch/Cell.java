@@ -53,11 +53,25 @@ public class Cell {
         if (this.letter == letter) {
             return true;
         }
-        if (this.letter == Cell.EMPTY || refCount == 0) {
+        if (isUnused()) {
             this.letter = letter;
             return true;
         }
         return false;
+    }
+
+    /**
+     * Returns true if cell contents are unused and can be overwritten
+     */
+    public boolean isUnused() {
+        return letter == EMPTY || refCount == 0;
+    }
+
+    /**
+     * Returns true if cell contents are blank
+     */
+    public boolean isEmpty() {
+        return letter == EMPTY;
     }
 
     @Override

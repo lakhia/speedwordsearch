@@ -77,6 +77,24 @@ public class PuzzleGrid {
         return true;
     }
 
+    /**
+     * Find an empty cell based on randomness controlled by sequencer
+     * @return Position that indicates vacant cell coordinates
+     */
+    public Position findEmptyCell(Sequencer sequencer) {
+        int rows[] = sequencer.getNextCoordinateSequence();
+        for (int x : rows) {
+            int cols[] = sequencer.getNextCoordinateSequence();
+            for (int y : cols) {
+                if (mGrid[x][y].isEmpty()) {
+                    // TODO: Fix dir
+                    return new Position(Direction.NONE, x, y);
+                }
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

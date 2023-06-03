@@ -27,12 +27,41 @@ public class Sequencer {
         {11,18,5,7,8,2,6,10,12,19,15,14,13,3,0,1,4,17,20},
         {10,11,8,7,13,3,14,18,17,1,12,15,19,20,6,0,4,5,2},
     };
-    private Random random;
+    private static int[][] coordinateCombinations;
+    private Random letterRandomGen;
+    private Random coordinateRandomGen;
 
     public Sequencer(int seed) {
-        random = new Random(seed);
+        letterRandomGen = new Random(seed);
     }
+
+    public Sequencer(int seed, int maxCoordinate) {
+        this(seed);
+
+        coordinateRandomGen = new Random(seed * maxCoordinate);
+        coordinateCombinations = new int[maxCoordinate][maxCoordinate];
+        for (int i=0; i<maxCoordinate; i++) {
+            for (int j=0; j<maxCoordinate; j++) {
+                coordinateCombinations[i][j] = j;
+            }
+            shuffle(coordinateCombinations[i]);
+        }
+    }
+
+    private void shuffle(int[] array) {
+        for (int i = array.length - 1; i > 0; i--) {
+            int index = coordinateRandomGen.nextInt(i + 1);
+            int temp = array[index];
+            array[index] = array[i];
+            array[i] = temp;
+        }
+    }
+
     public int[] getNextSequence() {
-        return letterCombinations[random.nextInt(letterCombinations.length)];
+        return letterCombinations[letterRandomGen.nextInt(letterCombinations.length)];
+    }
+    
+    public int[] getNextCoordinateSequence() {
+        return coordinateCombinations[coordinateRandomGen.nextInt(coordinateCombinations.length)];
     }
 }
