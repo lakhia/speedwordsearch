@@ -2,17 +2,22 @@ package creationsahead.speedwordsearch;
 
 import java.util.HashMap;
 
+import static creationsahead.speedwordsearch.Direction.ALL_DIRECTIONS;
+
 /**
  * A puzzle grid
  */
 public class PuzzleGrid {
     private final Cell[][] mGrid;
     private final HashMap<String, Position> mWords;
+    private final int maxX, maxY;
 
     /**
      * Create a grid using specified x and y size
      */
     public PuzzleGrid(int x, int y) {
+        maxX = x;
+        maxY = y;
         mGrid = new Cell[x][y];
         mWords = new HashMap<>();
         for (Cell[] row: mGrid) {
@@ -29,13 +34,13 @@ public class PuzzleGrid {
      */
     public boolean addWord(int startX, int startY, Direction dir, String word) {
         // Check bounds
-        if (startX < 0 || startY < 0 || startX >= mGrid.length || startY >= mGrid[0].length) {
+        if (startX < 0 || startY < 0 || startX >= maxX || startY >= maxY) {
             return false;
         }
         int len = word.length() - 1;
         int endX = startX + dir.x * len;
         int endY = startY + dir.y * len;
-        if (endX < 0 || endY < 0 || endX >= mGrid.length || endY >= mGrid[0].length) {
+        if (endX < 0 || endY < 0 || endX >= maxX || endY >= maxY) {
             return false;
         }
         // Cannot add same word twice
@@ -79,6 +84,7 @@ public class PuzzleGrid {
 
     /**
      * Find an empty cell based on randomness controlled by sequencer
+     * @param sequencer controls randomness
      * @return Position that indicates vacant cell coordinates
      */
     public Position findEmptyCell(Sequencer sequencer) {
@@ -87,7 +93,6 @@ public class PuzzleGrid {
             int cols[] = sequencer.getNextCoordinateSequence();
             for (int y : cols) {
                 if (mGrid[x][y].isEmpty()) {
-                    // TODO: Fix dir
                     return new Position(Direction.NONE, x, y);
                 }
             }
@@ -95,10 +100,27 @@ public class PuzzleGrid {
         return null;
     }
 
+    /**
+     * Find an empty cell based on randomness controlled by sequencer
+     * @param sequencer controls randomness
+     * @param size specified size of potential word
+     * @param callback called for each assignment that is possible
+     */
+    public void findEmptyCell(Sequencer sequencer, int size, AssignCallback callback) {
+        Position position = findEmptyCell(sequencer);
+        int dirs[] = sequencer.getDirectionSequence();
+        for (int dirIndex: dirs) {
+            Direction dir = ALL_DIRECTIONS[dirIndex];
+            if (dir.x * size < maxX && dir.y * size < maxY) {
+                callback.onUpdate(new Position(dir, position.x, position.y));
+            }
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int y=0; y < mGrid[0].length; y++) {
+        for (int y=0; y < maxY; y++) {
             for (Cell[] cells: mGrid) {
                 sb.append(cells[y]);
             }

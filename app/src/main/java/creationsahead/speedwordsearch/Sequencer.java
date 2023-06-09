@@ -27,12 +27,25 @@ public class Sequencer {
         {11,18,5,7,8,2,6,10,12,19,15,14,13,3,0,1,4,17,20},
         {10,11,8,7,13,3,14,18,17,1,12,15,19,20,6,0,4,5,2},
     };
+    private static final int[][] directionCombinations = new int[][] {
+        {7,2,6,1,5,3,0,4},
+        {5,2,7,1,6,0,4,3},
+        {1,5,2,3,6,7,0,4},
+        {7,2,5,6,4,0,3,1},
+        {2,1,4,3,7,5,0,6},
+        {3,7,0,6,1,2,5,4},
+        {3,4,6,2,5,1,7,0},
+        {6,5,2,7,0,4,3,1},
+    };
     private static int[][] coordinateCombinations;
+
     private Random letterRandomGen;
     private Random coordinateRandomGen;
+    private Random directionRandomGen;
 
     public Sequencer(int seed) {
         letterRandomGen = new Random(seed);
+        directionRandomGen = new Random(2+seed);
     }
 
     public Sequencer(int seed, int maxCoordinate) {
@@ -57,11 +70,15 @@ public class Sequencer {
         }
     }
 
-    public int[] getNextSequence() {
+    public int[] getNextLetterSequence() {
         return letterCombinations[letterRandomGen.nextInt(letterCombinations.length)];
     }
-    
+
     public int[] getNextCoordinateSequence() {
         return coordinateCombinations[coordinateRandomGen.nextInt(coordinateCombinations.length)];
+    }
+
+    public int[] getDirectionSequence() {
+        return directionCombinations[directionRandomGen.nextInt(directionCombinations.length)];
     }
 }

@@ -81,7 +81,7 @@ public class Trie {
         int i = 0;
         char c = s.charAt(i);
         if (c == Cell.EMPTY) {
-            int sequence[] = sequencer.getNextSequence();
+            int sequence[] = sequencer.getNextLetterSequence();
             for (int j : sequence) {
                 if (p.arr[j] != null) {
                     String subString = searchWithWildcards(p.arr[j], s.substring(i + 1), sequencer);
