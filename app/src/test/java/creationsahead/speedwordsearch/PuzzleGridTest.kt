@@ -12,12 +12,12 @@ import org.junit.Assert.assertFalse
 class PuzzleGridTest {
     fun fill_grid(): PuzzleGrid {
         val grid = PuzzleGrid(4, 4)
-        grid.addWord(0,0, Direction.EAST, "test")
-        grid.addWord(3,0, Direction.SOUTH, "tart")
-        grid.addWord(3,3, Direction.WEST, "take")
-        grid.addWord(0,3, Direction.NORTH, "east")
-        grid.addWord(0,1, Direction.EAST, "saga")
-        grid.addWord(0,2, Direction.EAST, "afar")
+        grid.addWord(Position(0, 0, Direction.EAST), "test")
+        grid.addWord(Position(3,0, Direction.SOUTH), "tart")
+        grid.addWord(Position(3,3, Direction.WEST), "take")
+        grid.addWord(Position(0,3, Direction.NORTH), "east")
+        grid.addWord(Position(0,1, Direction.EAST), "saga")
+        grid.addWord(Position(0,2, Direction.EAST), "afar")
         return grid
     }
 
@@ -55,13 +55,13 @@ class PuzzleGridTest {
     @Test
     fun test_03_insert_diagonal() {
         val grid = PuzzleGrid(4, 4)
-        grid.addWord(0,0, Direction.SOUTH_EAST, "test")
-        grid.addWord(2,0, Direction.SOUTH_WEST, "yes")
-        grid.addWord(1,3, Direction.NORTH_EAST, "ask")
-        grid.addWord(2,2, Direction.NORTH_WEST, "set")
-        grid.addWord(3,2, Direction.SOUTH_WEST, "ok")
-        grid.addWord(0,0, Direction.EAST, "toy")
-        grid.addWord(0,0, Direction.SOUTH, "task")
+        grid.addWord(Position(0,0, Direction.SOUTH_EAST), "test")
+        grid.addWord(Position(2,0, Direction.SOUTH_WEST), "yes")
+        grid.addWord(Position(1,3, Direction.NORTH_EAST), "ask")
+        grid.addWord(Position(2,2, Direction.NORTH_WEST), "set")
+        grid.addWord(Position(3,2, Direction.SOUTH_WEST), "ok")
+        grid.addWord(Position(0,0, Direction.EAST), "toy")
+        grid.addWord(Position(0,0, Direction.SOUTH), "task")
         var string = grid.toString()
         assertEquals(
                 "t o y . \n" +
@@ -90,12 +90,12 @@ class PuzzleGridTest {
     @Test
     fun test_04_no_successful_inserts() {
         val grid = PuzzleGrid(4, 4)
-        grid.addWord(1,0, Direction.EAST, "test")
-        grid.addWord(0,1, Direction.SOUTH, "test")
-        grid.addWord(2,0, Direction.WEST, "test")
-        grid.addWord(0,2, Direction.NORTH, "test")
-        grid.addWord(1,0, Direction.WEST, "bam")
-        grid.addWord(0,1, Direction.NORTH, "bam")
+        grid.addWord(Position(1,0, Direction.EAST), "test")
+        grid.addWord(Position(0,1, Direction.SOUTH), "test")
+        grid.addWord(Position(2,0, Direction.WEST), "test")
+        grid.addWord(Position(0,2, Direction.NORTH), "test")
+        grid.addWord(Position(1,0, Direction.WEST), "bam")
+        grid.addWord(Position(0,1, Direction.NORTH), "bam")
         val string = grid.toString()
         assertEquals(
                 ". . . . \n" +

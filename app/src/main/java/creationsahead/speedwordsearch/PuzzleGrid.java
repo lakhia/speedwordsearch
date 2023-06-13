@@ -32,14 +32,15 @@ public class PuzzleGrid {
      * @return True if successfully added
      * @throws RuntimeException if word is partially added
      */
-    public boolean addWord(int startX, int startY, Direction dir, String word) {
+    public boolean addWord(Position position, String word) {
         // Check bounds
-        if (startX < 0 || startY < 0 || startX >= maxX || startY >= maxY) {
+        if (position.x < 0 || position.y < 0 || position.x >= maxX || position.y >= maxY) {
             return false;
         }
+        Direction dir = position.direction;
         int len = word.length() - 1;
-        int endX = startX + dir.x * len;
-        int endY = startY + dir.y * len;
+        int endX = position.x + dir.x * len;
+        int endY = position.y + dir.y * len;
         if (endX < 0 || endY < 0 || endX >= maxX || endY >= maxY) {
             return false;
         }
@@ -49,7 +50,7 @@ public class PuzzleGrid {
         }
 
         // Check overwriting letters
-        for (int x = startX, y = startY, i=0; i <= len; i++) {
+        for (int x = position.x, y = position.y, i=0; i <= len; i++) {
             if (!mGrid[x][y].store(word.charAt(i))) {
                 throw new RuntimeException("Board in inconsistent state, word partially inserted");
             }
@@ -57,7 +58,7 @@ public class PuzzleGrid {
             y += dir.y;
         }
 
-        mWords.put(word, new Position(dir, startX, startY));
+        mWords.put(word, position);
         return true;
     }
 
@@ -93,7 +94,7 @@ public class PuzzleGrid {
             int cols[] = sequencer.getNextCoordinateSequence();
             for (int y : cols) {
                 if (mGrid[x][y].isEmpty()) {
-                    return new Position(Direction.NONE, x, y);
+                    return new Position(x, y, Direction.NONE);
                 }
             }
         }
@@ -112,7 +113,7 @@ public class PuzzleGrid {
         for (int dirIndex: dirs) {
             Direction dir = ALL_DIRECTIONS[dirIndex];
             if (dir.x * size < maxX && dir.y * size < maxY) {
-                callback.onUpdate(new Position(dir, position.x, position.y));
+                callback.onUpdate(new Position(position.x, position.y, dir));
             }
         }
     }

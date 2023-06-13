@@ -4,12 +4,12 @@ package creationsahead.speedwordsearch;
  * Indicates position of a word in a grid
  */
 public class Position {
-    public final Direction direction;
     public final int x, y;
+    public final Direction direction;
 
-    public Position(Direction dir, int startX, int startY) {
-        direction = dir;
+    public Position(int startX, int startY, Direction dir) {
         x = startX;
         y = startY;
+        direction = dir;
     }
 }
