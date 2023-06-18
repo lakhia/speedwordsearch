@@ -1,8 +1,7 @@
 package creationsahead.speedwordsearch
 
+import org.junit.Assert.*
 import org.junit.Test
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -22,13 +21,24 @@ class PuzzleGridTest {
     }
 
     @Test
-    fun test_01_print_grid() {
+    fun test_01_duplicates() {
         val grid = PuzzleGrid(6, 3)
-        val string = grid.toString()
-        assertEquals(
+        val empty =
                 ". . . . . . \n" +
                 ". . . . . . \n" +
-                ". . . . . . \n", string)
+                ". . . . . . \n";
+        assertEquals(empty, grid.toString())
+
+        // Add word, add again, remove
+        grid.addWord(Position(1,0, Direction.EAST), "test")
+        assertFalse(grid.addWord(Position(2,0, Direction.EAST), "test"))
+        assertTrue(grid.removeWord("test"))
+        assertEquals(empty, grid.toString())
+
+        // Add again
+        assertTrue(grid.addWord(Position(1,0, Direction.EAST), "test"))
+        assertTrue(grid.removeWord("test"))
+        assertEquals(empty, grid.toString())
     }
 
     @Test

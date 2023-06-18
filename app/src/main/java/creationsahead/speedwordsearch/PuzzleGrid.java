@@ -20,9 +20,9 @@ public class PuzzleGrid {
         maxY = y;
         mGrid = new Cell[x][y];
         mWords = new HashMap<>();
-        for (Cell[] row: mGrid) {
-            for (int i=0; i<row.length; i++) {
-                row[i] = new Cell();
+        for (int i=0; i<maxX; i++) {
+            for (int j=0; j<maxY; j++) {
+                mGrid[i][j] = new Cell();
             }
         }
     }
@@ -80,6 +80,7 @@ public class PuzzleGrid {
             x += pos.direction.x;
             y += pos.direction.y;
         }
+        mWords.remove(word);
         return true;
     }
 
