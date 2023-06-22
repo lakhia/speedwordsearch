@@ -31,4 +31,30 @@ public enum Direction {
         x = xDir;
         y = yDir;
     }
+
+    /**
+     * Given a direction, return the opposite direction
+     */
+    public Direction negate() {
+        switch (x*10 + y) {
+            case -1:
+                return SOUTH;
+            case 1:
+                return NORTH;
+            case -10:
+                return EAST;
+            case 10:
+                return WEST;
+            case 11:
+                return NORTH_WEST;
+            case -11:
+                return SOUTH_EAST;
+            case 9:
+                return SOUTH_WEST;
+            case -9:
+                return NORTH_EAST;
+            default:
+                return NONE;
+        }
+    }
 }

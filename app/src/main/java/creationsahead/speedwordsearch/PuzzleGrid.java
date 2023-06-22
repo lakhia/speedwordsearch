@@ -119,6 +119,24 @@ public class PuzzleGrid {
         }
     }
 
+    /**
+     * Returns content stored in grid at specified position
+     * @param size size for content, must be within bounds
+     * @return String with blanks and letters
+     */
+    public String findContents(Position position, int size) {
+        int x = position.x, y = position.y;
+        StringBuilder result = new StringBuilder();
+        Direction dir = position.direction;
+
+        for (int i = 0; i < size; i++) {
+            result.append(mGrid[x][y].letter);
+            x += dir.x;
+            y += dir.y;
+        }
+        return result.toString();
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
