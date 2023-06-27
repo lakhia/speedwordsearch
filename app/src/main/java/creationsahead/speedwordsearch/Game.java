@@ -7,19 +7,24 @@ public class Game {
     private final PuzzleGrid mGrid;
     private final Trie mDictionary;
     private final Sequencer mSequencer;
+    private final int maxDim;
 
-    public Game(Trie dictionary) {
-        mGrid = new PuzzleGrid(5, 5);
+    /**
+     * Construct a game with a square puzzle grid
+     */
+    public Game(Trie dictionary, int size, int seed) {
+        maxDim = size;
+        mGrid = new PuzzleGrid(size, size);
         mDictionary = dictionary;
-        mSequencer = new Sequencer(1, 5);
+        mSequencer = new Sequencer(seed, size);
     }
 
-    public void populatePuzzle() {
-        for (int i = 0; i < 2; i++) {
-            mGrid.findEmptyCell(mSequencer, 5, new AssignCallback() {
+    public void populatePuzzle(int iterations) {
+        for (int i = 0; i < iterations; i++) {
+            mGrid.findEmptyCell(mSequencer, maxDim, new AssignCallback() {
                 @Override
-                public void onUpdate(Position position) {
-                    String word = mDictionary.searchWithWildcards("....", mSequencer);
+                public void onUpdate(Position position, String contents) {
+                    String word = mDictionary.searchWithWildcards(contents, mSequencer);
                     mGrid.addWord(position, word);
                 }
             });

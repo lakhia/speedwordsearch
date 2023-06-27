@@ -34,23 +34,19 @@ public class PuzzleGrid {
      */
     public boolean addWord(Position position, String word) {
         // Check bounds
-        if (position.x < 0 || position.y < 0 || position.x >= maxX || position.y >= maxY) {
+        int len = word.length();
+        if (!position.inBounds(maxX, maxY, len)) {
             return false;
         }
-        Direction dir = position.direction;
-        int len = word.length() - 1;
-        int endX = position.x + dir.x * len;
-        int endY = position.y + dir.y * len;
-        if (endX < 0 || endY < 0 || endX >= maxX || endY >= maxY) {
-            return false;
-        }
+
         // Cannot add same word twice
         if (mWords.containsKey(word)) {
             return false;
         }
 
         // Check overwriting letters
-        for (int x = position.x, y = position.y, i=0; i <= len; i++) {
+        Direction dir = position.direction;
+        for (int x = position.x, y = position.y, i=0; i < len; i++) {
             if (!mGrid[x][y].store(word.charAt(i))) {
                 throw new RuntimeException("Board in inconsistent state, word partially inserted");
             }
@@ -113,8 +109,10 @@ public class PuzzleGrid {
         int dirs[] = sequencer.getDirectionSequence();
         for (int dirIndex: dirs) {
             Direction dir = ALL_DIRECTIONS[dirIndex];
-            if (dir.x * size < maxX && dir.y * size < maxY) {
-                callback.onUpdate(new Position(position.x, position.y, dir));
+            Position newPos = new Position(position.x, position.y, dir);
+            if (newPos.inBounds(maxX, maxY, size)) {
+                callback.onUpdate(newPos, findContents(newPos, size));
+                return;
             }
         }
     }

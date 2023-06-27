@@ -12,4 +12,21 @@ public class Position {
         y = startY;
         direction = dir;
     }
+
+    public boolean inBounds(int sizeX, int sizeY, int length) {
+        if (!inBounds(x, y, sizeX, sizeY)) {
+            return false;
+        }
+
+        if (length > 1) {
+            int endX = x + direction.x * (length-1);
+            int endY = y + direction.y * (length-1);
+            return inBounds(endX, endY, sizeX, sizeY);
+        }
+        return true;
+    }
+
+    private static boolean inBounds(int x, int y, int maxX, int maxY) {
+        return (x >= 0 && y >= 0 && x < maxX && y < maxY);
+    }
 }
