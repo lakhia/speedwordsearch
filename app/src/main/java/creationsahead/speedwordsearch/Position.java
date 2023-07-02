@@ -14,19 +14,34 @@ public class Position {
     }
 
     public boolean inBounds(int sizeX, int sizeY, int length) {
-        if (!inBounds(x, y, sizeX, sizeY)) {
+        if (!Position.inBounds(x, y, sizeX, sizeY)) {
             return false;
         }
 
         if (length > 1) {
             int endX = x + direction.x * (length-1);
             int endY = y + direction.y * (length-1);
-            return inBounds(endX, endY, sizeX, sizeY);
+            return Position.inBounds(endX, endY, sizeX, sizeY);
         }
         return true;
     }
 
-    private static boolean inBounds(int x, int y, int maxX, int maxY) {
+    public static boolean inBounds(int x, int y, int maxX, int maxY) {
         return (x >= 0 && y >= 0 && x < maxX && y < maxY);
+    }
+
+    public int getDistanceToBoundary(int maxX, int maxY) {
+        int xDist = maxX, yDist = maxY;
+        if (direction.x == 1) {
+            xDist = maxX - x;
+        } else if (direction.x == -1) {
+            xDist = x;
+        }
+        if (direction.y == 1) {
+            yDist = maxY - y;
+        } else if (direction.y == -1) {
+            yDist = y;
+        }
+        return Math.min(xDist, yDist);
     }
 }
