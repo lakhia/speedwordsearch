@@ -120,18 +120,18 @@ class PuzzleGridTest {
         val seq = Sequencer(1, 4)
 
         // No vacant cells
-        var pos = grid.findEmptyCell(seq)
+        var pos = grid.findEmptyCell(seq, null)
         assertEquals(null, pos)
 
         // Remove one word that does not clear any cells
         grid.removeWord("tart")
-        pos = grid.findEmptyCell(seq)
+        pos = grid.findEmptyCell(seq, null)
         assertEquals(null, pos)
 
         // Remove one word that does not clear any cells
         grid.removeWord("afar")
 
-        pos = grid.findEmptyCell(seq)
+        pos = grid.findEmptyCell(seq, null)
         assertEquals(3, pos.x)
         assertEquals(2, pos.y)
     }

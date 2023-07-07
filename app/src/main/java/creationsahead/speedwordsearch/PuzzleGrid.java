@@ -85,13 +85,24 @@ public class PuzzleGrid {
      * @param sequencer controls randomness
      * @return Position that indicates vacant cell coordinates
      */
-    public Position findEmptyCell(Sequencer sequencer) {
+    public Position findEmptyCell(Sequencer sequencer, AssignCallback callback) {
         int rows[] = sequencer.getNextCoordinateSequence();
         for (int x : rows) {
             int cols[] = sequencer.getNextCoordinateSequence();
             for (int y : cols) {
                 if (mGrid[x][y].isEmpty()) {
-                    return new Position(x, y, Direction.NONE);
+                    int dirs[] = sequencer.getDirectionSequence();
+                    for (int dirIndex: dirs) {
+                        Direction dir = ALL_DIRECTIONS[dirIndex];
+                        Position newPos = new Position(x, y, dir);
+                        if (callback != null) {
+                            if (callback.onUpdate(newPos, null)) {
+                                return null;
+                            }
+                        } else {
+                            return newPos;
+                        }
+                    }
                 }
             }
         }
@@ -104,17 +115,23 @@ public class PuzzleGrid {
      * @param size specified size of potential word
      * @param callback called for each assignment that is possible
      */
-    public void findEmptyCell(Sequencer sequencer, int size, AssignCallback callback) {
-        Position position = findEmptyCell(sequencer);
-        int dirs[] = sequencer.getDirectionSequence();
-        for (int dirIndex: dirs) {
-            Direction dir = ALL_DIRECTIONS[dirIndex];
-            Position newPos = new Position(position.x, position.y, dir);
-            if (newPos.inBounds(maxX, maxY, size)) {
-                callback.onUpdate(newPos, findContents(newPos, size));
-                return;
+    public void findEmptyCell(Sequencer sequencer, final int size, final AssignCallback callback) {
+        findEmptyCell(sequencer, new AssignCallback() {
+            @Override
+            public boolean onUpdate(Position position, String contents) {
+                if (!position.inBounds(maxX, maxY, size)) {
+                    int lacking = size - position.getDistanceToBoundary(maxX, maxY);
+                    position = new Position(position.x - position.direction.x * lacking,
+                                            position.y - position.direction.y * lacking,
+                                            position.direction);
+                }
+                if (position.inBounds(maxX, maxY, size)) {
+                    return callback.onUpdate(position, findContents(position, size));
+                }
+                return false;
             }
-        }
+        });
+
     }
 
     /**

@@ -18,6 +18,8 @@ class GameTest {
             dictionary.insert("bbac")
             dictionary.insert("baac")
             dictionary.insert("aaac")
+            dictionary.insert("caac")
+            dictionary.insert("babc")
             initialized = true
         }
     }
@@ -36,9 +38,9 @@ class GameTest {
         game.populatePuzzle(3)
         assertEquals(
                 "c a a a \n" +
-                "b b a c \n" +
-                ". . . . \n" +
-                ". . . . \n", game.toString())
+                "a . . b \n" +
+                "a . . a \n" +
+                "c . . c \n", game.toString())
     }
 
 }

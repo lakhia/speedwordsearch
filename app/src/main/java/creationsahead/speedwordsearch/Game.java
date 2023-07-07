@@ -23,9 +23,12 @@ public class Game {
         for (int i = 0; i < iterations; i++) {
             mGrid.findEmptyCell(mSequencer, maxDim, new AssignCallback() {
                 @Override
-                public void onUpdate(Position position, String contents) {
+                public boolean onUpdate(Position position, String contents) {
                     String word = mDictionary.searchWithWildcards(contents, mSequencer);
-                    mGrid.addWord(position, word);
+                    if (word != null) {
+                        return mGrid.addWord(position, word);
+                    }
+                    return false;
                 }
             });
         }
