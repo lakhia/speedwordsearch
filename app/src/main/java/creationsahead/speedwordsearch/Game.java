@@ -22,13 +22,17 @@ public class Game {
     public void populatePuzzle(int iterations) {
         for (int i = 0; i < iterations; i++) {
             mGrid.findEmptyCell(mSequencer, maxDim, new AssignCallback() {
+                boolean success = false;
                 @Override
-                public boolean onUpdate(Position position, String contents) {
-                    String word = mDictionary.searchWithWildcards(contents, mSequencer);
-                    if (word != null) {
-                        return mGrid.addWord(position, word);
-                    }
-                    return false;
+                public boolean onUpdate(final Position position, String contents) {
+                    mDictionary.searchWithWildcards(contents, mSequencer, new ValidateCallback() {
+                        @Override
+                        public boolean onValid(String result) {
+                            success = mGrid.addWord(position, result);
+                            return success;
+                        }
+                    });
+                    return success;
                 }
             });
         }

@@ -33,14 +33,14 @@ public class PuzzleGrid {
      * @throws RuntimeException if word is partially added
      */
     public boolean addWord(Position position, String word) {
-        // Check bounds
-        int len = word.length();
-        if (!position.inBounds(maxX, maxY, len)) {
+        // Cannot add same word twice
+        if (mWords.containsKey(word)) {
             return false;
         }
 
-        // Cannot add same word twice
-        if (mWords.containsKey(word)) {
+        // Check bounds
+        int len = word.length();
+        if (!position.inBounds(maxX, maxY, len)) {
             return false;
         }
 

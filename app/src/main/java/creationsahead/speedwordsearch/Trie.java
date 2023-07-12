@@ -43,80 +43,49 @@ public class Trie {
         p.isEnd = true;
     }
 
-    // Returns if the word is in the trie.
-    public boolean search(String word) {
-        TrieNode p = searchNode(word);
-        if (p == null) {
-            return false;
-        } else {
-            if (p.isEnd) return true;
-        }
-
-        return false;
-    }
-
-    // Returns if there is any word in the trie
-    // that starts with the given prefix.
-    public boolean startsWith(String prefix) {
-        TrieNode p = searchNode(prefix);
-        if (p == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     // Returns string that searches for string with wildcards
-    public String searchWithWildcards(String s, Sequencer sequencer) {
-        return searchWithWildcards(root, s, sequencer);
+    public String searchWithWildcards(String s, Sequencer sequencer, ValidateCallback callback) {
+        return searchWithWildcards(root, s, "", sequencer, callback);
     }
 
-    private String searchWithWildcards(TrieNode p, String s, Sequencer sequencer) {
+    private String searchWithWildcards(TrieNode p, String query, String result, Sequencer sequencer,
+                                       ValidateCallback callback) {
         // Base case
-        if (s.isEmpty()) {
-            return (p.isEnd ? "" : null);
+        if (query.isEmpty()) {
+            boolean isValid = p.isEnd;
+            if (isValid && callback != null) {
+                isValid = callback.onValid(result);
+            }
+
+            return (isValid ? "" : null);
         }
 
         // Recursive case
         int i = 0;
-        char c = s.charAt(i);
-        if (c == Cell.EMPTY) {
+        char chosenChar = query.charAt(i);
+        if (chosenChar == Cell.EMPTY) {
             int sequence[] = sequencer.getNextLetterSequence();
             for (int j : sequence) {
+                chosenChar = (char)('a' + j);
                 if (p.arr[j] != null) {
-                    String subString = searchWithWildcards(p.arr[j], s.substring(i + 1), sequencer);
+                    String subString = searchWithWildcards(p.arr[j], query.substring(i + 1),
+                                                           result + chosenChar, sequencer, callback);
                     if (subString != null) {
-                        return (char)('a' + j) + subString;
+                        return chosenChar + subString;
                     }
                 }
             }
             return null;
         } else {
-            int j = c - 'a';
+            int j = chosenChar - 'a';
             if (p.arr[j] != null) {
-                String subString = searchWithWildcards(p.arr[j], s.substring(i + 1), sequencer);
+                String subString = searchWithWildcards(p.arr[j], query.substring(i + 1),
+                                                       result + chosenChar, sequencer, callback);
                 if (subString != null) {
-                    return (char)('a' + j) + subString;
+                    return chosenChar + subString;
                 }
             }
         }
         return null;
-    }
-
-    public TrieNode searchNode(String s) {
-        TrieNode p = root;
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            int index = c - 'a';
-            if (p.arr[index] != null) {
-                p = p.arr[index];
-            } else {
-                return null;
-            }
-        }
-
-        if (p == root) return null;
-
-        return p;
     }
 }
