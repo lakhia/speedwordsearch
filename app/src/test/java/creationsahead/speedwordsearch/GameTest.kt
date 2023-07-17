@@ -20,6 +20,8 @@ class GameTest {
             dictionary.insert("aaac")
             dictionary.insert("caac")
             dictionary.insert("babc")
+            dictionary.insert("accc")
+            dictionary.insert("abcc")
             initialized = true
         }
     }
@@ -29,18 +31,49 @@ class GameTest {
         init()
 
         val game: Game = Game(dictionary, 4, 1)
-        game.populatePuzzle(1)
+        assertEquals(true, game.populatePuzzle(4, 1))
         assertEquals(
                 "c a a a \n" +
                 ". . . . \n" +
                 ". . . . \n" +
                 ". . . . \n", game.toString())
-        game.populatePuzzle(3)
+        assertEquals(true, game.populatePuzzle(4, 1))
+        assertEquals(true, game.populatePuzzle(4, 1))
+        assertEquals(true, game.populatePuzzle(4, 1))
+        assertEquals(true, game.populatePuzzle(4, 1))
         assertEquals(
                 "c a a a \n" +
-                "a . . b \n" +
-                "a . . a \n" +
-                "c . . c \n", game.toString())
+                "a b b c \n" +
+                "a c a c \n" +
+                "c c c c \n", game.toString())
+        assertEquals(false, game.populatePuzzle(4, 1))
+        assertEquals(false, game.populatePuzzle(3, 1))
+        assertEquals(false, game.populatePuzzle(1, 1))
+        assertEquals(false, game.populatePuzzle(0, 1))
     }
 
+    @Test
+    fun test_02_big_board() {
+        init()
+
+        val game: Game = Game(dictionary, 8, 1)
+        assertEquals(true, game.populatePuzzle(4, 1))
+        assertEquals(true, game.populatePuzzle(4, 1))
+        assertEquals(true, game.populatePuzzle(4, 1))
+        assertEquals(true, game.populatePuzzle(4, 1))
+        assertEquals(true, game.populatePuzzle(4, 1))
+        assertEquals(true, game.populatePuzzle(4, 1))
+        assertEquals(true, game.populatePuzzle(4, 1))
+        assertEquals(true, game.populatePuzzle(4, 1))
+        assertEquals(false, game.populatePuzzle(4, 1))
+        assertEquals(
+                ". . . . . . . . \n" +
+                ". . . . . . . . \n" +
+                "c a b b a c c c \n" +
+                ". . c a a b a . \n" +
+                ". . . b . . b c \n" +
+                ". . . c a a a . \n" +
+                ". . . c b a c . \n" +
+                ". . . c c . . . \n", game.toString())
+    }
 }

@@ -1,5 +1,6 @@
 package creationsahead.speedwordsearch;
 
+import android.support.annotation.NonNull;
 import java.util.HashMap;
 
 import static creationsahead.speedwordsearch.Direction.ALL_DIRECTIONS;
@@ -115,7 +116,7 @@ public class PuzzleGrid {
      * @param size specified size of potential word
      * @param callback called for each assignment that is possible
      */
-    public void findEmptyCell(Sequencer sequencer, final int size, final AssignCallback callback) {
+    public void findEmptyCell(Sequencer sequencer, final int size, @NonNull final AssignCallback callback) {
         findEmptyCell(sequencer, new AssignCallback() {
             @Override
             public boolean onUpdate(Position position, String contents) {
