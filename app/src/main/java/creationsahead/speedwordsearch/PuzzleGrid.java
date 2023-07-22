@@ -10,20 +10,20 @@ import static creationsahead.speedwordsearch.Direction.ALL_DIRECTIONS;
  */
 public class PuzzleGrid {
     private final Cell[][] mGrid;
-    private final HashMap<String, Position> mWords;
-    private final int maxX, maxY;
+    private final HashMap<String, Selection> mWords;
+    private final int sizeX, sizeY;
 
     /**
      * Create a grid using specified x and y size
      */
     public PuzzleGrid(int x, int y) {
-        maxX = x;
-        maxY = y;
-        mGrid = new Cell[x][y];
+        sizeX = x;
+        sizeY = y;
+        mGrid = new Cell[sizeX][sizeY];
         mWords = new HashMap<>();
-        for (int i=0; i<maxX; i++) {
-            for (int j=0; j<maxY; j++) {
-                mGrid[i][j] = new Cell();
+        for (x=0; x< sizeX; x++) {
+            for (y=0; y< sizeY; y++) {
+                mGrid[x][y] = new Cell();
             }
         }
     }
@@ -33,21 +33,21 @@ public class PuzzleGrid {
      * @return True if successfully added
      * @throws RuntimeException if word is partially added
      */
-    public boolean addWord(Position position, String word) {
+    public boolean addWord(Selection selection, String word) {
         // Cannot add same word twice
         if (mWords.containsKey(word)) {
             return false;
         }
 
+        // TODO: selection and word size mismatch?
         // Check bounds
-        int len = word.length();
-        if (!position.inBounds(maxX, maxY, len)) {
+        if (!selection.inBounds(sizeX, sizeY)) {
             return false;
         }
 
         // Check overwriting letters
-        Direction dir = position.direction;
-        for (int x = position.x, y = position.y, i=0; i < len; i++) {
+        Direction dir = selection.direction;
+        for (int x = selection.position.x, y = selection.position.y, i=0; i < selection.length; i++) {
             if (!mGrid[x][y].store(word.charAt(i))) {
                 throw new RuntimeException("Board in inconsistent state, word partially inserted");
             }
@@ -55,7 +55,7 @@ public class PuzzleGrid {
             y += dir.y;
         }
 
-        mWords.put(word, position);
+        mWords.put(word, selection);
         return true;
     }
 
@@ -65,17 +65,18 @@ public class PuzzleGrid {
      * @throws RuntimeException if word is partially removed
      */
     public boolean removeWord(String word) {
-        Position pos = mWords.get(word);
-        if (pos == null) {
+        Selection selection = mWords.get(word);
+        if (selection == null) {
             return false;
         }
         int len = word.length() - 1;
+        Position pos = selection.position;
         for (int x = pos.x, y = pos.y, i=0; i <= len; i++) {
             if (!mGrid[x][y].erase(word.charAt(i))) {
                 throw new RuntimeException("Board in inconsistent state, word not stored in previous step");
             }
-            x += pos.direction.x;
-            y += pos.direction.y;
+            x += selection.direction.x;
+            y += selection.direction.y;
         }
         mWords.remove(word);
         return true;
@@ -84,25 +85,22 @@ public class PuzzleGrid {
     /**
      * Find an empty cell based on randomness controlled by sequencer
      * @param sequencer controls randomness
+     * @param callback called for each valid empty position
      * @return Position that indicates vacant cell coordinates
      */
-    public Position findEmptyCell(Sequencer sequencer, AssignCallback callback) {
+    public Position findEmptyCell(Sequencer sequencer, PositionCallback callback) {
         int rows[] = sequencer.getNextCoordinateSequence();
         for (int x : rows) {
             int cols[] = sequencer.getNextCoordinateSequence();
             for (int y : cols) {
                 if (mGrid[x][y].isEmpty()) {
-                    int dirs[] = sequencer.getDirectionSequence();
-                    for (int dirIndex: dirs) {
-                        Direction dir = ALL_DIRECTIONS[dirIndex];
-                        Position newPos = new Position(x, y, dir);
-                        if (callback != null) {
-                            if (callback.onUpdate(newPos, null)) {
-                                return null;
-                            }
-                        } else {
-                            return newPos;
+                    Position newPos = new Position(x, y);
+                    if (callback != null) {
+                        if (callback.onUpdate(newPos)) {
+                            return null;
                         }
+                    } else {
+                        return newPos;
                     }
                 }
             }
@@ -111,41 +109,47 @@ public class PuzzleGrid {
     }
 
     /**
-     * Find an empty cell based on randomness controlled by sequencer
+     * Find a selection that includes an empty cell
      * @param sequencer controls randomness
-     * @param size specified size of potential word
+     * @param length length of potential word
      * @param callback called for each assignment that is possible
      */
-    public void findEmptyCell(Sequencer sequencer, final int size, @NonNull final AssignCallback callback) {
-        findEmptyCell(sequencer, new AssignCallback() {
+    public void findEmptyCell(final Sequencer sequencer, final int length,
+                              @NonNull final AssignCallback callback) {
+        findEmptyCell(sequencer, new PositionCallback() {
             @Override
-            public boolean onUpdate(Position position, String contents) {
-                if (!position.inBounds(maxX, maxY, size)) {
-                    int lacking = size - position.getDistanceToBoundary(maxX, maxY);
-                    position = new Position(position.x - position.direction.x * lacking,
-                                            position.y - position.direction.y * lacking,
-                                            position.direction);
-                }
-                if (position.inBounds(maxX, maxY, size)) {
-                    return callback.onUpdate(position, findContents(position, size));
+            public boolean onUpdate(final Position position) {
+                int dirs[] = sequencer.getDirectionSequence();
+                for (int dirIndex: dirs) {
+                    Direction dir = ALL_DIRECTIONS[dirIndex];
+                    Position pos = position;
+
+                    // If position cannot accommodate length, move it
+                    if (!Selection.inBounds(pos, dir, sizeX, sizeY, length)) {
+                        int lacking = length - pos.getDistanceToBoundary(dir, sizeX, sizeY);
+                        pos = new Position(pos.x - dir.x * lacking,
+                                           pos.y - dir.y * lacking);
+                    }
+                    if (Selection.inBounds(pos, dir, sizeX, sizeY, length)) {
+                        Selection selection = new Selection(pos, dir, length);
+                        return callback.onUpdate(selection, findContents(selection));
+                    }
                 }
                 return false;
             }
         });
-
     }
 
     /**
-     * Returns content stored in grid at specified position
-     * @param size size for content, must be within bounds
+     * Returns content stored in grid at specified selection
      * @return String with blanks and letters
      */
-    public String findContents(Position position, int size) {
-        int x = position.x, y = position.y;
+    public String findContents(Selection selection) {
+        int x = selection.position.x, y = selection.position.y;
         StringBuilder result = new StringBuilder();
-        Direction dir = position.direction;
+        Direction dir = selection.direction;
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < selection.length; i++) {
             result.append(mGrid[x][y].letter);
             x += dir.x;
             y += dir.y;
@@ -156,7 +160,7 @@ public class PuzzleGrid {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int y=0; y < maxY; y++) {
+        for (int y=0; y < sizeY; y++) {
             for (Cell[] cells: mGrid) {
                 sb.append(cells[y]);
             }

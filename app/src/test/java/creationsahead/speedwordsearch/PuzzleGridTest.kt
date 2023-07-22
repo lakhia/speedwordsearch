@@ -11,12 +11,12 @@ import org.junit.Test
 class PuzzleGridTest {
     fun fill_grid(): PuzzleGrid {
         val grid = PuzzleGrid(4, 4)
-        grid.addWord(Position(0, 0, Direction.EAST), "test")
-        grid.addWord(Position(3, 0, Direction.SOUTH), "tart")
-        grid.addWord(Position(3, 3, Direction.WEST), "take")
-        grid.addWord(Position(0, 3, Direction.NORTH), "east")
-        grid.addWord(Position(0, 1, Direction.EAST), "saga")
-        grid.addWord(Position(0, 2, Direction.EAST), "afar")
+        grid.addWord(Selection(0, 0, Direction.EAST, 4), "test")
+        grid.addWord(Selection(3, 0, Direction.SOUTH, 4), "tart")
+        grid.addWord(Selection(3, 3, Direction.WEST, 4), "take")
+        grid.addWord(Selection(0, 3, Direction.NORTH, 4), "east")
+        grid.addWord(Selection(0, 1, Direction.EAST, 4), "saga")
+        grid.addWord(Selection(0, 2, Direction.EAST, 4), "afar")
         return grid
     }
 
@@ -30,13 +30,13 @@ class PuzzleGridTest {
         assertEquals(empty, grid.toString())
 
         // Add word, add again, remove
-        grid.addWord(Position(1, 0, Direction.EAST), "test")
-        assertFalse(grid.addWord(Position(2, 0, Direction.EAST), "test"))
+        grid.addWord(Selection(1, 0, Direction.EAST, 4), "test")
+        assertFalse(grid.addWord(Selection(2, 0, Direction.EAST, 4), "test"))
         assertTrue(grid.removeWord("test"))
         assertEquals(empty, grid.toString())
 
         // Add again
-        assertTrue(grid.addWord(Position(1, 0, Direction.EAST), "test"))
+        assertTrue(grid.addWord(Selection(1, 0, Direction.EAST, 4), "test"))
         assertTrue(grid.removeWord("test"))
         assertEquals(empty, grid.toString())
     }
@@ -65,13 +65,13 @@ class PuzzleGridTest {
     @Test
     fun test_03_insert_diagonal() {
         val grid = PuzzleGrid(4, 4)
-        grid.addWord(Position(0, 0, Direction.SOUTH_EAST), "test")
-        grid.addWord(Position(2, 0, Direction.SOUTH_WEST), "yes")
-        grid.addWord(Position(1, 3, Direction.NORTH_EAST), "ask")
-        grid.addWord(Position(2, 2, Direction.NORTH_WEST), "set")
-        grid.addWord(Position(3, 2, Direction.SOUTH_WEST), "ok")
-        grid.addWord(Position(0, 0, Direction.EAST), "toy")
-        grid.addWord(Position(0, 0, Direction.SOUTH), "task")
+        grid.addWord(Selection(0, 0, Direction.SOUTH_EAST, 4), "test")
+        grid.addWord(Selection(2, 0, Direction.SOUTH_WEST, 3), "yes")
+        grid.addWord(Selection(1, 3, Direction.NORTH_EAST, 3), "ask")
+        grid.addWord(Selection(2, 2, Direction.NORTH_WEST, 3), "set")
+        grid.addWord(Selection(3, 2, Direction.SOUTH_WEST, 2), "ok")
+        grid.addWord(Selection(0, 0, Direction.EAST, 3), "toy")
+        grid.addWord(Selection(0, 0, Direction.SOUTH, 4), "task")
         var string = grid.toString()
         assertEquals(
                 "t o y . \n" +
@@ -100,12 +100,12 @@ class PuzzleGridTest {
     @Test
     fun test_04_no_successful_inserts() {
         val grid = PuzzleGrid(4, 4)
-        grid.addWord(Position(1, 0, Direction.EAST), "test")
-        grid.addWord(Position(0, 1, Direction.SOUTH), "test")
-        grid.addWord(Position(2, 0, Direction.WEST), "test")
-        grid.addWord(Position(0, 2, Direction.NORTH), "test")
-        grid.addWord(Position(1, 0, Direction.WEST), "bam")
-        grid.addWord(Position(0, 1, Direction.NORTH), "bam")
+        grid.addWord(Selection(1, 0, Direction.EAST, 4), "test")
+        grid.addWord(Selection(0, 1, Direction.SOUTH, 4), "test")
+        grid.addWord(Selection(2, 0, Direction.WEST, 4), "test")
+        grid.addWord(Selection(0, 2, Direction.NORTH, 4), "test")
+        grid.addWord(Selection(1, 0, Direction.WEST, 3), "bam")
+        grid.addWord(Selection(0, 1, Direction.NORTH, 3), "bam")
         val string = grid.toString()
         assertEquals(
                 ". . . . \n" +
@@ -141,17 +141,17 @@ class PuzzleGridTest {
         val grid = fill_grid()
 
         var content: String
-        content = grid.findContents(Position(3,3, Direction.WEST), 4)
+        content = grid.findContents(Selection(3,3, Direction.WEST, 4))
         assertEquals("take", content)
-        content = grid.findContents(Position(3,2, Direction.NORTH_WEST), 3)
+        content = grid.findContents(Selection(3,2, Direction.NORTH_WEST, 3))
         assertEquals("rge", content)
-        content = grid.findContents(Position(0,0, Direction.SOUTH_EAST), 4)
+        content = grid.findContents(Selection(0,0, Direction.SOUTH_EAST, 4))
         assertEquals("taat", content)
-        content = grid.findContents(Position(0,3, Direction.NORTH), 4)
+        content = grid.findContents(Selection(0,3, Direction.NORTH, 4))
         assertEquals("east", content)
 
         grid.removeWord("afar")
-        content = grid.findContents(Position(1,0, Direction.SOUTH), 4)
+        content = grid.findContents(Selection(1,0, Direction.SOUTH, 4))
         assertEquals("ea.k", content)
     }
 }

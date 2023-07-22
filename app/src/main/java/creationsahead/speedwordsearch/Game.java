@@ -23,11 +23,11 @@ public class Game {
             success = false;
             mGrid.findEmptyCell(mSequencer, size, new AssignCallback() {
                 @Override
-                public boolean onUpdate(final Position position, String contents) {
+                public boolean onUpdate(final Selection selection, String contents) {
                     mDictionary.searchWithWildcards(contents, mSequencer, new ValidateCallback() {
                         @Override
                         public boolean onValid(String result) {
-                            success = mGrid.addWord(position, result);
+                            success = mGrid.addWord(selection, result);
                             return success;
                         }
                     });

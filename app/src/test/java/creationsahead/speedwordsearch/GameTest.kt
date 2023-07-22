@@ -67,9 +67,9 @@ class GameTest {
         assertEquals(true, game.populatePuzzle(4, 1))
         assertEquals(false, game.populatePuzzle(4, 1))
         assertEquals(
+                ". . . c c c a . \n" +
                 ". . . . . . . . \n" +
-                ". . . . . . . . \n" +
-                "c a b b a c c c \n" +
+                "c a b b . . . . \n" +
                 ". . c a a b a . \n" +
                 ". . . b . . b c \n" +
                 ". . . c a a a . \n" +

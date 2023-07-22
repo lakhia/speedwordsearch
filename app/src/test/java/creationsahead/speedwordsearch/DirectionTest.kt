@@ -20,4 +20,16 @@ class DirectionTest {
         assertEquals(Direction.SOUTH_WEST, Direction.NORTH_EAST.negate())
         assertEquals(Direction.SOUTH_EAST, Direction.NORTH_WEST.negate())
     }
+
+    @Test
+    fun test_02_find() {
+        var dir = Direction.find(0, 1)
+        assertEquals(Direction.SOUTH, dir)
+        dir = Direction.find(-1, 0)
+        assertEquals(Direction.WEST, dir)
+        dir = Direction.find(-1, -1)
+        assertEquals(Direction.NORTH_WEST, dir)
+        dir = Direction.find(-1, 4)
+        assertEquals(Direction.NONE, dir)
+    }
 }
