@@ -6,7 +6,7 @@ package creationsahead.speedwordsearch;
 public class Cell {
     public static final char EMPTY = '.';
     public char letter;
-    public int refCount;
+    private int refCount;
 
     public Cell() {
         this(EMPTY);
@@ -61,21 +61,31 @@ public class Cell {
     }
 
     /**
-     * Returns true if cell contents are unused and can be overwritten
+     * Returns true if cell content is unused and can be overwritten
      */
     public boolean isUnused() {
         return letter == EMPTY || refCount == 0;
     }
 
     /**
-     * Returns true if cell contents are blank
+     * Returns true if cell content is blank
      */
     public boolean isEmpty() {
         return letter == EMPTY;
     }
 
+    /**
+     * Returns display value of cell
+     */
     @Override
     public String toString() {
         return letter + " ";
+    }
+
+    /**
+     * Return search value of cell (placeholders become wildcards
+     */
+    public char getSearchValue() {
+        return isUnused() ? EMPTY : letter;
     }
 }

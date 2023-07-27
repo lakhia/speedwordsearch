@@ -23,7 +23,7 @@ public class Game {
             success = false;
             mGrid.findEmptyCell(mSequencer, size, new AssignCallback() {
                 @Override
-                public boolean onUpdate(final Selection selection, String contents) {
+                public boolean onUpdate(final Selection selection, final String contents) {
                     mDictionary.searchWithWildcards(contents, mSequencer, new ValidateCallback() {
                         @Override
                         public boolean onValid(String result) {
@@ -39,6 +39,19 @@ public class Game {
             }
         }
         return true;
+    }
+
+    /**
+     * Validate a guess and mark word from grid as un-used
+     * @param selection selection made by user
+     * @return true if word was removed
+     */
+    public boolean guess(Selection selection) {
+        // Use placeholder letters to find word so that accidental words are found
+        String answer = mGrid.findContents(selection, false);
+        // Account for selection made in flipped order
+        String altAnswer = mGrid.findContents(selection.flipped(), false);
+        return mGrid.removeWord(answer) || mGrid.removeWord(altAnswer);
     }
 
     @Override

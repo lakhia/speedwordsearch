@@ -93,7 +93,7 @@ public class PuzzleGrid {
         for (int x : rows) {
             int cols[] = sequencer.getNextCoordinateSequence();
             for (int y : cols) {
-                if (mGrid[x][y].isEmpty()) {
+                if (mGrid[x][y].isUnused()) {
                     Position newPos = new Position(x, y);
                     if (callback != null) {
                         if (callback.onUpdate(newPos)) {
@@ -124,15 +124,10 @@ public class PuzzleGrid {
                     Direction dir = ALL_DIRECTIONS[dirIndex];
                     Position pos = position;
 
-                    // If position cannot accommodate length, move it
-                    if (!Selection.inBounds(pos, dir, sizeX, sizeY, length)) {
-                        int lacking = length - pos.getDistanceToBoundary(dir, sizeX, sizeY);
-                        pos = new Position(pos.x - dir.x * lacking,
-                                           pos.y - dir.y * lacking);
-                    }
+                    // If position can accommodate length, process it
                     if (Selection.inBounds(pos, dir, sizeX, sizeY, length)) {
                         Selection selection = new Selection(pos, dir, length);
-                        return callback.onUpdate(selection, findContents(selection));
+                        return callback.onUpdate(selection, findContents(selection, true));
                     }
                 }
                 return false;
@@ -142,15 +137,22 @@ public class PuzzleGrid {
 
     /**
      * Returns content stored in grid at specified selection
+     * @param searchValue if true, placeholders become blanks
      * @return String with blanks and letters
      */
-    public String findContents(Selection selection) {
+    public String findContents(Selection selection, boolean searchValue) {
         int x = selection.position.x, y = selection.position.y;
         StringBuilder result = new StringBuilder();
         Direction dir = selection.direction;
 
         for (int i = 0; i < selection.length; i++) {
-            result.append(mGrid[x][y].letter);
+            char letter;
+            if (searchValue) {
+                letter = mGrid[x][y].getSearchValue();
+            } else {
+                letter = mGrid[x][y].letter;
+            }
+            result.append(letter);
             x += dir.x;
             y += dir.y;
         }

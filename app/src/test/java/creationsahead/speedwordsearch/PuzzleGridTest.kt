@@ -141,17 +141,17 @@ class PuzzleGridTest {
         val grid = fill_grid()
 
         var content: String
-        content = grid.findContents(Selection(3,3, Direction.WEST, 4))
+        content = grid.findContents(Selection(3,3, Direction.WEST, 4), true)
         assertEquals("take", content)
-        content = grid.findContents(Selection(3,2, Direction.NORTH_WEST, 3))
+        content = grid.findContents(Selection(3,2, Direction.NORTH_WEST, 3), true)
         assertEquals("rge", content)
-        content = grid.findContents(Selection(0,0, Direction.SOUTH_EAST, 4))
+        content = grid.findContents(Selection(0,0, Direction.SOUTH_EAST, 4), true)
         assertEquals("taat", content)
-        content = grid.findContents(Selection(0,3, Direction.NORTH, 4))
+        content = grid.findContents(Selection(0,3, Direction.NORTH, 4), true)
         assertEquals("east", content)
 
         grid.removeWord("afar")
-        content = grid.findContents(Selection(1,0, Direction.SOUTH, 4))
+        content = grid.findContents(Selection(1,0, Direction.SOUTH, 4), true)
         assertEquals("ea.k", content)
     }
 }
