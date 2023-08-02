@@ -18,6 +18,12 @@ public class Game {
         mSequencer = new Sequencer(seed, size);
     }
 
+    /**
+     * Populate an empty puzzle
+     * @param size size of square grid
+     * @param maxIterations use iterations specified or less
+     * @return true if last iteration added at least 1 letter
+     */
     public boolean populatePuzzle(final int size, int maxIterations) {
         for (int i = 0; i < maxIterations; i++) {
             success = false;
