@@ -43,6 +43,11 @@ public class Position {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
+
     public boolean equals(int xVal, int yVal) {
         return x == xVal && y == yVal;
     }

@@ -170,4 +170,11 @@ public class PuzzleGrid {
         }
         return sb.toString();
     }
+
+    /**
+     * Get cell at coordinate x and y, assumes coordinates are within range
+     */
+    public Cell getCell(int x, int y) {
+        return mGrid[x][y];
+    }
 }

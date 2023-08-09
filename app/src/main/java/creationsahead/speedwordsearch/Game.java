@@ -48,6 +48,13 @@ public class Game {
     }
 
     /**
+     * Get cell at coordinate x and y, assumes coordinates are within range
+     */
+    public Cell getCell(int x, int y) {
+        return mGrid.getCell(x, y);
+    }
+
+    /**
      * Validate a guess and mark word from grid as un-used
      * @param selection selection made by user
      * @return true if word was removed

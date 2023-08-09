@@ -8,6 +8,11 @@ public class Selection {
     public final Direction direction;
     public final int length;
 
+    @Override
+    public String toString() {
+        return "pos: " + position.toString() + ", dir: " + direction + ", len: " + length;
+    }
+
     public Selection(int x, int y, Direction dir, int len) {
         position = new Position(x, y);
         direction = dir;
