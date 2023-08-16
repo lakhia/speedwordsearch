@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Speed Word Search</string>
+    <string name="row">row</string>
+    <string name="column">column</string>
 </resources>

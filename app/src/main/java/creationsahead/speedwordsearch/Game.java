@@ -12,10 +12,10 @@ public class Game {
     /**
      * Construct a game with a square puzzle grid
      */
-    public Game(Trie dictionary, int size, int seed) {
-        mGrid = new PuzzleGrid(size, size);
-        mDictionary = dictionary;
-        mSequencer = new Sequencer(seed, size);
+    public Game(Config config) {
+        mGrid = new PuzzleGrid(config.sizeX, config.sizeY);
+        mDictionary = config.dictionary;
+        mSequencer = new Sequencer(config.seed, config.sizeX);
     }
 
     /**

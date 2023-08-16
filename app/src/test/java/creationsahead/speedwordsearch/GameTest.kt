@@ -30,7 +30,7 @@ class GameTest {
     fun test_01_game() {
         init()
 
-        val game: Game = Game(dictionary, 4, 1)
+        val game = Game(Config(4, 4, dictionary, 1))
         assertEquals(true, game.populatePuzzle(4, 1))
         assertEquals(
                 "c a a a \n" +
@@ -55,7 +55,7 @@ class GameTest {
     fun test_02_big_board() {
         init()
 
-        val game: Game = Game(dictionary, 8, 1)
+        val game = Game(Config(8, 8, dictionary, 1))
         assertEquals(true, game.populatePuzzle(4, 1))
         assertEquals(true, game.populatePuzzle(4, 1))
         assertEquals(true, game.populatePuzzle(4, 1))

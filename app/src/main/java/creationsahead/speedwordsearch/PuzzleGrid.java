@@ -122,11 +122,10 @@ public class PuzzleGrid {
                 int dirs[] = sequencer.getDirectionSequence();
                 for (int dirIndex: dirs) {
                     Direction dir = ALL_DIRECTIONS[dirIndex];
-                    Position pos = position;
 
                     // If position can accommodate length, process it
-                    if (Selection.inBounds(pos, dir, sizeX, sizeY, length)) {
-                        Selection selection = new Selection(pos, dir, length);
+                    if (Selection.inBounds(position, dir, sizeX, sizeY, length)) {
+                        Selection selection = new Selection(position, dir, length);
                         return callback.onUpdate(selection, findContents(selection, true));
                     }
                 }
