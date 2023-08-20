@@ -4,8 +4,10 @@ package creationsahead.speedwordsearch;
  * A cell in a puzzle grid contains a letter and reference count
  */
 public class Cell {
+    public static DrawCallback callback;
     public static final char EMPTY = '.';
     public char letter;
+    public Object tag;
     private int refCount;
 
     public Cell() {
@@ -15,6 +17,7 @@ public class Cell {
     public Cell(char letter) {
         this.letter = letter;
         refCount = 0;
+        tag = null;
     }
 
     /**
@@ -27,6 +30,9 @@ public class Cell {
             if (refCount <= 0) {
                 this.letter = EMPTY;
                 refCount = 0;
+                if (callback != null) {
+                    callback.onInvalidated(this);
+                }
             }
             return true;
         }
@@ -53,11 +59,14 @@ public class Cell {
         if (this.letter == letter) {
             return true;
         }
-        if (isUnused()) {
-            this.letter = letter;
-            return true;
+        if (!isUnused()) {
+            return false;
         }
-        return false;
+        this.letter = letter;
+        if (callback != null) {
+            callback.onInvalidated(this);
+        }
+        return true;
     }
 
     /**

@@ -11,6 +11,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import creationsahead.speedwordsearch.Cell;
+import creationsahead.speedwordsearch.DrawCallback;
 import creationsahead.speedwordsearch.Game;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
@@ -19,7 +21,7 @@ import creationsahead.speedwordsearch.Selection;
 /**
  * Primary activity for game play
  */
-public class GameActivity extends Activity implements View.OnClickListener {
+public class GameActivity extends Activity implements View.OnClickListener, DrawCallback {
     private int lastX = -1, lastY = -1;
     private View lastSelection = null;
     private Game game;
@@ -58,15 +60,24 @@ public class GameActivity extends Activity implements View.OnClickListener {
             for (int j = 0; j < numCells; j++) {
                 ContextThemeWrapper newContext = new ContextThemeWrapper(this, R.style.PuzzleLetter);
                 TextView textView = new TextView(newContext, null);
-                textView.setText(game.getCell(i, j).toString());
+                Cell cell = game.getCell(i, j);
+                textView.setText(cell.toString());
                 textView.setMinWidth(cellSize);
                 textView.setMinHeight(cellSize);
                 textView.setOnClickListener(this);
                 textView.setTag(R.string.row, i);
                 textView.setTag(R.string.column, j);
                 row.addView(textView);
+                cell.tag = textView;
             }
         }
+        Cell.callback = this;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Cell.callback = null;
     }
 
     @Override
@@ -82,9 +93,11 @@ public class GameActivity extends Activity implements View.OnClickListener {
         } else {
             lastSelection.setBackgroundResource(R.drawable.border);
             Selection selection = Selection.isValid(lastX, lastY, currentX, currentY);
+            lastX = -1;
+            lastY = -1;
             String error = null;
             if (selection != null) {
-                if (game.guess(selection)) {
+                if (!game.guess(selection)) {
                     error = "Did not find word";
                 }
             } else {
@@ -94,5 +107,16 @@ public class GameActivity extends Activity implements View.OnClickListener {
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onInvalidated(final Cell cell) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView textView = (TextView) cell.tag;
+                textView.setText(cell.toString());
+            }
+        });
     }
 }
