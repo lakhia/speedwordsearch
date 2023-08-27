@@ -5,17 +5,15 @@ package creationsahead.speedwordsearch;
  */
 public class Game {
     private final PuzzleGrid mGrid;
-    private final Trie mDictionary;
-    private final Sequencer mSequencer;
+    private final Config mConfig;
     private boolean success;
 
     /**
      * Construct a game with a square puzzle grid
      */
     public Game(Config config) {
-        mGrid = new PuzzleGrid(config.sizeX, config.sizeY);
-        mDictionary = config.dictionary;
-        mSequencer = new Sequencer(config.seed, config.sizeX);
+        mGrid = new PuzzleGrid(config);
+        mConfig = config;
     }
 
     /**
@@ -27,10 +25,10 @@ public class Game {
     public boolean populatePuzzle(final int size, int maxIterations) {
         for (int i = 0; i < maxIterations; i++) {
             success = false;
-            mGrid.findEmptyCell(mSequencer, size, new AssignCallback() {
+            mGrid.findEmptyCell(size, new AssignCallback() {
                 @Override
                 public boolean onUpdate(final Selection selection, final String contents) {
-                    mDictionary.searchWithWildcards(contents, mSequencer, new ValidateCallback() {
+                    mConfig.dictionary.searchWithWildcards(contents, mConfig.sequencer, new ValidateCallback() {
                         @Override
                         public boolean onValid(String result) {
                             success = mGrid.addWord(selection, result);

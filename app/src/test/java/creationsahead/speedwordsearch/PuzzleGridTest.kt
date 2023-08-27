@@ -10,7 +10,8 @@ import org.junit.Test
  */
 class PuzzleGridTest {
     fun fill_grid(): PuzzleGrid {
-        val grid = PuzzleGrid(4, 4)
+        val config = Config(4, 4, null, 0)
+        val grid = PuzzleGrid(config)
         grid.addWord(Selection(0, 0, Direction.EAST, 4), "test")
         grid.addWord(Selection(3, 0, Direction.SOUTH, 4), "tart")
         grid.addWord(Selection(3, 3, Direction.WEST, 4), "take")
@@ -22,7 +23,8 @@ class PuzzleGridTest {
 
     @Test
     fun test_01_duplicates() {
-        val grid = PuzzleGrid(6, 3)
+        val config = Config(6, 3, null, 0)
+        val grid = PuzzleGrid(config)
         val empty =
                 ". . . . . . \n" +
                 ". . . . . . \n" +
@@ -64,7 +66,8 @@ class PuzzleGridTest {
 
     @Test
     fun test_03_insert_diagonal() {
-        val grid = PuzzleGrid(4, 4)
+        val config = Config(4, 4, null, 0)
+        val grid = PuzzleGrid(config)
         grid.addWord(Selection(0, 0, Direction.SOUTH_EAST, 4), "test")
         grid.addWord(Selection(2, 0, Direction.SOUTH_WEST, 3), "yes")
         grid.addWord(Selection(1, 3, Direction.NORTH_EAST, 3), "ask")
@@ -99,7 +102,8 @@ class PuzzleGridTest {
 
     @Test
     fun test_04_no_successful_inserts() {
-        val grid = PuzzleGrid(4, 4)
+        val config = Config(4, 4, null, 0)
+        val grid = PuzzleGrid(config)
         grid.addWord(Selection(1, 0, Direction.EAST, 4), "test")
         grid.addWord(Selection(0, 1, Direction.SOUTH, 4), "test")
         grid.addWord(Selection(2, 0, Direction.WEST, 4), "test")
@@ -117,21 +121,20 @@ class PuzzleGridTest {
     @Test
     fun test_05_vacant_cell() {
         val grid = fill_grid()
-        val seq = Sequencer(1, 4)
 
         // No vacant cells
-        var pos = grid.findEmptyCell(seq, null)
+        var pos = grid.findEmptyCell(null)
         assertEquals(null, pos)
 
         // Remove one word that does not clear any cells
         grid.removeWord("tart")
-        pos = grid.findEmptyCell(seq, null)
+        pos = grid.findEmptyCell(null)
         assertEquals(null, pos)
 
         // Remove one word that does not clear any cells
         grid.removeWord("afar")
 
-        pos = grid.findEmptyCell(seq, null)
+        pos = grid.findEmptyCell(null)
         assertEquals(3, pos.x)
         assertEquals(2, pos.y)
     }

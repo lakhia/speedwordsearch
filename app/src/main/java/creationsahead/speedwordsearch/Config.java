@@ -5,13 +5,14 @@ package creationsahead.speedwordsearch;
  */
 public class Config {
     public int sizeX, sizeY;
-    public int seed;
+    public Sequencer sequencer;
     public Trie dictionary;
 
     public Config(int sizeX, int sizeY, Trie dictionary, int seed) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
-        this.seed = seed;
         this.dictionary = dictionary;
+        // TODO: sequencer needs a single dimension
+        sequencer = new Sequencer(seed, sizeX);
     }
 }
