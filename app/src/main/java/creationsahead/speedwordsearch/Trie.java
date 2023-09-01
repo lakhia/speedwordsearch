@@ -31,7 +31,7 @@ public class Trie {
         TrieNode p = root;
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
-            int index = c - 'a';
+            int index = c - 'A';
             if (p.arr[index] == null) {
                 TrieNode temp = new TrieNode();
                 p.arr[index] = temp;
@@ -45,19 +45,18 @@ public class Trie {
 
     // Returns string that searches for string with wildcards
     public String searchWithWildcards(String s, Sequencer sequencer, ValidateCallback callback) {
-        return searchWithWildcards(root, s, "", sequencer, callback);
+        try {
+            return searchWithWildcards(root, s, "", sequencer, callback);
+        } catch (IllegalMonitorStateException ex) {
+            return ex.getMessage();
+        }
     }
 
     private String searchWithWildcards(TrieNode p, String query, String result, Sequencer sequencer,
                                        ValidateCallback callback) {
         // Base case
         if (query.isEmpty()) {
-            boolean isValid = p.isEnd;
-            if (isValid && callback != null) {
-                isValid = callback.onValid(result);
-            }
-
-            return (isValid ? "" : null);
+            return p.isEnd ? result : null;
         }
 
         // Recursive case
@@ -66,24 +65,42 @@ public class Trie {
         if (chosenChar == Cell.EMPTY) {
             int sequence[] = sequencer.getNextLetterSequence();
             for (int j : sequence) {
-                chosenChar = (char)('a' + j);
                 if (p.arr[j] != null) {
+                    chosenChar = (char)('A' + j);
                     String subString = searchWithWildcards(p.arr[j], query.substring(i + 1),
                                                            result + chosenChar, sequencer, callback);
-                    if (subString != null) {
-                        return chosenChar + subString;
+                    if (subString == null && p.arr[j].isEnd) {
+                        subString = result + chosenChar;
                     }
+                    if (callback != null) {
+                        if (subString == null || !callback.onValid(subString)) {
+                            continue;
+                        } else {
+                            // Hack to unwind stack
+                            throw new IllegalMonitorStateException(subString);
+                        }
+                    }
+                    return subString;
                 }
             }
             return null;
         } else {
-            int j = chosenChar - 'a';
+            int j = chosenChar - 'A';
             if (p.arr[j] != null) {
                 String subString = searchWithWildcards(p.arr[j], query.substring(i + 1),
                                                        result + chosenChar, sequencer, callback);
-                if (subString != null) {
-                    return chosenChar + subString;
+                if (subString == null && p.arr[j].isEnd) {
+                    subString = result + chosenChar;
                 }
+                if (callback != null) {
+                    if (subString == null || !callback.onValid(subString)) {
+                        return null;
+                    } else {
+                        // Hack to unwind stack
+                        throw new IllegalMonitorStateException(subString);
+                    }
+                }
+                return subString;
             }
         }
         return null;

@@ -1,5 +1,7 @@
 package creationsahead.speedwordsearch;
 
+import java.io.InputStream;
+
 /**
  * Tracks progress and manages instance of current game
  */
@@ -10,10 +12,11 @@ public class ProgressTracker {
     private static Config currentConfig;
 
     /**
-     * Initialize progress tracker
+     * Initialize progress tracker and load dictionary of words
+     * @param inputStream InputStream of words to load
      */
-    public static void init() {
-        WordList.init();
+    public static void init(InputStream inputStream) {
+        WordList.init(inputStream);
         reset();
     }
 
@@ -53,7 +56,7 @@ public class ProgressTracker {
         } else {
             currentConfig = new Config(currentLevel + 5,
                                        currentLevel + 5,
-                                       WordList.mDictionary,
+                                       WordList.dictionary,
                                        5);
             currentGame = new Game(currentConfig);
         }

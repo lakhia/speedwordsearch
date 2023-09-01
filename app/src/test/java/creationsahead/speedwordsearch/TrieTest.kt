@@ -12,105 +12,105 @@ class TrieTest {
     @Test
     fun test_01_no_wildcards() {
         val dictionary: Trie = Trie()
-        dictionary.insert("abac")
-        dictionary.insert("bbac")
-        dictionary.insert("baac")
-        dictionary.insert("aaac")
+        dictionary.insert("ABAC")
+        dictionary.insert("BBAC")
+        dictionary.insert("BAAC")
+        dictionary.insert("AAAC")
 
-        val word = dictionary.searchWithWildcards("abac", Sequencer(1), null)
-        assertEquals("abac", word)
+        val word = dictionary.searchWithWildcards("ABAC", Sequencer(1), null)
+        assertEquals("ABAC", word)
     }
 
     @Test
     fun test_02_one_wildcard() {
         val dictionary: Trie = Trie()
-        dictionary.insert("abac")
-        dictionary.insert("bbac")
-        dictionary.insert("baac")
-        dictionary.insert("aaac")
+        dictionary.insert("ABAC")
+        dictionary.insert("BBAC")
+        dictionary.insert("BAAC")
+        dictionary.insert("AAAC")
 
-        val word = dictionary.searchWithWildcards("ab.c", Sequencer(1), null)
-        assertEquals("abac", word)
+        val word = dictionary.searchWithWildcards("AB.C", Sequencer(1), null)
+        assertEquals("ABAC", word)
     }
 
     @Test
     fun test_03_two_wildcard() {
         val dictionary: Trie = Trie()
-        dictionary.insert("bbac")
-        dictionary.insert("baac")
-        dictionary.insert("aaac")
+        dictionary.insert("BBAC")
+        dictionary.insert("BAAC")
+        dictionary.insert("AAAC")
 
-        val word = dictionary.searchWithWildcards("bb..", Sequencer(1), null)
-        assertEquals("bbac", word)
+        val word = dictionary.searchWithWildcards("BB..", Sequencer(1), null)
+        assertEquals("BBAC", word)
     }
 
     @Test
     fun test_04_wildcard_choices() {
         val dictionary: Trie = Trie()
-        dictionary.insert("abac")
-        dictionary.insert("bbac")
-        dictionary.insert("baac")
-        dictionary.insert("aaac")
+        dictionary.insert("ABAC")
+        dictionary.insert("BBAC")
+        dictionary.insert("BAAC")
+        dictionary.insert("AAAC")
 
-        var word = dictionary.searchWithWildcards(".bac", Sequencer(1), null)
-        assertEquals("abac", word)
-        word = dictionary.searchWithWildcards(".bac", Sequencer(3), null)
-        assertEquals("bbac", word)
+        var word = dictionary.searchWithWildcards(".BAC", Sequencer(1), null)
+        assertEquals("ABAC", word)
+        word = dictionary.searchWithWildcards(".BAC", Sequencer(3), null)
+        assertEquals("BBAC", word)
     }
 
     @Test
     fun test_05_two_wildcard_choices() {
         val dictionary: Trie = Trie()
-        dictionary.insert("abac")
-        dictionary.insert("bbac")
-        dictionary.insert("baac")
-        dictionary.insert("aaac")
+        dictionary.insert("ABAC")
+        dictionary.insert("BBAC")
+        dictionary.insert("BAAC")
+        dictionary.insert("AAAC")
 
-        var word = dictionary.searchWithWildcards("..ac", Sequencer(1), null)
-        assertEquals("aaac", word)
-        word = dictionary.searchWithWildcards("..ac", Sequencer(3), null)
-        assertEquals("baac", word)
-        word = dictionary.searchWithWildcards("..ac", Sequencer(33), null)
-        assertEquals("abac", word)
+        var word = dictionary.searchWithWildcards("..AC", Sequencer(1), null)
+        assertEquals("AAAC", word)
+        word = dictionary.searchWithWildcards("..AC", Sequencer(3), null)
+        assertEquals("BAAC", word)
+        word = dictionary.searchWithWildcards("..AC", Sequencer(33), null)
+        assertEquals("ABAC", word)
     }
 
     @Test
     fun test_06_substrings() {
         val dictionary: Trie = Trie()
-        dictionary.insert("a")
-        dictionary.insert("ab")
-        dictionary.insert("aba")
-        dictionary.insert("abac")
-        dictionary.insert("abaca")
-        dictionary.insert("abacab")
+        dictionary.insert("A")
+        dictionary.insert("AB")
+        dictionary.insert("ABA")
+        dictionary.insert("ABAC")
+        dictionary.insert("ABACA")
+        dictionary.insert("ABACAB")
 
-        var word = dictionary.searchWithWildcards("c", Sequencer(1), null)
+        var word = dictionary.searchWithWildcards("C", Sequencer(1), null)
         assertEquals(null, word)
-        word = dictionary.searchWithWildcards("a", Sequencer(3), null)
-        assertEquals("a", word)
-        word = dictionary.searchWithWildcards("ab", Sequencer(33), null)
-        assertEquals("ab", word)
-        word = dictionary.searchWithWildcards("aba", Sequencer(33), null)
-        assertEquals("aba", word)
-        word = dictionary.searchWithWildcards("abac", Sequencer(33), null)
-        assertEquals("abac", word)
-        word = dictionary.searchWithWildcards("abaca", Sequencer(33), null)
-        assertEquals("abaca", word)
-        word = dictionary.searchWithWildcards("abacab", Sequencer(33), null)
-        assertEquals("abacab", word)
+        word = dictionary.searchWithWildcards("A", Sequencer(3), null)
+        assertEquals("A", word)
+        word = dictionary.searchWithWildcards("AB", Sequencer(33), null)
+        assertEquals("AB", word)
+        word = dictionary.searchWithWildcards("ABA", Sequencer(33), null)
+        assertEquals("ABA", word)
+        word = dictionary.searchWithWildcards("ABAC", Sequencer(33), null)
+        assertEquals("ABAC", word)
+        word = dictionary.searchWithWildcards("ABACA", Sequencer(33), null)
+        assertEquals("ABACA", word)
+        word = dictionary.searchWithWildcards("ABACAB", Sequencer(33), null)
+        assertEquals("ABACAB", word)
     }
 
     @Test
     fun test_07_validation() {
         val dictionary: Trie = Trie()
-        dictionary.insert("abba")
-        dictionary.insert("acca")
-        dictionary.insert("adda")
-        dictionary.insert("aeec")
-        dictionary.insert("affa")
-        dictionary.insert("agga")
-        dictionary.insert("bgga")
-        dictionary.insert("cgga")
+        dictionary.insert("ABBA")
+        dictionary.insert("ACCA")
+        dictionary.insert("ADDA")
+        dictionary.insert("AEEC")
+        dictionary.insert("AFFA")
+        dictionary.insert("AGGA")
+        dictionary.insert("BGGA")
+        dictionary.insert("CGGA")
 
         var counter = 0
         var word = dictionary.searchWithWildcards("....", Sequencer(1), { counter++; false; })
@@ -118,29 +118,65 @@ class TrieTest {
         assertEquals(8, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards(".g..", Sequencer(1), { counter++; false; })
+        word = dictionary.searchWithWildcards(".G..", Sequencer(1), { counter++; false; })
         assertEquals(null, word)
         assertEquals(3, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("a...", Sequencer(1), { counter++; false; })
+        word = dictionary.searchWithWildcards("A...", Sequencer(1), { counter++; false; })
         assertEquals(null, word)
         assertEquals(6, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("a...", Sequencer(1), { counter++; counter==3; })
-        assertEquals("adda", word)
+        word = dictionary.searchWithWildcards("A...", Sequencer(1), { counter++; counter==3; })
+        assertEquals("ADDA", word)
         assertEquals(3, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("...a", Sequencer(1), { counter++; counter==4; })
-        assertEquals("affa", word)
+        word = dictionary.searchWithWildcards("...A", Sequencer(1), { counter++; counter==4; })
+        assertEquals("AFFA", word)
         assertEquals(4, counter)
 
-        word = dictionary.searchWithWildcards(".bb.", Sequencer(1), { true; })
-        assertEquals("abba", word)
+        word = dictionary.searchWithWildcards(".BB.", Sequencer(1), { true; })
+        assertEquals("ABBA", word)
 
-        word = dictionary.searchWithWildcards("c...", Sequencer(1), { true; })
-        assertEquals("cgga", word)
+        word = dictionary.searchWithWildcards("C...", Sequencer(1), { true; })
+        assertEquals("CGGA", word)
+    }
+
+    @Test
+    fun test_08_substrings_validation_order() {
+        val dictionary: Trie = Trie()
+        dictionary.insert("A")
+        dictionary.insert("AB")
+        dictionary.insert("ABC")
+        dictionary.insert("ABCD")
+        dictionary.insert("ABCDE")
+        dictionary.insert("ABCDEF")
+
+        var counter = 0
+        val buffer = StringBuffer()
+        var word = dictionary.searchWithWildcards("......", Sequencer(1),
+                { buffer.append(it); counter++; false; })
+        assertEquals(null, word)
+        assertEquals(6, counter)
+        assertEquals("ABCDEFABCDEABCDABCABA", buffer.toString())
+
+
+        counter = 0
+        buffer.delete(0, buffer.length)
+        word = dictionary.searchWithWildcards("A.....", Sequencer(1),
+                { buffer.append(it); counter++; false; })
+        assertEquals(null, word)
+        assertEquals(6, counter)
+        assertEquals("ABCDEFABCDEABCDABCABA", buffer.toString())
+
+        counter = 0
+        buffer.delete(0, buffer.length)
+        word = dictionary.searchWithWildcards(".B....", Sequencer(1),
+                { buffer.append(it); counter++; false; })
+        assertEquals(null, word)
+        assertEquals(6, counter)
+        assertEquals("ABCDEFABCDEABCDABCABA", buffer.toString())
     }
 }

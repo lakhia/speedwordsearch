@@ -14,14 +14,14 @@ class GameTest {
 
     fun init() {
         if (!initialized) {
-            dictionary.insert("abac")
-            dictionary.insert("bbac")
-            dictionary.insert("baac")
-            dictionary.insert("aaac")
-            dictionary.insert("caac")
-            dictionary.insert("babc")
-            dictionary.insert("accc")
-            dictionary.insert("abcc")
+            dictionary.insert("ABAC")
+            dictionary.insert("BBAC")
+            dictionary.insert("BAAC")
+            dictionary.insert("AAAC")
+            dictionary.insert("CAAC")
+            dictionary.insert("BABC")
+            dictionary.insert("ACCC")
+            dictionary.insert("ABCC")
             initialized = true
         }
     }
@@ -33,7 +33,7 @@ class GameTest {
         val game = Game(Config(4, 4, dictionary, 1))
         assertEquals(true, game.populatePuzzle(4, 1))
         assertEquals(
-                "c a a a \n" +
+                "C A A A \n" +
                 ". . . . \n" +
                 ". . . . \n" +
                 ". . . . \n", game.toString())
@@ -41,10 +41,10 @@ class GameTest {
         assertEquals(true, game.populatePuzzle(4, 1))
         assertEquals(true, game.populatePuzzle(4, 1))
         assertEquals(
-                "c a a a \n" +
-                "c a a c \n" +
-                "b a a c \n" +
-                "a c c c \n", game.toString())
+                "C A A A \n" +
+                "C A A C \n" +
+                "B A A C \n" +
+                "A C C C \n", game.toString())
         assertEquals(false, game.populatePuzzle(4, 1))
         assertEquals(false, game.populatePuzzle(3, 1))
         assertEquals(false, game.populatePuzzle(1, 1))
@@ -67,13 +67,13 @@ class GameTest {
         assertEquals(false, game.populatePuzzle(4, 1))
         assertEquals(
                 ". . . . . . . . \n" +
-                ". . . c c c a . \n" +
-                "c a a c . . . . \n" +
-                ". . c a b b a . \n" +
-                ". . . b . . b . \n" +
-                ". . . c a a a . \n" +
-                ". . . c . b c . \n" +
-                ". . . b a a c . \n", game.toString())
+                ". . . C C C A . \n" +
+                "C A A C . . . . \n" +
+                ". . C A B B A . \n" +
+                ". . . B . . B . \n" +
+                ". . . C A A A . \n" +
+                ". . . C . B C . \n" +
+                ". . . B A A C . \n", game.toString())
 
         // Correct direction guessing
         assertFalse(game.guess(Selection(1, 2, Direction.EAST, 4)))
@@ -90,10 +90,10 @@ class GameTest {
                 ". . . . . . . . \n" +
                 ". . . . . . . . \n" +
                 ". . . . . . . . \n" +
-                ". . c a b b . . \n" +
-                ". . . b . . . . \n" +
-                ". . . c a a a . \n" +
-                ". . . c . b . . \n" +
+                ". . C A B B . . \n" +
+                ". . . B . . . . \n" +
+                ". . . C A A A . \n" +
+                ". . . C . B . . \n" +
                 ". . . . . . . . \n", game.toString())
     }
 }

@@ -17,6 +17,8 @@ import creationsahead.speedwordsearch.Game;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.Selection;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Primary activity for game play
@@ -30,8 +32,13 @@ public class GameActivity extends Activity implements View.OnClickListener, Draw
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
-        ProgressTracker.init();
-        createUI();
+        try {
+            InputStream inputStream = getAssets().open("words_124k.db");
+            ProgressTracker.init(inputStream);
+            createUI();
+        } catch (IOException ignored) {
+            Toast.makeText(this, "Unable to load words", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
