@@ -115,21 +115,18 @@ public class PuzzleGrid {
      * @param callback called for each assignment that is possible
      */
     public void findEmptyCell(final int length, @NonNull final AssignCallback callback) {
-        findEmptyCell(new PositionCallback() {
-            @Override
-            public boolean onUpdate(final Position position) {
-                int dirs[] = mConfig.sequencer.getDirectionSequence();
-                for (int dirIndex: dirs) {
-                    Direction dir = ALL_DIRECTIONS[dirIndex];
+        findEmptyCell(position -> {
+            int dirs[] = mConfig.sequencer.getDirectionSequence();
+            for (int dirIndex: dirs) {
+                Direction dir = ALL_DIRECTIONS[dirIndex];
 
-                    // If position can accommodate length, process it
-                    if (Selection.inBounds(position, dir, mConfig.sizeX, mConfig.sizeY, length)) {
-                        Selection selection = new Selection(position, dir, length);
-                        return callback.onUpdate(selection, findContents(selection, true));
-                    }
+                // If position can accommodate length, process it
+                if (Selection.inBounds(position, dir, mConfig.sizeX, mConfig.sizeY, length)) {
+                    Selection selection = new Selection(position, dir, length);
+                    return callback.onUpdate(selection, findContents(selection, true));
                 }
-                return false;
             }
+            return false;
         });
     }
 

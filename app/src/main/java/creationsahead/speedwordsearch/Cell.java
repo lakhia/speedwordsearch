@@ -11,11 +11,7 @@ public class Cell {
     private int refCount;
 
     public Cell() {
-        this(EMPTY);
-    }
-
-    public Cell(char letter) {
-        this.letter = letter;
+        this.letter = EMPTY;
         refCount = 0;
         tag = null;
     }
@@ -92,7 +88,7 @@ public class Cell {
     }
 
     /**
-     * Return search value of cell (placeholders become wildcards
+     * Return search value of cell (placeholders become wildcards)
      */
     public char getSearchValue() {
         return isUnused() ? EMPTY : letter;

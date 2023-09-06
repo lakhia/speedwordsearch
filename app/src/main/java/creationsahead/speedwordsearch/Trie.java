@@ -16,7 +16,7 @@ public class Trie {
         TrieNode[] arr;
         boolean isEnd;
         // Initialize your data structure here.
-        protected TrieNode() {
+        TrieNode() {
             this.arr = new TrieNode[26];
         }
 

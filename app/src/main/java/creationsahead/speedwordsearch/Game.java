@@ -25,18 +25,12 @@ public class Game {
     public boolean populatePuzzle(final int size, int maxIterations) {
         for (int i = 0; i < maxIterations; i++) {
             success = false;
-            mGrid.findEmptyCell(size, new AssignCallback() {
-                @Override
-                public boolean onUpdate(final Selection selection, final String contents) {
-                    mConfig.dictionary.searchWithWildcards(contents, mConfig.sequencer, new ValidateCallback() {
-                        @Override
-                        public boolean onValid(String result) {
-                            success = mGrid.addWord(selection, result);
-                            return success;
-                        }
-                    });
+            mGrid.findEmptyCell(size, (selection, contents) -> {
+                mConfig.dictionary.searchWithWildcards(contents, mConfig.sequencer, result -> {
+                    success = mGrid.addWord(selection, result);
                     return success;
-                }
+                });
+                return success;
             });
             if (!success) {
                 return false;

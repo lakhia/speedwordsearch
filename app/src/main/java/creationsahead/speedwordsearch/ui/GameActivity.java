@@ -118,12 +118,9 @@ public class GameActivity extends Activity implements View.OnClickListener, Draw
 
     @Override
     public void onInvalidated(final Cell cell) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextView textView = (TextView) cell.tag;
-                textView.setText(cell.toString());
-            }
+        runOnUiThread(() -> {
+            TextView textView = (TextView) cell.tag;
+            textView.setText(cell.toString());
         });
     }
 }
