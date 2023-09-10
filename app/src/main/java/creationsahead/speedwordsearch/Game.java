@@ -47,6 +47,13 @@ public class Game {
     }
 
     /**
+     * Get all the words in puzzle grid
+     */
+    public String[] getWords() {
+        return mGrid.getWords();
+    }
+
+    /**
      * Validate a guess and mark word from grid as un-used
      * @param selection selection made by user
      * @return true if word was removed

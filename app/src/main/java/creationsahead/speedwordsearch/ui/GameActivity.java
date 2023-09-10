@@ -3,10 +3,15 @@ package creationsahead.speedwordsearch.ui;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -35,20 +40,39 @@ public class GameActivity extends Activity implements View.OnClickListener, Draw
         try {
             InputStream inputStream = getAssets().open("words_124k.db");
             ProgressTracker.init(inputStream);
-            createUI();
+            createGrid();
+            createWordList();
         } catch (IOException ignored) {
             Toast.makeText(this, "Unable to load words", Toast.LENGTH_LONG).show();
         }
     }
 
+    private void createWordList() {
+        GridLayout gridLayout = findViewById(R.id.wordsListLayout);
+        String[] words = game.getWords();
+        for (String word: words) {
+            ContextThemeWrapper newContext = new ContextThemeWrapper(this, R.style.WordList);
+            TextView textView = new TextView(newContext, null);
+            textView.setText(word);
+            gridLayout.addView(textView);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Point displaySize = new Point();
         getWindowManager().getDefaultDisplay().getSize(displaySize);
+        LinearLayout layout = findViewById(R.id.topLayout);
+        if (newConfig.getLayoutDirection() == Configuration.ORIENTATION_LANDSCAPE) {
+            layout.setOrientation(LinearLayout.VERTICAL);
+        } else {
+            layout.setOrientation(LinearLayout.HORIZONTAL);
+        }
     }
 
-    public void createUI() {
+    public void createGrid() {
         Point displaySize = new Point();
         getWindowManager().getDefaultDisplay().getSize(displaySize);
         int numCells = ProgressTracker.getCurrentConfig().sizeX;
@@ -58,7 +82,11 @@ public class GameActivity extends Activity implements View.OnClickListener, Draw
         game.populatePuzzle(5, 20);
         game.populatePuzzle(4, 10);
 
-        TableLayout layout = findViewById(R.id.layout);
+        TableLayout layout = findViewById(R.id.gridLayout);
+        ViewGroup.LayoutParams params = layout.getLayoutParams();
+        params.width = cellSize * numCells;
+        params.height = cellSize * numCells;
+
         for (int i = 0; i < numCells; i++) {
             TableRow row = new TableRow(this);
             row.setMinimumHeight(cellSize);

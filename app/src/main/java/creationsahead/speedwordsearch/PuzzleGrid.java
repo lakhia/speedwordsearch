@@ -1,7 +1,9 @@
 package creationsahead.speedwordsearch;
 
 import android.support.annotation.NonNull;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
 
 import static creationsahead.speedwordsearch.Direction.ALL_DIRECTIONS;
 
@@ -171,5 +173,14 @@ public class PuzzleGrid {
      */
     public Cell getCell(int x, int y) {
         return mGrid[x][y];
+    }
+
+    /**
+     * Get all the words in puzzle grid
+     */
+    public String[] getWords() {
+        String[] words = (String[]) mWords.keySet().toArray();
+        Arrays.sort(words);
+        return words;
     }
 }
