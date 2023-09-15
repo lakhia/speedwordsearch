@@ -179,7 +179,7 @@ public class PuzzleGrid {
      * Get all the words in puzzle grid
      */
     public String[] getWords() {
-        String[] words = (String[]) mWords.keySet().toArray();
+        String[] words = mWords.keySet().toArray(new String[mWords.size()]);
         Arrays.sort(words);
         return words;
     }

@@ -58,20 +58,6 @@ public class GameActivity extends Activity implements View.OnClickListener, Draw
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Point displaySize = new Point();
-        getWindowManager().getDefaultDisplay().getSize(displaySize);
-        LinearLayout layout = findViewById(R.id.topLayout);
-        if (newConfig.getLayoutDirection() == Configuration.ORIENTATION_LANDSCAPE) {
-            layout.setOrientation(LinearLayout.VERTICAL);
-        } else {
-            layout.setOrientation(LinearLayout.HORIZONTAL);
-        }
-    }
-
     public void createGrid() {
         Point displaySize = new Point();
         getWindowManager().getDefaultDisplay().getSize(displaySize);
