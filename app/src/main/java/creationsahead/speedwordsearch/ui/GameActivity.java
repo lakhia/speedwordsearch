@@ -3,10 +3,8 @@ package creationsahead.speedwordsearch.ui;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,30 +30,52 @@ public class GameActivity extends Activity implements View.OnClickListener, Draw
     private int lastX = -1, lastY = -1;
     private View lastSelection = null;
     private Game game;
+    private TableLayout puzzleLayout;
+    private GridLayout wordLayout;
+    private LinearLayout topLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initUI();
+    }
+
+    private void initUI() {
         setContentView(R.layout.game);
-        try {
-            InputStream inputStream = getAssets().open("words_124k.db");
-            ProgressTracker.init(inputStream);
-            createGrid();
-            createWordList();
-        } catch (IOException ignored) {
-            Toast.makeText(this, "Unable to load words", Toast.LENGTH_LONG).show();
+        topLayout = findViewById(R.id.topLayout);
+        if (puzzleLayout == null || wordLayout == null) {
+            puzzleLayout = findViewById(R.id.puzzleLayout);
+            wordLayout = findViewById(R.id.wordsListLayout);
+            try {
+                InputStream inputStream = getAssets().open("words_124k.db");
+                ProgressTracker.init(inputStream);
+                createGrid();
+                createWordList();
+            } catch (IOException ignored) {
+                Toast.makeText(this, "Unable to load words", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            topLayout.removeAllViews();
+            topLayout.addView(puzzleLayout);
+            topLayout.addView(wordLayout);
         }
     }
 
     private void createWordList() {
-        GridLayout gridLayout = findViewById(R.id.wordsListLayout);
         String[] words = game.getWords();
         for (String word: words) {
             ContextThemeWrapper newContext = new ContextThemeWrapper(this, R.style.WordList);
             TextView textView = new TextView(newContext, null);
             textView.setText(word);
-            gridLayout.addView(textView);
+            wordLayout.addView(textView);
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        topLayout.removeAllViews();
+        super.onConfigurationChanged(newConfig);
+        initUI();
     }
 
     public void createGrid() {
@@ -68,15 +88,14 @@ public class GameActivity extends Activity implements View.OnClickListener, Draw
         game.populatePuzzle(5, 20);
         game.populatePuzzle(4, 10);
 
-        TableLayout layout = findViewById(R.id.gridLayout);
-        ViewGroup.LayoutParams params = layout.getLayoutParams();
+        ViewGroup.LayoutParams params = puzzleLayout.getLayoutParams();
         params.width = cellSize * numCells;
         params.height = cellSize * numCells;
 
         for (int i = 0; i < numCells; i++) {
             TableRow row = new TableRow(this);
             row.setMinimumHeight(cellSize);
-            layout.addView(row);
+            puzzleLayout.addView(row);
 
             for (int j = 0; j < numCells; j++) {
                 ContextThemeWrapper newContext = new ContextThemeWrapper(this, R.style.PuzzleLetter);
