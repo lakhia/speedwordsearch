@@ -112,7 +112,7 @@ public class PuzzleGrid {
     }
 
     /**
-     * Find a selection that includes an empty cell
+     * Find a selection that includes an empty cell and is of size length
      * @param length length of potential word
      * @param callback called for each assignment that is possible
      */
@@ -130,6 +130,33 @@ public class PuzzleGrid {
             }
             return false;
         });
+    }
+
+    /**
+     * Find a random selection of size length
+     * @param length length of potential word
+     * @param callback called for each assignment that is possible
+     */
+    public void findRandomCells(final int length, @NonNull final AssignCallback callback) {
+        int rows[] = mConfig.sequencer.getNextCoordinateSequence();
+        for (int x : rows) {
+            int cols[] = mConfig.sequencer.getNextCoordinateSequence();
+            for (int y : cols) {
+                Position position = new Position(x, y);
+                int dirs[] = mConfig.sequencer.getDirectionSequence();
+                for (int dirIndex: dirs) {
+                    Direction dir = ALL_DIRECTIONS[dirIndex];
+
+                    // If position can accommodate length, process it
+                    if (Selection.inBounds(position, dir, mConfig.sizeX, mConfig.sizeY, length)) {
+                        Selection selection = new Selection(position, dir, length);
+                        if (callback.onUpdate(selection, findContents(selection, true))) {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
