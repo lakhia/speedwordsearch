@@ -1,9 +1,7 @@
 package creationsahead.speedwordsearch;
 
 import android.support.annotation.NonNull;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Set;
 
 import static creationsahead.speedwordsearch.Direction.ALL_DIRECTIONS;
 
@@ -12,7 +10,7 @@ import static creationsahead.speedwordsearch.Direction.ALL_DIRECTIONS;
  */
 public class PuzzleGrid {
     private final Cell[][] mGrid;
-    private final HashMap<String, Selection> mWords;
+    private final HashMap<String, Answer> mWords;
     private final Config mConfig;
 
     /**
@@ -59,7 +57,8 @@ public class PuzzleGrid {
             y += dir.y;
         }
 
-        mWords.put(word, selection);
+        // TODO: compute score
+        mWords.put(word, new Answer(selection, word, 5));
         return true;
     }
 
@@ -69,11 +68,12 @@ public class PuzzleGrid {
      * @throws RuntimeException if word is partially removed
      */
     public boolean removeWord(String word) {
-        Selection selection = mWords.get(word);
-        if (selection == null) {
+        Answer answer = mWords.get(word);
+        if (answer == null) {
             return false;
         }
         int len = word.length() - 1;
+        Selection selection = answer.selection;
         Position pos = selection.position;
         for (int x = pos.x, y = pos.y, i=0; i <= len; i++) {
             if (!mGrid[x][y].erase(word.charAt(i))) {
@@ -82,7 +82,9 @@ public class PuzzleGrid {
             x += selection.direction.x;
             y += selection.direction.y;
         }
+        // TODO: add score
         mWords.remove(word);
+        answer.notifyScoreClaimed();
         return true;
     }
 
@@ -200,14 +202,5 @@ public class PuzzleGrid {
      */
     public Cell getCell(int x, int y) {
         return mGrid[x][y];
-    }
-
-    /**
-     * Get all the words in puzzle grid
-     */
-    public String[] getWords() {
-        String[] words = mWords.keySet().toArray(new String[mWords.size()]);
-        Arrays.sort(words);
-        return words;
     }
 }

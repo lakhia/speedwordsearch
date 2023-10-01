@@ -51,4 +51,9 @@ public class Position {
     public boolean equals(int xVal, int yVal) {
         return x == xVal && y == yVal;
     }
+
+    @Override
+    public int hashCode() {
+        return x * 31 + y;
+    }
 }

@@ -20,13 +20,16 @@ import creationsahead.speedwordsearch.Game;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.Selection;
+import creationsahead.speedwordsearch.Answer;
+import creationsahead.speedwordsearch.AnswerCallback;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Primary activity for game play
  */
-public class GameActivity extends Activity implements View.OnClickListener, DrawCallback {
+public class GameActivity extends Activity implements View.OnClickListener,
+    DrawCallback, AnswerCallback {
     private int lastX = -1, lastY = -1;
     private View lastSelection = null;
     private Game game;
@@ -50,7 +53,6 @@ public class GameActivity extends Activity implements View.OnClickListener, Draw
                 InputStream inputStream = getAssets().open("words_124k.db");
                 ProgressTracker.init(inputStream);
                 createGrid();
-                createWordList();
             } catch (IOException ignored) {
                 Toast.makeText(this, "Unable to load words", Toast.LENGTH_LONG).show();
             }
@@ -58,16 +60,6 @@ public class GameActivity extends Activity implements View.OnClickListener, Draw
             topLayout.removeAllViews();
             topLayout.addView(puzzleLayout);
             topLayout.addView(wordLayout);
-        }
-    }
-
-    private void createWordList() {
-        String[] words = game.getWords();
-        for (String word: words) {
-            ContextThemeWrapper newContext = new ContextThemeWrapper(this, R.style.WordList);
-            TextView textView = new TextView(newContext, null);
-            textView.setText(word);
-            wordLayout.addView(textView);
         }
     }
 
@@ -83,6 +75,7 @@ public class GameActivity extends Activity implements View.OnClickListener, Draw
         getWindowManager().getDefaultDisplay().getSize(displaySize);
         int numCells = ProgressTracker.getCurrentConfig().sizeX;
         int cellSize = Math.min(displaySize.x, displaySize.y) / numCells;
+        Answer.callback = this;
 
         game = ProgressTracker.getCurrentGame();
         game.populatePuzzle(5, 20);
@@ -118,6 +111,7 @@ public class GameActivity extends Activity implements View.OnClickListener, Draw
     protected void onDestroy() {
         super.onDestroy();
         Cell.callback = null;
+        Answer.callback = null;
     }
 
     @Override
@@ -155,5 +149,19 @@ public class GameActivity extends Activity implements View.OnClickListener, Draw
             TextView textView = (TextView) cell.tag;
             textView.setText(cell.toString());
         });
+    }
+
+    @Override
+    public void onUpdate(Answer answer) {
+        if (answer.tag == null) {
+            ContextThemeWrapper newContext = new ContextThemeWrapper(this, R.style.WordList);
+            TextView textView = new TextView(newContext, null);
+            textView.setText(answer.word);
+            wordLayout.addView(textView);
+            answer.tag = textView;
+        } else {
+            View view = (View) answer.tag;
+            wordLayout.removeView(view);
+        }
     }
 }
