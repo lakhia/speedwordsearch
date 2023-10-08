@@ -8,6 +8,7 @@ import java.io.InputStream;
 public class ProgressTracker {
     private static final int MAX_LEVEL = 10;
     private static int currentLevel = 0;
+    private static int currentScore = 0;
     private static Game currentGame;
     private static Config currentConfig;
 
@@ -47,6 +48,27 @@ public class ProgressTracker {
     public static void incrementLevel() {
         currentLevel++;
         reset();
+    }
+
+    /**
+     * Get current score
+     */
+    public static int getCurrentScore() {
+        return currentScore;
+    }
+
+    /**
+     * Score ranges from 5 to 10 points, and bigger words score less
+     */
+    public static int computeScore(String word) {
+        return 11 - word.length()/2;
+    }
+
+    /**
+     * Add score to current user score
+     */
+    public static void addScore(int score) {
+        currentScore += score;
     }
 
     private static void reset() {

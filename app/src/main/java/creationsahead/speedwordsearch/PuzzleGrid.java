@@ -57,8 +57,8 @@ public class PuzzleGrid {
             y += dir.y;
         }
 
-        // TODO: compute score
-        mWords.put(word, new Answer(selection, word, 5));
+        int score = ProgressTracker.computeScore(word);
+        mWords.put(word, new Answer(selection, word, score));
         return true;
     }
 
@@ -82,8 +82,8 @@ public class PuzzleGrid {
             x += selection.direction.x;
             y += selection.direction.y;
         }
-        // TODO: add score
         mWords.remove(word);
+        ProgressTracker.addScore(answer.score);
         answer.notifyScoreClaimed();
         return true;
     }
