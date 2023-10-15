@@ -1,38 +1,32 @@
 package creationsahead.speedwordsearch;
 
-import java.io.InputStream;
-
 /**
  * Tracks progress and manages instance of current game
  */
 public class ProgressTracker {
+    public static final String SCORE = "score";
+    public static final String LEVEL = "level";
+    /** Current game */
+    public static Game game;
+    /** Current game's configuration */
+    public static Config config;
+
     private static final int MAX_LEVEL = 10;
     private static int currentLevel = 0;
     private static int currentScore = 0;
-    private static Game currentGame;
-    private static Config currentConfig;
+    private static StorageInterface storageInterface;
 
     /**
-     * Initialize progress tracker and load dictionary of words
-     * @param inputStream InputStream of words to load
+     * Initialize progress tracker and use storage interface to load words
+     * @param storageInterface InputStream of words to load
      */
-    public static void init(InputStream inputStream) {
-        WordList.init(inputStream);
-        reset();
-    }
+    public static void init(StorageInterface storageInterface, int seed) {
+        ProgressTracker.storageInterface = storageInterface;
+        currentScore = storageInterface.getPreference(SCORE);
+        currentLevel = storageInterface.getPreference(LEVEL);
+        WordList.init(storageInterface.getAssetInputStream("words_9k.db"));
 
-    /**
-     * Get current configuration
-     */
-    public static Config getCurrentConfig() {
-        return currentConfig;
-    }
-
-    /**
-     * Get current game instance
-     */
-    public static Game getCurrentGame() {
-        return currentGame;
+        reset(seed);
     }
 
     /**
@@ -45,9 +39,11 @@ public class ProgressTracker {
     /**
      * User has finished current level
      */
-    public static void incrementLevel() {
+    public static void incrementLevel(int seed) {
         currentLevel++;
-        reset();
+        storageInterface.storePreference(LEVEL, currentLevel);
+        storageInterface.storePreference(SCORE, currentScore);
+        reset(seed);
     }
 
     /**
@@ -71,16 +67,16 @@ public class ProgressTracker {
         currentScore += score;
     }
 
-    private static void reset() {
+    private static void reset(int seed) {
         if (currentLevel > MAX_LEVEL) {
-            currentGame = null;
-            currentConfig = null;
+            game = null;
+            config = null;
         } else {
-            currentConfig = new Config(currentLevel + 5,
-                                       currentLevel + 5,
-                                       WordList.dictionary,
-                                       5);
-            currentGame = new Game(currentConfig);
+            config = new Config(currentLevel + 5,
+                                currentLevel + 5,
+                                WordList.dictionary,
+                                seed);
+            game = new Game(config);
         }
     }
 }

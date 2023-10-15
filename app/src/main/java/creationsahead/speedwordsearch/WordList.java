@@ -2,20 +2,18 @@ package creationsahead.speedwordsearch;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.zip.GZIPInputStream;
+import java.io.Reader;
 
 public class WordList {
     public static Trie dictionary;
 
-    public static void init(InputStream inputStream) {
+    public static void init(Reader inputStream) {
         dictionary = new Trie();
+        BufferedReader bufferedReader = new BufferedReader(inputStream);
+
         try {
             String line;
-            BufferedReader input = new BufferedReader(
-                new InputStreamReader(new GZIPInputStream(inputStream)));
-            while((line = input.readLine()) != null) {
+            while((line = bufferedReader.readLine()) != null) {
                 dictionary.insert(line);
             }
         } catch (IOException ignored) {

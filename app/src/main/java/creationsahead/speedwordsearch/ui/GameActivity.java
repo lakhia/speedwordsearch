@@ -14,16 +14,14 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import creationsahead.speedwordsearch.Answer;
+import creationsahead.speedwordsearch.AnswerCallback;
 import creationsahead.speedwordsearch.Cell;
 import creationsahead.speedwordsearch.DrawCallback;
 import creationsahead.speedwordsearch.Game;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.Selection;
-import creationsahead.speedwordsearch.Answer;
-import creationsahead.speedwordsearch.AnswerCallback;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Primary activity for game play
@@ -49,13 +47,7 @@ public class GameActivity extends Activity implements View.OnClickListener,
         if (puzzleLayout == null || wordLayout == null) {
             puzzleLayout = findViewById(R.id.puzzleLayout);
             wordLayout = findViewById(R.id.wordsListLayout);
-            try {
-                InputStream inputStream = getAssets().open("words_124k.db");
-                ProgressTracker.init(inputStream);
-                createGrid();
-            } catch (IOException ignored) {
-                Toast.makeText(this, "Unable to load words", Toast.LENGTH_LONG).show();
-            }
+            createGrid();
         } else {
             topLayout.removeAllViews();
             topLayout.addView(puzzleLayout);
@@ -73,11 +65,11 @@ public class GameActivity extends Activity implements View.OnClickListener,
     public void createGrid() {
         Point displaySize = new Point();
         getWindowManager().getDefaultDisplay().getSize(displaySize);
-        int numCells = ProgressTracker.getCurrentConfig().sizeX;
+        int numCells = ProgressTracker.config.sizeX;
         int cellSize = Math.min(displaySize.x, displaySize.y) / numCells;
         Answer.callback = this;
 
-        game = ProgressTracker.getCurrentGame();
+        game = ProgressTracker.game;
         game.populatePuzzle(5, 20);
         game.populatePuzzle(4, 10);
 
