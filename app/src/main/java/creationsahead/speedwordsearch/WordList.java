@@ -1,5 +1,6 @@
 package creationsahead.speedwordsearch;
 
+import android.support.annotation.NonNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -7,7 +8,7 @@ import java.io.Reader;
 public class WordList {
     public static Trie dictionary;
 
-    public static void init(Reader inputStream) {
+    public static void init(@NonNull Reader inputStream) {
         dictionary = new Trie();
         BufferedReader bufferedReader = new BufferedReader(inputStream);
 

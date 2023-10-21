@@ -1,5 +1,7 @@
 package creationsahead.speedwordsearch;
 
+import android.support.annotation.NonNull;
+
 /**
  * Indicates a position in a grid
  */
@@ -19,7 +21,7 @@ public class Position {
         return (x >= 0 && y >= 0 && x < maxX && y < maxY);
     }
 
-    public int getDistanceToBoundary(Direction direction, int maxX, int maxY) {
+    public int getDistanceToBoundary(@NonNull Direction direction, int maxX, int maxY) {
         int xDist = maxX, yDist = maxY;
         if (direction.x == 1) {
             xDist = maxX - x;
@@ -43,6 +45,7 @@ public class Position {
         return false;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";

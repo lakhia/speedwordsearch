@@ -1,5 +1,7 @@
 package creationsahead.speedwordsearch;
 
+import android.support.annotation.NonNull;
+
 /**
  * Indicates a selection in a grid
  */
@@ -8,6 +10,7 @@ public class Selection {
     public final Direction direction;
     public final int length;
 
+    @NonNull
     @Override
     public String toString() {
         return "pos: " + position.toString() + ", dir: " + direction + ", len: " + length;
@@ -29,7 +32,7 @@ public class Selection {
         return Selection.inBounds(position, direction, sizeX, sizeY, length);
     }
 
-    public static boolean inBounds(Position position, Direction direction,
+    public static boolean inBounds(@NonNull Position position, @NonNull Direction direction,
                                    int sizeX, int sizeY, int length) {
         if (!position.inBounds(sizeX, sizeY)) {
             return false;
@@ -73,6 +76,7 @@ public class Selection {
      * Change the selection so that start and end are flipped
      * @return New flipped selection
      */
+    @NonNull
     public Selection flipped() {
         Direction newDir = direction.negate();
         return new Selection(position.x + direction.x * (length-1),

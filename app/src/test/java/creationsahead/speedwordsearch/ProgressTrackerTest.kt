@@ -17,14 +17,14 @@ class ProgressTrackerTest {
         var map: HashMap<String, Int> = HashMap()
 
         override fun getPreference(key: String): Int {
-            return map.get(key) ?: return 0
+            return map[key] ?: return 0
         }
 
         override fun storePreference(key: String, score: Int) {
             map.put(key, score)
         }
 
-        override fun getAssetInputStream(name: String): Reader? {
+        override fun getAssetInputStream(name: String): Reader {
             return StringReader("ONE\nTWO\nTHREE")
         }
     }

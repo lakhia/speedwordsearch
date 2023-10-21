@@ -1,42 +1,87 @@
 package creationsahead.speedwordsearch;
 
+import android.support.annotation.NonNull;
+
 /**
  * A game manages the puzzle grid
  */
 public class Game {
-    private final PuzzleGrid mGrid;
+    @NonNull private final PuzzleGrid mGrid;
     private final Config mConfig;
     private boolean success;
+    private int letterCount;
 
     /**
      * Construct a game with a square puzzle grid
      */
     public Game(Config config) {
+        letterCount = 0;
         mGrid = new PuzzleGrid(config);
         mConfig = config;
     }
 
     /**
-     * Populate an empty puzzle
-     * @param size size of square grid
-     * @param maxIterations use iterations specified or less
-     * @return true if last iteration added at least 1 letter
+     * Populate entire puzzle based on configuration
      */
-    public boolean populatePuzzle(final int size, int maxIterations) {
-        for (int i = 0; i < maxIterations; i++) {
-            success = false;
-            mGrid.findEmptyCell(size, (selection, contents) -> {
-                mConfig.dictionary.searchWithWildcards(contents, mConfig.sequencer, result -> {
-                    success = mGrid.addWord(selection, result);
-                    return success;
-                });
-                return success;
-            });
-            if (!success) {
-                return false;
+    public void populatePuzzle() {
+        int letterLimit = mConfig.sizeX * mConfig.sizeY * mConfig.letterRatio / 100;
+        int maxSize = mConfig.sizeX;
+        int minSize = mConfig.sizeX;
+        while (letterCount < letterLimit) {
+            if (!addOneWord(minSize, maxSize)) {
+                maxSize--;
+                minSize--;
+                if (minSize < 2) {
+                    break;
+                }
             }
         }
-        return true;
+    }
+
+    /**
+     * Fill all the empty cells with random letters
+     * TODO: Currently replaces placeholder cells too
+     */
+    public void fillEmptyCells() {
+        // Need indirection to allow modification in lambda function
+        final int[][] letterSeq = { mConfig.sequencer.getNextLetterSequence() };
+        final int[] index = { 0 };
+        mGrid.findEmptyCell((position) -> {
+            char letter = (char) ('A' + letterSeq[0][index[0]]);
+            if (!mGrid.addLetter(position, letter)) {
+                throw new RuntimeException("Could not add letter");
+            }
+            index[0]++;
+            if (index[0] >= letterSeq[0].length) {
+                index[0] = 0;
+                letterSeq[0] = mConfig.sequencer.getNextLetterSequence();
+            }
+            return false;
+        });
+    }
+
+    /**
+     * Populate an empty puzzle
+     * @param maxSize size of square grid
+     * @return true if last iteration added at least 1 letter
+     */
+    public boolean addOneWord(final int minSize, final int maxSize) {
+        success = false;
+        mGrid.findEmptyCell(maxSize, (selection, contents) -> {
+            mConfig.dictionary.searchWithWildcards(contents, mConfig.sequencer, result -> {
+                int len = result.length();
+                if (len < minSize) {
+                    return false;
+                }
+                success = mGrid.addWord(selection, result);
+                if (success) {
+                    letterCount += len;
+                }
+                return success;
+            });
+            return success;
+        });
+        return success;
     }
 
     /**
@@ -54,9 +99,7 @@ public class Game {
     public boolean guess(Selection selection) {
         // Use placeholder letters to find word so that accidental words are found
         String answer = mGrid.findContents(selection, false);
-        // Account for selection made in flipped order
-        String altAnswer = mGrid.findContents(selection.flipped(), false);
-        return mGrid.removeWord(answer) || mGrid.removeWord(altAnswer);
+        return mGrid.removeWord(answer);
     }
 
     @Override

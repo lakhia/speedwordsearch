@@ -24,14 +24,11 @@ public class GameApplication extends Application implements StorageInterface {
         ProgressTracker.init(this, 5);
     }
 
+    @NonNull
     @Override
-    public Reader getAssetInputStream(@NonNull String fileName) {
-        try {
-            InputStream inputStream = getAssets().open(fileName);
-            return new InputStreamReader(new GZIPInputStream(inputStream));
-        } catch (IOException ignored) {
-        }
-        return null;
+    public Reader getAssetInputStream(@NonNull String fileName) throws IOException {
+        InputStream inputStream = getAssets().open(fileName);
+        return new InputStreamReader(new GZIPInputStream(inputStream));
     }
 
     @Override
@@ -41,8 +38,8 @@ public class GameApplication extends Application implements StorageInterface {
     }
 
     @Override
-    public void storePreference(@NonNull String key, int score) {
+    public void storePreference(@NonNull String key, int val) {
         SharedPreferences prefs = getSharedPreferences(getClass().getName(), Context.MODE_PRIVATE);
-        prefs.edit().putInt(key, score).apply();
+        prefs.edit().putInt(key, val).apply();
     }
 }

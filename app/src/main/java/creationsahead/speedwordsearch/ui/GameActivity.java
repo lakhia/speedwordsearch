@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -29,7 +30,7 @@ import creationsahead.speedwordsearch.Selection;
 public class GameActivity extends Activity implements View.OnClickListener,
     DrawCallback, AnswerCallback {
     private int lastX = -1, lastY = -1;
-    private View lastSelection = null;
+    @Nullable private View lastSelection = null;
     private Game game;
     private TableLayout puzzleLayout;
     private GridLayout wordLayout;
@@ -62,7 +63,7 @@ public class GameActivity extends Activity implements View.OnClickListener,
         initUI();
     }
 
-    public void createGrid() {
+    private void createGrid() {
         Point displaySize = new Point();
         getWindowManager().getDefaultDisplay().getSize(displaySize);
         int numCells = ProgressTracker.config.sizeX;
@@ -70,8 +71,7 @@ public class GameActivity extends Activity implements View.OnClickListener,
         Answer.callback = this;
 
         game = ProgressTracker.game;
-        game.populatePuzzle(5, 20);
-        game.populatePuzzle(4, 10);
+        game.populatePuzzle();
 
         ViewGroup.LayoutParams params = puzzleLayout.getLayoutParams();
         params.width = cellSize * numCells;
@@ -107,7 +107,7 @@ public class GameActivity extends Activity implements View.OnClickListener,
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(@NonNull View view) {
         int currentX = (int) view.getTag(R.string.row);
         int currentY = (int) view.getTag(R.string.column);
 
@@ -136,15 +136,13 @@ public class GameActivity extends Activity implements View.OnClickListener,
     }
 
     @Override
-    public void onInvalidated(final Cell cell) {
-        runOnUiThread(() -> {
-            TextView textView = (TextView) cell.tag;
-            textView.setText(cell.toString());
-        });
+    public void onInvalidated(@NonNull final Cell cell) {
+        TextView textView = (TextView) cell.tag;
+        textView.setText(cell.toString());
     }
 
     @Override
-    public void onUpdate(Answer answer) {
+    public void onUpdate(@NonNull Answer answer) {
         if (answer.tag == null) {
             ContextThemeWrapper newContext = new ContextThemeWrapper(this, R.style.WordList);
             TextView textView = new TextView(newContext, null);
@@ -154,6 +152,11 @@ public class GameActivity extends Activity implements View.OnClickListener,
         } else {
             View view = (View) answer.tag;
             wordLayout.removeView(view);
+            if (wordLayout.getChildCount() == 0) {
+                // Win
+                // TODO: seed and restart new game
+                ProgressTracker.incrementLevel(1);
+            }
         }
     }
 }

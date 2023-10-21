@@ -1,6 +1,7 @@
 package creationsahead.speedwordsearch;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import java.util.HashMap;
 
 import static creationsahead.speedwordsearch.Direction.ALL_DIRECTIONS;
@@ -9,14 +10,14 @@ import static creationsahead.speedwordsearch.Direction.ALL_DIRECTIONS;
  * A puzzle grid
  */
 public class PuzzleGrid {
-    private final Cell[][] mGrid;
-    private final HashMap<String, Answer> mWords;
-    private final Config mConfig;
+    @NonNull private final Cell[][] mGrid;
+    @NonNull private final HashMap<String, Answer> mWords;
+    @NonNull private final Config mConfig;
 
     /**
      * Create a grid using specified x and y size
      */
-    public PuzzleGrid(Config config) {
+    public PuzzleGrid(@NonNull Config config) {
         mConfig = config;
         mGrid = new Cell[config.sizeX][config.sizeY];
         mWords = new HashMap<>();
@@ -28,11 +29,21 @@ public class PuzzleGrid {
     }
 
     /**
+     * Add a letter as placeholder
+     * @param position where letter is inserted
+     * @param letter letter to be added
+     * @return true if store was successful
+     */
+    public boolean addLetter(@NonNull Position position, char letter) {
+        return mGrid[position.x][position.y].storePlaceholder(letter);
+    }
+
+    /**
      * Add word to grid in specified direction and coordinates
      * @return True if successfully added
      * @throws RuntimeException if word is partially added
      */
-    public boolean addWord(Selection selection, String word) {
+    public boolean addWord(@NonNull Selection selection, @NonNull String word) {
         // Cannot add same word twice
         if (mWords.containsKey(word)) {
             return false;
@@ -67,7 +78,7 @@ public class PuzzleGrid {
      * @return True if successfully removed
      * @throws RuntimeException if word is partially removed
      */
-    public boolean removeWord(String word) {
+    public boolean removeWord(@NonNull String word) {
         Answer answer = mWords.get(word);
         if (answer == null) {
             return false;
@@ -92,8 +103,10 @@ public class PuzzleGrid {
      * Find an empty cell based on randomness controlled by sequencer
      * @param callback called for each valid empty position
      * @return Position that indicates vacant cell coordinates
+     * TODO: Method currently finds unused/placeholder cells too
      */
-    public Position findEmptyCell(PositionCallback callback) {
+    @Nullable
+    public Position findEmptyCell(@Nullable PositionCallback callback) {
         int rows[] = mConfig.sequencer.getNextCoordinateSequence();
         for (int x : rows) {
             int cols[] = mConfig.sequencer.getNextCoordinateSequence();
@@ -166,7 +179,8 @@ public class PuzzleGrid {
      * @param searchValue if true, placeholders become blanks
      * @return String with blanks and letters
      */
-    public String findContents(Selection selection, boolean searchValue) {
+    @NonNull
+    public String findContents(@NonNull Selection selection, boolean searchValue) {
         int x = selection.position.x, y = selection.position.y;
         StringBuilder result = new StringBuilder();
         Direction dir = selection.direction;
@@ -185,6 +199,7 @@ public class PuzzleGrid {
         return result.toString();
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

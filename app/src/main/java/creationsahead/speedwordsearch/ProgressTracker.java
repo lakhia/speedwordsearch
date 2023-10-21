@@ -1,15 +1,19 @@
 package creationsahead.speedwordsearch;
 
+import android.support.annotation.NonNull;
+import java.io.IOException;
+
 /**
  * Tracks progress and manages instance of current game
+ * TODO: Fix null initialization of NonNull fields
  */
 public class ProgressTracker {
     public static final String SCORE = "score";
     public static final String LEVEL = "level";
     /** Current game */
-    public static Game game;
+    @NonNull public static Game game;
     /** Current game's configuration */
-    public static Config config;
+    @NonNull public static Config config;
 
     private static final int MAX_LEVEL = 10;
     private static int currentLevel = 0;
@@ -20,13 +24,15 @@ public class ProgressTracker {
      * Initialize progress tracker and use storage interface to load words
      * @param storageInterface InputStream of words to load
      */
-    public static void init(StorageInterface storageInterface, int seed) {
+    public static void init(@NonNull StorageInterface storageInterface, int seed) {
         ProgressTracker.storageInterface = storageInterface;
         currentScore = storageInterface.getPreference(SCORE);
         currentLevel = storageInterface.getPreference(LEVEL);
-        WordList.init(storageInterface.getAssetInputStream("words_9k.db"));
-
-        reset(seed);
+        try {
+            WordList.init(storageInterface.getAssetInputStream("words_9k.db"));
+            reset(seed);
+        } catch (IOException ignored) {
+        }
     }
 
     /**
@@ -56,7 +62,7 @@ public class ProgressTracker {
     /**
      * Score ranges from 5 to 10 points, and bigger words score less
      */
-    public static int computeScore(String word) {
+    public static int computeScore(@NonNull String word) {
         return 11 - word.length()/2;
     }
 
@@ -68,14 +74,12 @@ public class ProgressTracker {
     }
 
     private static void reset(int seed) {
-        if (currentLevel > MAX_LEVEL) {
-            game = null;
-            config = null;
-        } else {
+        if (currentLevel < MAX_LEVEL) {
             config = new Config(currentLevel + 5,
                                 currentLevel + 5,
                                 WordList.dictionary,
-                                seed);
+                                seed,
+                                100 * currentLevel / MAX_LEVEL);
             game = new Game(config);
         }
     }

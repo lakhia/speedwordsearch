@@ -1,13 +1,16 @@
 package creationsahead.speedwordsearch;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * A cell in a puzzle grid contains a letter and reference count
  */
 public class Cell {
-    public static DrawCallback callback;
+    @Nullable public static DrawCallback callback;
     public static final char EMPTY = '.';
     public char letter;
-    public Object tag;
+    @Nullable public Object tag;
     private int refCount;
 
     public Cell() {
@@ -82,6 +85,7 @@ public class Cell {
     /**
      * Returns display value of cell
      */
+    @NonNull
     @Override
     public String toString() {
         return letter + " ";

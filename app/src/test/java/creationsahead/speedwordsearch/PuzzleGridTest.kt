@@ -10,7 +10,7 @@ import org.junit.Test
  */
 class PuzzleGridTest {
     fun fill_grid(): PuzzleGrid {
-        val config = Config(4, 4, null, 0)
+        val config = Config(4, 4, null, 0, 1)
         val grid = PuzzleGrid(config)
         grid.addWord(Selection(0, 0, Direction.EAST, 4), "test")
         grid.addWord(Selection(3, 0, Direction.SOUTH, 4), "tart")
@@ -23,7 +23,7 @@ class PuzzleGridTest {
 
     @Test
     fun test_01_duplicates() {
-        val config = Config(6, 3, null, 0)
+        val config = Config(6, 3, null, 0, 1)
         val grid = PuzzleGrid(config)
         val empty =
                 ". . . . . . \n" +
@@ -66,7 +66,7 @@ class PuzzleGridTest {
 
     @Test
     fun test_03_insert_diagonal() {
-        val config = Config(4, 4, null, 0)
+        val config = Config(4, 4, null, 0, 1)
         val grid = PuzzleGrid(config)
         grid.addWord(Selection(0, 0, Direction.SOUTH_EAST, 4), "test")
         grid.addWord(Selection(2, 0, Direction.SOUTH_WEST, 3), "yes")
@@ -102,7 +102,7 @@ class PuzzleGridTest {
 
     @Test
     fun test_04_no_successful_inserts() {
-        val config = Config(4, 4, null, 0)
+        val config = Config(4, 4, null, 0, 1)
         val grid = PuzzleGrid(config)
         grid.addWord(Selection(1, 0, Direction.EAST, 4), "test")
         grid.addWord(Selection(0, 1, Direction.SOUTH, 4), "test")
@@ -135,8 +135,9 @@ class PuzzleGridTest {
         grid.removeWord("afar")
 
         pos = grid.findEmptyCell(null)
-        assertEquals(3, pos.x)
-        assertEquals(2, pos.y)
+        assertNotNull(pos)
+        assertEquals(3, pos?.x)
+        assertEquals(2, pos?.y)
     }
 
     @Test
@@ -144,17 +145,38 @@ class PuzzleGridTest {
         val grid = fill_grid()
 
         var content: String
-        content = grid.findContents(Selection(3,3, Direction.WEST, 4), true)
+        content = grid.findContents(Selection(3, 3, Direction.WEST, 4), true)
         assertEquals("take", content)
-        content = grid.findContents(Selection(3,2, Direction.NORTH_WEST, 3), true)
+        content = grid.findContents(Selection(3, 2, Direction.NORTH_WEST, 3), true)
         assertEquals("rge", content)
-        content = grid.findContents(Selection(0,0, Direction.SOUTH_EAST, 4), true)
+        content = grid.findContents(Selection(0, 0, Direction.SOUTH_EAST, 4), true)
         assertEquals("taat", content)
-        content = grid.findContents(Selection(0,3, Direction.NORTH, 4), true)
+        content = grid.findContents(Selection(0, 3, Direction.NORTH, 4), true)
         assertEquals("east", content)
 
         grid.removeWord("afar")
-        content = grid.findContents(Selection(1,0, Direction.SOUTH, 4), true)
+        content = grid.findContents(Selection(1, 0, Direction.SOUTH, 4), true)
         assertEquals("ea.k", content)
+    }
+
+    @Test
+    fun test_07_get_cell() {
+        val grid = fill_grid()
+
+        // Get a cell and verify stats
+        var cell = grid.getCell(0,0)
+        assertEquals('t', cell.letter)
+        assertEquals(false, cell.isUnused)
+        assertEquals(false, cell.isEmpty)
+        assertEquals(false, cell.store('b'))
+        assertEquals(false, cell.storePlaceholder('b'))
+        assertEquals('t', cell.letter)
+
+        cell = grid.getCell(3,3)
+        assertEquals('t', cell.letter)
+
+        // Add a letter
+        assertFalse(grid.addLetter(Position(0, 0), 'b'))
+        assertTrue(grid.addLetter(Position(0, 0), 't'))
     }
 }

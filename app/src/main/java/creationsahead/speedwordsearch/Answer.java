@@ -1,14 +1,17 @@
 package creationsahead.speedwordsearch;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * A word that is stored in puzzle grid
  */
 public class Answer {
-    public static AnswerCallback callback;
+    @Nullable public static AnswerCallback callback;
     public final String word;
     public final Selection selection;
     public final int score;
-    public Object tag;
+    @Nullable public Object tag;
 
     /**
      * When word is added and assigned a score
@@ -29,5 +32,11 @@ public class Answer {
         if (callback != null) {
             callback.onUpdate(this);
         }
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return selection.toString() + ", word: " + word;
     }
 }

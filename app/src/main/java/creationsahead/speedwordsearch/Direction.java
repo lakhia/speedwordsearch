@@ -1,5 +1,7 @@
 package creationsahead.speedwordsearch;
 
+import android.support.annotation.NonNull;
+
 /**
  * Enum indicating direction of word
  */
@@ -35,6 +37,7 @@ public enum Direction {
     /**
      * Given a direction, return the opposite direction
      */
+    @NonNull
     public Direction negate() {
         return find(-x, -y);
     }
@@ -42,6 +45,7 @@ public enum Direction {
     /**
      * Given x and y, find the Direction
      */
+    @NonNull
     public static Direction find(int x, int y) {
         switch (x*10 + y) {
             case 1:

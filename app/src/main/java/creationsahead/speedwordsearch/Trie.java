@@ -1,5 +1,8 @@
 package creationsahead.speedwordsearch;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * Trie to store dictionary words for quick searching
  *
@@ -27,7 +30,7 @@ public class Trie {
     }
 
     // Inserts a word into the trie.
-    public void insert(String word) {
+    public void insert(@NonNull String word) {
         TrieNode p = root;
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
@@ -44,7 +47,9 @@ public class Trie {
     }
 
     // Returns string that searches for string with wildcards
-    public String searchWithWildcards(String s, Sequencer sequencer, ValidateCallback callback) {
+    @Nullable
+    public String searchWithWildcards(@NonNull String s, @NonNull Sequencer sequencer,
+                                      ValidateCallback callback) {
         try {
             return searchWithWildcards(root, s, "", sequencer, callback);
         } catch (IllegalMonitorStateException ex) {
@@ -52,8 +57,9 @@ public class Trie {
         }
     }
 
-    private String searchWithWildcards(TrieNode p, String query, String result, Sequencer sequencer,
-                                       ValidateCallback callback) {
+    private String searchWithWildcards(@NonNull TrieNode p, @NonNull String query,
+                                       String result, @NonNull Sequencer sequencer,
+                                       @Nullable ValidateCallback callback) {
         // Base case
         if (query.isEmpty()) {
             return p.isEnd ? result : null;

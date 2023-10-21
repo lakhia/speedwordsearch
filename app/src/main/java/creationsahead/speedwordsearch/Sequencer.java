@@ -1,5 +1,6 @@
 package creationsahead.speedwordsearch;
 
+import android.support.annotation.NonNull;
 import java.util.Random;
 
 /**
@@ -61,7 +62,7 @@ public class Sequencer {
         }
     }
 
-    private void shuffle(int[] array) {
+    private void shuffle(@NonNull int[] array) {
         for (int i = array.length - 1; i > 0; i--) {
             int index = coordinateRandomGen.nextInt(i + 1);
             int temp = array[index];
