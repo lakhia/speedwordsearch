@@ -21,7 +21,7 @@ public class GameApplication extends Application implements StorageInterface {
     @Override
     public void onCreate() {
         super.onCreate();
-        ProgressTracker.init(this, 5);
+        ProgressTracker.getInstance().init(this);
     }
 
     @NonNull

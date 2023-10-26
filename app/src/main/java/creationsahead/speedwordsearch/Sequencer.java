@@ -38,7 +38,7 @@ public class Sequencer {
         {3,4,6,2,5,1,7,0},
         {6,5,2,7,0,4,3,1},
     };
-    private static int[][] coordinateCombinations;
+    private int[][] coordinateCombinations;
 
     private Random letterRandomGen;
     private Random coordinateRandomGen;

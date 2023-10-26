@@ -13,14 +13,16 @@ public class PuzzleGrid {
     @NonNull private final Cell[][] mGrid;
     @NonNull private final HashMap<String, Answer> mWords;
     @NonNull private final Config mConfig;
+    @NonNull private final ScoreInterface mScoreTracker;
 
     /**
      * Create a grid using specified x and y size
      */
-    public PuzzleGrid(@NonNull Config config) {
+    public PuzzleGrid(@NonNull Config config, @NonNull ScoreInterface scoreInterface) {
         mConfig = config;
         mGrid = new Cell[config.sizeX][config.sizeY];
         mWords = new HashMap<>();
+        mScoreTracker = scoreInterface;
         for (int x=0; x < config.sizeX; x++) {
             for (int y=0; y < config.sizeY; y++) {
                 mGrid[x][y] = new Cell();
@@ -68,7 +70,7 @@ public class PuzzleGrid {
             y += dir.y;
         }
 
-        int score = ProgressTracker.computeScore(word);
+        int score = mScoreTracker.computeScore(word);
         mWords.put(word, new Answer(selection, word, score));
         return true;
     }
@@ -94,7 +96,7 @@ public class PuzzleGrid {
             y += selection.direction.y;
         }
         mWords.remove(word);
-        ProgressTracker.addScore(answer.score);
+        mScoreTracker.addScore(answer.score);
         answer.notifyScoreClaimed();
         return true;
     }

@@ -14,9 +14,9 @@ public class Game {
     /**
      * Construct a game with a square puzzle grid
      */
-    public Game(Config config) {
+    public Game(Config config, ScoreInterface scoreInterface) {
         letterCount = 0;
-        mGrid = new PuzzleGrid(config);
+        mGrid = new PuzzleGrid(config, scoreInterface);
         mConfig = config;
     }
 

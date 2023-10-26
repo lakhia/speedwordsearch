@@ -9,9 +9,10 @@ import org.junit.Test
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class PuzzleGridTest {
+
     fun fill_grid(): PuzzleGrid {
         val config = Config(4, 4, null, 0, 1)
-        val grid = PuzzleGrid(config)
+        val grid = PuzzleGrid(config, Scoring())
         grid.addWord(Selection(0, 0, Direction.EAST, 4), "test")
         grid.addWord(Selection(3, 0, Direction.SOUTH, 4), "tart")
         grid.addWord(Selection(3, 3, Direction.WEST, 4), "take")
@@ -24,7 +25,8 @@ class PuzzleGridTest {
     @Test
     fun test_01_duplicates() {
         val config = Config(6, 3, null, 0, 1)
-        val grid = PuzzleGrid(config)
+        val scoring = Scoring()
+        val grid = PuzzleGrid(config, scoring)
         val empty =
                 ". . . . . . \n" +
                 ". . . . . . \n" +
@@ -36,6 +38,7 @@ class PuzzleGridTest {
         assertFalse(grid.addWord(Selection(2, 0, Direction.EAST, 4), "test"))
         assertTrue(grid.removeWord("test"))
         assertEquals(empty, grid.toString())
+        assertEquals(5, scoring.totalScore)
 
         // Add again
         assertTrue(grid.addWord(Selection(1, 0, Direction.EAST, 4), "test"))
@@ -67,7 +70,8 @@ class PuzzleGridTest {
     @Test
     fun test_03_insert_diagonal() {
         val config = Config(4, 4, null, 0, 1)
-        val grid = PuzzleGrid(config)
+        var scoring = Scoring()
+        val grid = PuzzleGrid(config, scoring)
         grid.addWord(Selection(0, 0, Direction.SOUTH_EAST, 4), "test")
         grid.addWord(Selection(2, 0, Direction.SOUTH_WEST, 3), "yes")
         grid.addWord(Selection(1, 3, Direction.NORTH_EAST, 3), "ask")
@@ -89,6 +93,7 @@ class PuzzleGridTest {
         assertFalse(grid.removeWord("tok"))
         assertFalse(grid.removeWord("kakt"))
         assertEquals(string, grid.toString())
+        assertEquals(0, scoring.totalScore)
 
         // Remove words
         grid.removeWord("test")
@@ -103,7 +108,7 @@ class PuzzleGridTest {
     @Test
     fun test_04_no_successful_inserts() {
         val config = Config(4, 4, null, 0, 1)
-        val grid = PuzzleGrid(config)
+        val grid = PuzzleGrid(config, Scoring())
         grid.addWord(Selection(1, 0, Direction.EAST, 4), "test")
         grid.addWord(Selection(0, 1, Direction.SOUTH, 4), "test")
         grid.addWord(Selection(2, 0, Direction.WEST, 4), "test")

@@ -32,40 +32,42 @@ class ProgressTrackerTest {
     @Test
     fun test_01_init() {
         val storage = Storage()
-        ProgressTracker.init(storage, 5)
+        val progress = ProgressTracker.getInstance()
+        progress.init(storage)
 
-        assertNotNull(ProgressTracker.config)
-        assertNotNull(ProgressTracker.config.dictionary)
-        assertNotNull(ProgressTracker.config.sequencer)
-        assertEquals(5, ProgressTracker.config.sizeX)
-        assertEquals(5, ProgressTracker.config.sizeY)
+        assertNotNull(progress.config)
+        assertNotNull(progress.config.dictionary)
+        assertNotNull(progress.config.sequencer)
+        assertEquals(5, progress.config.sizeX)
+        assertEquals(5, progress.config.sizeY)
 
-        assertNotNull(ProgressTracker.game)
+        assertNotNull(progress.game)
     }
 
     @Test
     fun test_02_progress() {
         val storage = Storage()
-        ProgressTracker.init(storage, 5)
+        val progress = ProgressTracker.getInstance()
+        progress.init(storage)
 
-        ProgressTracker.addScore(50)
-        ProgressTracker.addScore(40)
-        ProgressTracker.addScore(30)
-        ProgressTracker.addScore(20)
-        ProgressTracker.addScore(10)
-        ProgressTracker.incrementLevel(10)
+        progress.addScore(50)
+        progress.addScore(40)
+        progress.addScore(30)
+        progress.addScore(20)
+        progress.addScore(10)
+        progress.incrementLevel()
 
-        assertEquals(150, ProgressTracker.getCurrentScore())
-        assertEquals(1, ProgressTracker.getCurrentLevel())
+        assertEquals(150, progress.getCurrentScore())
+        assertEquals(1, progress.getCurrentLevel())
         assertEquals(150, storage.map[ProgressTracker.SCORE])
         assertEquals(1, storage.map[ProgressTracker.LEVEL])
 
-        assertNotNull(ProgressTracker.config)
-        assertNotNull(ProgressTracker.config.dictionary)
-        assertNotNull(ProgressTracker.config.sequencer)
-        assertEquals(6, ProgressTracker.config.sizeX)
-        assertEquals(6, ProgressTracker.config.sizeY)
+        assertNotNull(progress.config)
+        assertNotNull(progress.config.dictionary)
+        assertNotNull(progress.config.sequencer)
+        assertEquals(6, progress.config.sizeX)
+        assertEquals(6, progress.config.sizeY)
 
-        assertNotNull(ProgressTracker.game)
+        assertNotNull(progress.game)
     }
 }

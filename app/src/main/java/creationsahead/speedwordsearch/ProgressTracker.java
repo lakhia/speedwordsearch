@@ -5,32 +5,46 @@ import java.io.IOException;
 
 /**
  * Tracks progress and manages instance of current game
- * TODO: Fix null initialization of NonNull fields
  */
-public class ProgressTracker {
+public class ProgressTracker implements ScoreInterface {
     public static final String SCORE = "score";
     public static final String LEVEL = "level";
-    /** Current game */
-    @NonNull public static Game game;
-    /** Current game's configuration */
-    @NonNull public static Config config;
-
     private static final int MAX_LEVEL = 10;
-    private static int currentLevel = 0;
-    private static int currentScore = 0;
+
+    /** Current game's configuration */
+    public Config config;
+    /** Current game */
+    public Game game;
+
+    private int currentLevel = 0;
+    private int currentScore = 0;
     private static StorageInterface storageInterface;
+
+    private static class SingletonHolder {
+        private final static ProgressTracker instance = new ProgressTracker();
+    }
+    private ProgressTracker() {
+        reset();
+    }
+
+    /**
+     * Get singleton instance
+     */
+    public static ProgressTracker getInstance() {
+        return SingletonHolder.instance;
+    }
 
     /**
      * Initialize progress tracker and use storage interface to load words
-     * @param storageInterface InputStream of words to load
+     * @param storage InputStream of words to load
      */
-    public static void init(@NonNull StorageInterface storageInterface, int seed) {
-        ProgressTracker.storageInterface = storageInterface;
+    public void init(@NonNull StorageInterface storage) {
+        storageInterface = storage;
         currentScore = storageInterface.getPreference(SCORE);
         currentLevel = storageInterface.getPreference(LEVEL);
         try {
             WordList.init(storageInterface.getAssetInputStream("words_9k.db"));
-            reset(seed);
+            reset();
         } catch (IOException ignored) {
         }
     }
@@ -38,49 +52,51 @@ public class ProgressTracker {
     /**
      * Get current level number
      */
-    public static int getCurrentLevel() {
+    public int getCurrentLevel() {
         return currentLevel;
     }
 
     /**
      * User has finished current level
      */
-    public static void incrementLevel(int seed) {
+    public void incrementLevel() {
         currentLevel++;
         storageInterface.storePreference(LEVEL, currentLevel);
         storageInterface.storePreference(SCORE, currentScore);
-        reset(seed);
+        reset();
     }
 
     /**
      * Get current score
      */
-    public static int getCurrentScore() {
+    public int getCurrentScore() {
         return currentScore;
     }
 
     /**
      * Score ranges from 5 to 10 points, and bigger words score less
      */
-    public static int computeScore(@NonNull String word) {
+    @Override
+    public int computeScore(@NonNull String word) {
         return 11 - word.length()/2;
     }
 
     /**
      * Add score to current user score
      */
-    public static void addScore(int score) {
+    @Override
+    public void addScore(int score) {
         currentScore += score;
     }
 
-    private static void reset(int seed) {
+    private void reset() {
         if (currentLevel < MAX_LEVEL) {
             config = new Config(currentLevel + 5,
                                 currentLevel + 5,
                                 WordList.dictionary,
-                                seed,
+                                5,
                                 100 * currentLevel / MAX_LEVEL);
-            game = new Game(config);
+            game = new Game(config, this);
         }
     }
 }
