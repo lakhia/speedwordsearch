@@ -133,7 +133,7 @@ class GameTest {
         game.populatePuzzle()
         assertEquals(
                 "G A D D A B \n" +
-                "G . C . A A \n" +
+                "G H C O A A \n" +
                 "C C C A B A \n" +
                 "F C A C A C \n" +
                 "F B B A C A \n" +
@@ -164,12 +164,12 @@ class GameTest {
         val game = Game(Config(6, 6, dictionary, 1, 80), Scoring())
         game.populatePuzzle()
         assertEquals(
-                ". . . . . . \n" +
-                ". . C . . . \n" +
-                ". C . A . . \n" +
-                ". . A . A . \n" +
-                ". B B A C A \n" +
-                ". . . . C . \n", game.toString())
+                "G S A N B N \n" +
+                "P O C C T I \n" +
+                "M C E A I L \n" +
+                "U D A A A H \n" +
+                "T B B A C A \n" +
+                "B R F G C K \n", game.toString())
     }
 
     @Test

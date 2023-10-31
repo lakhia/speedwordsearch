@@ -105,7 +105,6 @@ public class PuzzleGrid {
      * Find an empty cell based on randomness controlled by sequencer
      * @param callback called for each valid empty position
      * @return Position that indicates vacant cell coordinates
-     * TODO: Method currently finds unused/placeholder cells too
      */
     @Nullable
     public Position findEmptyCell(@Nullable PositionCallback callback) {
@@ -113,7 +112,7 @@ public class PuzzleGrid {
         for (int x : rows) {
             int cols[] = mConfig.sequencer.getNextCoordinateSequence();
             for (int y : cols) {
-                if (mGrid[x][y].isUnused()) {
+                if (mGrid[x][y].isEmpty()) {
                     Position newPos = new Position(x, y);
                     if (callback != null) {
                         if (callback.onUpdate(newPos)) {

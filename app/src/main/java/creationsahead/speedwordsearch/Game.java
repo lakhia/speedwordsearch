@@ -36,11 +36,11 @@ public class Game {
                 }
             }
         }
+        fillEmptyCells();
     }
 
     /**
      * Fill all the empty cells with random letters
-     * TODO: Currently replaces placeholder cells too
      */
     public void fillEmptyCells() {
         // Need indirection to allow modification in lambda function
