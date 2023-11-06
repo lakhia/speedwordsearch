@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.widget.GridLayout;
 import android.widget.TextView;
 import creationsahead.speedwordsearch.Answer;
 import creationsahead.speedwordsearch.AnswerCallback;
@@ -16,20 +15,19 @@ import creationsahead.speedwordsearch.R;
 /**
  * Widget that displays list of words
  */
-public class WordListWidget extends GridLayout implements AnswerCallback {
+public class WordListWidget extends com.nex3z.flowlayout.FlowLayout
+    implements AnswerCallback {
 
     public WordListWidget(@NonNull Context context) {
-        this(context, null, 0);
+        this(context, null);
     }
 
     public WordListWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public WordListWidget(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs);
         setBackgroundResource(R.color.black_overlay);
-        setColumnCount(3);
+        setChildSpacing(SPACING_AUTO);
+        setChildSpacingForLastRow(5);
+        setRowSpacing(5);
     }
 
     @Override
