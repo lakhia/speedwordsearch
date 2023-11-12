@@ -11,7 +11,7 @@ import static creationsahead.speedwordsearch.Direction.ALL_DIRECTIONS;
  */
 public class PuzzleGrid {
     @NonNull private final Cell[][] mGrid;
-    @NonNull private final HashMap<String, Answer> mWords;
+    @NonNull final HashMap<String, Answer> answerMap;
     @NonNull private final Config mConfig;
     @NonNull private final ScoreInterface mScoreTracker;
 
@@ -21,7 +21,7 @@ public class PuzzleGrid {
     public PuzzleGrid(@NonNull Config config, @NonNull ScoreInterface scoreInterface) {
         mConfig = config;
         mGrid = new Cell[config.sizeX][config.sizeY];
-        mWords = new HashMap<>();
+        answerMap = new HashMap<>();
         mScoreTracker = scoreInterface;
         for (int x=0; x < config.sizeX; x++) {
             for (int y=0; y < config.sizeY; y++) {
@@ -47,7 +47,7 @@ public class PuzzleGrid {
      */
     public boolean addWord(@NonNull Selection selection, @NonNull String word) {
         // Cannot add same word twice
-        if (mWords.containsKey(word)) {
+        if (answerMap.containsKey(word)) {
             return false;
         }
 
@@ -71,7 +71,7 @@ public class PuzzleGrid {
         }
 
         int score = mScoreTracker.computeScore(word);
-        mWords.put(word, new Answer(selection, word, score));
+        answerMap.put(word, new Answer(selection, word, score));
         return true;
     }
 
@@ -81,7 +81,7 @@ public class PuzzleGrid {
      * @throws RuntimeException if word is partially removed
      */
     public boolean removeWord(@NonNull String word) {
-        Answer answer = mWords.get(word);
+        Answer answer = answerMap.get(word);
         if (answer == null) {
             return false;
         }
@@ -95,7 +95,7 @@ public class PuzzleGrid {
             x += selection.direction.x;
             y += selection.direction.y;
         }
-        mWords.remove(word);
+        answerMap.remove(word);
         mScoreTracker.addScore(answer.score);
         answer.notifyScoreClaimed();
         return true;

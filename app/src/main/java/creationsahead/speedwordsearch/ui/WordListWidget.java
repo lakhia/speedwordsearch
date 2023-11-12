@@ -28,11 +28,13 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout
         setChildSpacing(SPACING_AUTO);
         setChildSpacingForLastRow(5);
         setRowSpacing(5);
+        setPadding(5, 5, 5, 5);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        ProgressTracker.getInstance().game.visitAllAnswers(this);
         Answer.callback = this;
     }
 

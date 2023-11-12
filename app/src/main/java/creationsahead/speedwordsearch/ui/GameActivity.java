@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R ;
@@ -19,12 +20,12 @@ public class GameActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ProgressTracker.getInstance().game.populatePuzzle();
-        initUI();
-    }
-
-    private void initUI() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                             WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game);
+
+        ProgressTracker.getInstance().game.populatePuzzle();
+
         topLayout = findViewById(R.id.topLayout);
         if (gridWidget == null || wordListWidget == null) {
             gridWidget = new GridWidget(this);
@@ -36,9 +37,11 @@ public class GameActivity extends Activity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        topLayout.removeAllViews();
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            topLayout.setOrientation(LinearLayout.HORIZONTAL);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            topLayout.setOrientation(LinearLayout.VERTICAL);
+        }
         super.onConfigurationChanged(newConfig);
-        initUI();
     }
-
 }

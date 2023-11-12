@@ -24,6 +24,7 @@ import static android.support.v4.widget.TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFO
  */
 public class GridWidget extends TableLayout implements DrawCallback, View.OnClickListener {
     private int lastX = -1, lastY = -1;
+    private int cellSize = -1;
     @Nullable private View lastSelection = null;
 
     public GridWidget(@NonNull Context context) {
@@ -76,7 +77,7 @@ public class GridWidget extends TableLayout implements DrawCallback, View.OnClic
         int measuredHeight = MeasureSpec.getSize(heightMeasureSpec);
         int measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
         int widgetSize = Math.min(measuredHeight, measuredWidth);
-        int cellSize = widgetSize / ProgressTracker.getInstance().config.sizeX;
+        cellSize = Math.max(widgetSize / ProgressTracker.getInstance().config.sizeX, cellSize);
         setMeasuredDimension(widgetSize, widgetSize);
 
         int childCount = getChildCount();
@@ -127,7 +128,9 @@ public class GridWidget extends TableLayout implements DrawCallback, View.OnClic
                     error = "Did not find word";
                 }
             } else {
-                error = "Invalid Selection";
+                if (currentX != lastX && currentY != lastY) {
+                    error = "Invalid Selection";
+                }
             }
             if (error != null) {
                 Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
