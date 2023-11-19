@@ -37,17 +37,16 @@ class PuzzleGridTest {
         grid.addWord(Selection(1, 0, Direction.EAST, 4), "test")
         assertFalse(grid.addWord(Selection(2, 0, Direction.EAST, 4), "test"))
         assertTrue(grid.removeWord("test"))
-        assertEquals(empty, grid.toString())
         assertEquals(5, scoring.totalScore)
 
         // Add again
         assertTrue(grid.addWord(Selection(1, 0, Direction.EAST, 4), "test"))
         assertTrue(grid.removeWord("test"))
-        assertEquals(empty, grid.toString())
+        assertEquals(10, scoring.totalScore)
     }
 
     @Test
-    fun test_02_insert_straight() {
+    fun test_02_contents_after_remove() {
         val grid = fill_grid()
         var string = grid.toString()
         assertEquals(
@@ -59,18 +58,20 @@ class PuzzleGridTest {
         grid.removeWord("saga")
         grid.removeWord("east")
         grid.removeWord("afar")
-        string = grid.toString()
-        assertEquals(
-                "t e s t \n" +
-                ". . . a \n" +
-                ". . . r \n" +
-                "e k a t \n", string)
+        string = grid.findContents(Selection(0, 1, Direction.EAST, 4), true)
+        assertEquals("...a", string)
+        string = grid.findContents(Selection(0, 1, Direction.EAST, 4), false)
+        assertEquals("saga", string)
+        string = grid.findContents(Selection(0, 2, Direction.EAST, 4), true)
+        assertEquals("...r", string)
+        string = grid.findContents(Selection(0, 2, Direction.EAST, 4), false)
+        assertEquals("afar", string)
     }
 
     @Test
     fun test_03_insert_diagonal() {
         val config = Config(4, 4, null, 0, 1)
-        var scoring = Scoring()
+        val scoring = Scoring()
         val grid = PuzzleGrid(config, scoring)
         grid.addWord(Selection(0, 0, Direction.SOUTH_EAST, 4), "test")
         grid.addWord(Selection(2, 0, Direction.SOUTH_WEST, 3), "yes")
@@ -84,7 +85,7 @@ class PuzzleGridTest {
                 "t o y . \n" +
                 "a e . k \n" +
                 "s . s o \n" +
-                "k a k t \n", string)
+                "k a k t \n", grid.toString())
 
         // Remove non-existent words
         assertFalse(grid.removeWord("you"))
@@ -95,14 +96,18 @@ class PuzzleGridTest {
         assertEquals(string, grid.toString())
         assertEquals(0, scoring.totalScore)
 
-        // Remove words
+        // Remove word
         grid.removeWord("test")
         string = grid.toString()
+        assertEquals(string, grid.toString())
+
+        // Add different word that uses placeholder
+        grid.addWord(Selection(0, 0, Direction.SOUTH_EAST, 4), "tess")
         assertEquals(
                 "t o y . \n" +
                 "a e . k \n" +
                 "s . s o \n" +
-                "k a k . \n", string)
+                "k a k s \n", grid.toString())
     }
 
     @Test
@@ -128,21 +133,48 @@ class PuzzleGridTest {
         val grid = fill_grid()
 
         // No vacant cells
-        var pos = grid.findEmptyCell(null)
+        var pos = grid.findUnusedCells(null)
         assertEquals(null, pos)
 
-        // Remove one word that does not clear any cells
+        // Remove one word that does not free any cells
         grid.removeWord("tart")
-        pos = grid.findEmptyCell(null)
+        pos = grid.findUnusedCells(null)
         assertEquals(null, pos)
 
-        // Remove one word that does not clear any cells
+        // Remove one word that makes exactly one cell unused
         grid.removeWord("afar")
-
-        pos = grid.findEmptyCell(null)
+        pos = grid.findUnusedCells(null)
         assertNotNull(pos)
         assertEquals(3, pos?.x)
         assertEquals(2, pos?.y)
+
+        // Test cell
+        var cell = grid.getCell(3, 2)
+        assertFalse(cell.isEmpty)
+        assertTrue(cell.isUnused)
+        assertEquals(Cell.EMPTY, cell.searchValue)
+        assertEquals('r', cell.letter)
+
+        cell = grid.getCell(2, 3)
+        assertFalse(cell.isEmpty)
+        assertFalse(cell.isUnused)
+        assertEquals('a', cell.searchValue)
+
+        // Clear unused cell
+        assertTrue(grid.clearLetter(Position(3, 2)))
+        assertFalse(grid.clearLetter(Position(2, 3)))
+
+        // Test cell again
+        cell = grid.getCell(3, 2)
+        assertTrue(cell.isEmpty)
+        assertTrue(cell.isUnused)
+        assertEquals(Cell.EMPTY, cell.searchValue)
+        assertEquals(Cell.EMPTY, cell.letter)
+
+        cell = grid.getCell(2, 3)
+        assertFalse(cell.isEmpty)
+        assertFalse(cell.isUnused)
+        assertEquals('a', cell.searchValue)
     }
 
     @Test
@@ -171,12 +203,28 @@ class PuzzleGridTest {
         // Get a cell and verify stats
         var cell = grid.getCell(0,0)
         assertEquals('t', cell.letter)
-        assertEquals(false, cell.isUnused)
-        assertEquals(false, cell.isEmpty)
-        assertEquals(false, cell.store('b'))
-        assertEquals(false, cell.storePlaceholder('b'))
+        assertFalse(cell.isUnused)
+        assertFalse(cell.isEmpty)
+        assertFalse(cell.store('b'))
+        assertFalse(cell.storePlaceholder('b'))
         assertEquals('t', cell.letter)
 
+        // Clear cell, then store again
+        cell.erase('t')
+        assertFalse(cell.isUnused)
+        assertFalse(cell.isEmpty)
+        cell.erase('t')
+        assertTrue(cell.isUnused)
+        assertFalse(cell.isEmpty)
+        assertEquals('t', cell.letter)
+        cell.clear()
+        assertTrue(cell.isUnused)
+        assertTrue(cell.isEmpty)
+        assertEquals(Cell.EMPTY, cell.letter)
+        assertTrue(cell.storePlaceholder('r'))
+        assertTrue(cell.store('t'))
+
+        // Test another cell
         cell = grid.getCell(3,3)
         assertEquals('t', cell.letter)
 

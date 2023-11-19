@@ -41,6 +41,15 @@ public class PuzzleGrid {
     }
 
     /**
+     * Clear letter if it is a placeholder
+     * @param position where letter is cleared
+     * @return true if clear was successful
+     */
+    public boolean clearLetter(@NonNull Position position) {
+        return mGrid[position.x][position.y].clear();
+    }
+
+    /**
      * Add word to grid in specified direction and coordinates
      * @return True if successfully added
      * @throws RuntimeException if word is partially added
@@ -102,17 +111,17 @@ public class PuzzleGrid {
     }
 
     /**
-     * Find an empty cell based on randomness controlled by sequencer
+     * Find an empty cell or placeholder cells based on randomness
      * @param callback called for each valid empty position
      * @return Position that indicates vacant cell coordinates
      */
     @Nullable
-    public Position findEmptyCell(@Nullable PositionCallback callback) {
+    public Position findUnusedCells(@Nullable PositionCallback callback) {
         int rows[] = mConfig.sequencer.getNextCoordinateSequence();
         for (int x : rows) {
             int cols[] = mConfig.sequencer.getNextCoordinateSequence();
             for (int y : cols) {
-                if (mGrid[x][y].isEmpty()) {
+                if (mGrid[x][y].isUnused()) {
                     Position newPos = new Position(x, y);
                     if (callback != null) {
                         if (callback.onUpdate(newPos)) {
@@ -132,8 +141,8 @@ public class PuzzleGrid {
      * @param length length of potential word
      * @param callback called for each assignment that is possible
      */
-    public void findEmptyCell(final int length, @NonNull final AssignCallback callback) {
-        findEmptyCell(position -> {
+    public void findUnusedSelection(final int length, @NonNull final SelectionCallback callback) {
+        findUnusedCells(position -> {
             int dirs[] = mConfig.sequencer.getDirectionSequence();
             for (int dirIndex: dirs) {
                 Direction dir = ALL_DIRECTIONS[dirIndex];
@@ -153,7 +162,7 @@ public class PuzzleGrid {
      * @param length length of potential word
      * @param callback called for each assignment that is possible
      */
-    public void findRandomCells(final int length, @NonNull final AssignCallback callback) {
+    public void findRandomSelection(final int length, @NonNull final SelectionCallback callback) {
         int rows[] = mConfig.sequencer.getNextCoordinateSequence();
         for (int x : rows) {
             int cols[] = mConfig.sequencer.getNextCoordinateSequence();

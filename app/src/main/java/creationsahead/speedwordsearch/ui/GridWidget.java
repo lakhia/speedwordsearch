@@ -12,7 +12,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import creationsahead.speedwordsearch.Cell;
-import creationsahead.speedwordsearch.DrawCallback;
+import creationsahead.speedwordsearch.CellCallback;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.Selection;
@@ -22,20 +22,12 @@ import static android.support.v4.widget.TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFO
 /**
  * Widget that displays grid
  */
-public class GridWidget extends TableLayout implements DrawCallback, View.OnClickListener {
+public class GridWidget extends TableLayout implements CellCallback, View.OnClickListener {
     private int lastX = -1, lastY = -1;
     private int cellSize = -1;
     @Nullable private View lastSelection = null;
 
-    public GridWidget(@NonNull Context context) {
-        this(context, null, 0);
-    }
-
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs);
         setBackgroundResource(R.color.black_overlay);
 
@@ -101,7 +93,7 @@ public class GridWidget extends TableLayout implements DrawCallback, View.OnClic
     }
 
     @Override
-    public void onInvalidated(Cell cell) {
+    public void onChanged(@NonNull Cell cell) {
         if (cell.tag != null) {
             TextView textView = (TextView) cell.tag;
             textView.setText(cell.toString());

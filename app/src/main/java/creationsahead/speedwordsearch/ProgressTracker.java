@@ -30,6 +30,7 @@ public class ProgressTracker implements ScoreInterface {
     /**
      * Get singleton instance
      */
+    @NonNull
     public static ProgressTracker getInstance() {
         return SingletonHolder.instance;
     }
@@ -58,6 +59,7 @@ public class ProgressTracker implements ScoreInterface {
 
     /**
      * User has finished current level
+     * TODO: Do not go past max level
      */
     public void incrementLevel() {
         currentLevel++;

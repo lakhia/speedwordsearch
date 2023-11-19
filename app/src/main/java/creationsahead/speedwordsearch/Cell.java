@@ -7,31 +7,44 @@ import android.support.annotation.Nullable;
  * A cell in a puzzle grid contains a letter and reference count
  */
 public class Cell {
-    @Nullable public static DrawCallback callback;
+    @Nullable public static CellCallback callback;
     public static final char EMPTY = '.';
     public char letter;
     @Nullable public Object tag;
     private int refCount;
 
-    public Cell() {
+    /**
+     * Create a cell, defaults to empty
+     */
+    Cell() {
         this.letter = EMPTY;
         refCount = 0;
         tag = null;
     }
 
     /**
-     * Erase letter and switch to empty cell if not used
+     * Erase letter's use but do not clear the contents
      * @return true if erase was successful
      */
     public boolean erase(char letter) {
         if (this.letter == letter) {
             refCount--;
-            if (refCount <= 0) {
-                this.letter = EMPTY;
-                refCount = 0;
-                if (callback != null) {
-                    callback.onInvalidated(this);
-                }
+            if (refCount < 0) {
+                throw new RuntimeException("Erase occurred on placeholder");
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Clear letter content
+     */
+    public boolean clear() {
+        if (refCount == 0) {
+            letter = EMPTY;
+            if (callback != null) {
+                callback.onChanged(this);
             }
             return true;
         }
@@ -63,7 +76,7 @@ public class Cell {
         }
         this.letter = letter;
         if (callback != null) {
-            callback.onInvalidated(this);
+            callback.onChanged(this);
         }
         return true;
     }

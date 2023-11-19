@@ -73,6 +73,12 @@ class GameTest {
                 ". . . C . B C . \n" +
                 ". . . B A A C . \n", game.toString())
 
+        // Visit answers
+        val buffer = StringBuffer()
+        game.visitAnswers { buffer.append(it.word + " ") }
+        assertEquals("AAAC ACCC ABAC BBAC BABC ABCC CAAC BAAC ",
+                buffer.toString())
+
         // Correct direction guessing
         assertFalse(game.guess(Selection(1, 2, Direction.EAST, 4)))
         assertFalse(game.guess(Selection(0, 2, Direction.SOUTH, 4)))
@@ -82,9 +88,20 @@ class GameTest {
 
         // Opposite direction guessing
         assertTrue(game.guess(Selection(3, 7, Direction.EAST, 4)))
+        assertEquals(15, scoring.totalScore)
 
         // Palindrome
         assertTrue(game.guess(Selection(0, 2, Direction.EAST, 4)))
+        assertEquals(20, scoring.totalScore)
+
+        // Visit answers again
+        buffer.delete(0, buffer.length)
+        game.visitAnswers { buffer.append(it.word + " ") }
+        assertEquals("AAAC BBAC BABC ABCC ",
+                buffer.toString())
+
+        // Clear placeholders
+        game.clearPlaceholders(30)
         assertEquals(
                 ". . . . . . . . \n" +
                 ". . . . . . . . \n" +
@@ -94,7 +111,6 @@ class GameTest {
                 ". . . C A A A . \n" +
                 ". . . C . B . . \n" +
                 ". . . . . . . . \n", game.toString())
-        assertEquals(20, scoring.totalScore)
     }
 
     @Test

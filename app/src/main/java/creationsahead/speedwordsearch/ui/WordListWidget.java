@@ -18,10 +18,6 @@ import creationsahead.speedwordsearch.R;
 public class WordListWidget extends com.nex3z.flowlayout.FlowLayout
     implements AnswerCallback {
 
-    public WordListWidget(@NonNull Context context) {
-        this(context, null);
-    }
-
     public WordListWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setBackgroundResource(R.color.black_overlay);
@@ -34,7 +30,7 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        ProgressTracker.getInstance().game.visitAllAnswers(this);
+        ProgressTracker.getInstance().game.visitAnswers(this);
         Answer.callback = this;
     }
 
@@ -55,11 +51,6 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout
         } else {
             View view = (View) answer.tag;
             removeView(view);
-            if (getChildCount() == 0) {
-                // Win
-                // TODO: seed and restart new game
-                ProgressTracker.getInstance().incrementLevel();
-            }
         }
     }
 

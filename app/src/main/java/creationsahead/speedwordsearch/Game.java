@@ -1,6 +1,7 @@
 package creationsahead.speedwordsearch;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * A game manages the puzzle grid
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 public class Game {
     @NonNull private final PuzzleGrid grid;
     @NonNull private final Config config;
+    @Nullable public GameCallback callback;
     private boolean success;
     private int letterCount;
 
@@ -46,7 +48,11 @@ public class Game {
         // Need indirection to allow modification in lambda function
         final int[][] letterSeq = { config.sequencer.getNextLetterSequence() };
         final int[] index = { 0 };
-        grid.findEmptyCell((position) -> {
+        grid.findUnusedCells((position) -> {
+            // Ignore placeholder cells
+            if (!grid.getCell(position.x, position.y).isEmpty()) {
+                return false;
+            }
             char letter = (char) ('A' + letterSeq[0][index[0]]);
             if (!grid.addLetter(position, letter)) {
                 throw new RuntimeException("Could not add letter");
@@ -61,13 +67,31 @@ public class Game {
     }
 
     /**
-     * Populate an empty puzzle
+     * Clear placeholder cells
+     * @param count clear count, must be at least 1
+     */
+    public void clearPlaceholders(int count) {
+        final int[] letterCount = { count };
+        grid.findUnusedCells((position) -> {
+            // Ignore empty cells
+            if (grid.getCell(position.x, position.y).isEmpty()) {
+                return false;
+            }
+            if (grid.clearLetter(position)) {
+                --letterCount[0];
+            }
+            return letterCount[0] == 0;
+        });
+    }
+
+    /**
+     * Add one word that uses unused letter(s)
      * @param maxSize size of square grid
      * @return true if last iteration added at least 1 letter
      */
     public boolean addOneWord(final int minSize, final int maxSize) {
         success = false;
-        grid.findEmptyCell(maxSize, (selection, contents) -> {
+        grid.findUnusedSelection(maxSize, (selection, contents) -> {
             config.dictionary.searchWithWildcards(contents, config.sequencer, result -> {
                 int len = result.length();
                 if (len < minSize) {
@@ -94,7 +118,7 @@ public class Game {
     /**
      * Visit all the answers
      */
-    public void visitAllAnswers(AnswerCallback callback) {
+    public void visitAnswers(@NonNull AnswerCallback callback) {
         for (Answer answer : grid.answerMap.values()) {
             callback.onUpdate(answer);
         }
@@ -108,9 +132,14 @@ public class Game {
     public boolean guess(@NonNull Selection selection) {
         // Use placeholder letters to find word so that accidental words are found
         String answer = grid.findContents(selection, false);
-        return grid.removeWord(answer);
+        boolean success = grid.removeWord(answer);
+        if (grid.answerMap.isEmpty() && callback != null) {
+            callback.onWin(this);
+        }
+        return success;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return grid.toString();
