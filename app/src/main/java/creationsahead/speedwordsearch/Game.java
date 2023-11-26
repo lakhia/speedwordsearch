@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 public class Game {
     @NonNull private final PuzzleGrid grid;
     @NonNull private final Config config;
+    @NonNull private Sequencer sequencer;
     @Nullable public GameCallback callback;
     private boolean success;
     private int letterCount;
@@ -16,10 +17,12 @@ public class Game {
     /**
      * Construct a game with a square puzzle grid
      */
-    public Game(@NonNull Config config, @NonNull ScoreInterface scoreInterface) {
+    public Game(@NonNull Config config, @NonNull ScoreInterface scoreInterface,
+                @NonNull Sequencer sequencer) {
         letterCount = 0;
-        grid = new PuzzleGrid(config, scoreInterface);
+        grid = new PuzzleGrid(config, scoreInterface, sequencer);
         this.config = config;
+        this.sequencer = sequencer;
     }
 
     /**
@@ -46,7 +49,7 @@ public class Game {
      */
     public void fillEmptyCells() {
         // Need indirection to allow modification in lambda function
-        final int[][] letterSeq = { config.sequencer.getNextLetterSequence() };
+        final int[][] letterSeq = { sequencer.getLetterSequence() };
         final int[] index = { 0 };
         grid.findUnusedCells((position) -> {
             // Ignore placeholder cells
@@ -60,7 +63,7 @@ public class Game {
             index[0]++;
             if (index[0] >= letterSeq[0].length) {
                 index[0] = 0;
-                letterSeq[0] = config.sequencer.getNextLetterSequence();
+                letterSeq[0] = sequencer.getLetterSequence();
             }
             return false;
         });
@@ -92,7 +95,7 @@ public class Game {
     public boolean addOneWord(final int minSize, final int maxSize) {
         success = false;
         grid.findUnusedSelection(maxSize, (selection, contents) -> {
-            config.dictionary.searchWithWildcards(contents, config.sequencer, result -> {
+            config.dictionary.searchWithWildcards(contents, sequencer, result -> {
                 int len = result.length();
                 if (len < minSize) {
                     return false;

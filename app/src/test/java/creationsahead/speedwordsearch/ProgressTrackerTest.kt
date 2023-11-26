@@ -37,7 +37,6 @@ class ProgressTrackerTest {
 
         assertNotNull(progress.config)
         assertNotNull(progress.config.dictionary)
-        assertNotNull(progress.config.sequencer)
         assertEquals(5, progress.config.sizeX)
         assertEquals(5, progress.config.sizeY)
 
@@ -64,7 +63,6 @@ class ProgressTrackerTest {
 
         assertNotNull(progress.config)
         assertNotNull(progress.config.dictionary)
-        assertNotNull(progress.config.sequencer)
         assertEquals(6, progress.config.sizeX)
         assertEquals(6, progress.config.sizeY)
 

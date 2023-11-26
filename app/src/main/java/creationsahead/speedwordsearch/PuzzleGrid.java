@@ -14,12 +14,15 @@ public class PuzzleGrid {
     @NonNull final HashMap<String, Answer> answerMap;
     @NonNull private final Config mConfig;
     @NonNull private final ScoreInterface mScoreTracker;
+    @NonNull private final Sequencer mSequencer;
 
     /**
      * Create a grid using specified x and y size
      */
-    public PuzzleGrid(@NonNull Config config, @NonNull ScoreInterface scoreInterface) {
+    public PuzzleGrid(@NonNull Config config, @NonNull ScoreInterface scoreInterface,
+                      @NonNull Sequencer sequencer) {
         mConfig = config;
+        mSequencer = sequencer;
         mGrid = new Cell[config.sizeX][config.sizeY];
         answerMap = new HashMap<>();
         mScoreTracker = scoreInterface;
@@ -117,9 +120,9 @@ public class PuzzleGrid {
      */
     @Nullable
     public Position findUnusedCells(@Nullable PositionCallback callback) {
-        int rows[] = mConfig.sequencer.getNextCoordinateSequence();
+        int rows[] = mSequencer.getXCoordinateSequence();
         for (int x : rows) {
-            int cols[] = mConfig.sequencer.getNextCoordinateSequence();
+            int cols[] = mSequencer.getYCoordinateSequence();
             for (int y : cols) {
                 if (mGrid[x][y].isUnused()) {
                     Position newPos = new Position(x, y);
@@ -143,7 +146,7 @@ public class PuzzleGrid {
      */
     public void findUnusedSelection(final int length, @NonNull final SelectionCallback callback) {
         findUnusedCells(position -> {
-            int dirs[] = mConfig.sequencer.getDirectionSequence();
+            int dirs[] = mSequencer.getDirectionSequence();
             for (int dirIndex: dirs) {
                 Direction dir = ALL_DIRECTIONS[dirIndex];
 
@@ -163,12 +166,12 @@ public class PuzzleGrid {
      * @param callback called for each assignment that is possible
      */
     public void findRandomSelection(final int length, @NonNull final SelectionCallback callback) {
-        int rows[] = mConfig.sequencer.getNextCoordinateSequence();
+        int rows[] = mSequencer.getXCoordinateSequence();
         for (int x : rows) {
-            int cols[] = mConfig.sequencer.getNextCoordinateSequence();
+            int cols[] = mSequencer.getYCoordinateSequence();
             for (int y : cols) {
                 Position position = new Position(x, y);
-                int dirs[] = mConfig.sequencer.getDirectionSequence();
+                int dirs[] = mSequencer.getDirectionSequence();
                 for (int dirIndex: dirs) {
                     Direction dir = ALL_DIRECTIONS[dirIndex];
 

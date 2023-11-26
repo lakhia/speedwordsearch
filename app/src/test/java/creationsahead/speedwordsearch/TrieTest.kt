@@ -17,7 +17,7 @@ class TrieTest {
         dictionary.insert("BAAC")
         dictionary.insert("AAAC")
 
-        val word = dictionary.searchWithWildcards("ABAC", Sequencer(1), null)
+        val word = dictionary.searchWithWildcards("ABAC", DeterministicSequencer(1), null)
         assertEquals("ABAC", word)
     }
 
@@ -29,7 +29,7 @@ class TrieTest {
         dictionary.insert("BAAC")
         dictionary.insert("AAAC")
 
-        val word = dictionary.searchWithWildcards("AB.C", Sequencer(1), null)
+        val word = dictionary.searchWithWildcards("AB.C", DeterministicSequencer(1), null)
         assertEquals("ABAC", word)
     }
 
@@ -40,7 +40,7 @@ class TrieTest {
         dictionary.insert("BAAC")
         dictionary.insert("AAAC")
 
-        val word = dictionary.searchWithWildcards("BB..", Sequencer(1), null)
+        val word = dictionary.searchWithWildcards("BB..", DeterministicSequencer(1), null)
         assertEquals("BBAC", word)
     }
 
@@ -52,9 +52,9 @@ class TrieTest {
         dictionary.insert("BAAC")
         dictionary.insert("AAAC")
 
-        var word = dictionary.searchWithWildcards(".BAC", Sequencer(1), null)
+        var word = dictionary.searchWithWildcards(".BAC", DeterministicSequencer(1), null)
         assertEquals("ABAC", word)
-        word = dictionary.searchWithWildcards(".BAC", Sequencer(3), null)
+        word = dictionary.searchWithWildcards(".BAC", DeterministicSequencer(3), null)
         assertEquals("BBAC", word)
     }
 
@@ -66,11 +66,11 @@ class TrieTest {
         dictionary.insert("BAAC")
         dictionary.insert("AAAC")
 
-        var word = dictionary.searchWithWildcards("..AC", Sequencer(1), null)
+        var word = dictionary.searchWithWildcards("..AC", DeterministicSequencer(1), null)
         assertEquals("AAAC", word)
-        word = dictionary.searchWithWildcards("..AC", Sequencer(3), null)
+        word = dictionary.searchWithWildcards("..AC", DeterministicSequencer(3), null)
         assertEquals("BAAC", word)
-        word = dictionary.searchWithWildcards("..AC", Sequencer(33), null)
+        word = dictionary.searchWithWildcards("..AC", DeterministicSequencer(33), null)
         assertEquals("ABAC", word)
     }
 
@@ -84,19 +84,19 @@ class TrieTest {
         dictionary.insert("ABACA")
         dictionary.insert("ABACAB")
 
-        var word = dictionary.searchWithWildcards("C", Sequencer(1), null)
+        var word = dictionary.searchWithWildcards("C", DeterministicSequencer(1), null)
         assertEquals(null, word)
-        word = dictionary.searchWithWildcards("A", Sequencer(3), null)
+        word = dictionary.searchWithWildcards("A", DeterministicSequencer(3), null)
         assertEquals("A", word)
-        word = dictionary.searchWithWildcards("AB", Sequencer(33), null)
+        word = dictionary.searchWithWildcards("AB", DeterministicSequencer(33), null)
         assertEquals("AB", word)
-        word = dictionary.searchWithWildcards("ABA", Sequencer(33), null)
+        word = dictionary.searchWithWildcards("ABA", DeterministicSequencer(33), null)
         assertEquals("ABA", word)
-        word = dictionary.searchWithWildcards("ABAC", Sequencer(33), null)
+        word = dictionary.searchWithWildcards("ABAC", DeterministicSequencer(33), null)
         assertEquals("ABAC", word)
-        word = dictionary.searchWithWildcards("ABACA", Sequencer(33), null)
+        word = dictionary.searchWithWildcards("ABACA", DeterministicSequencer(33), null)
         assertEquals("ABACA", word)
-        word = dictionary.searchWithWildcards("ABACAB", Sequencer(33), null)
+        word = dictionary.searchWithWildcards("ABACAB", DeterministicSequencer(33), null)
         assertEquals("ABACAB", word)
     }
 
@@ -113,34 +113,34 @@ class TrieTest {
         dictionary.insert("CGGA")
 
         var counter = 0
-        var word = dictionary.searchWithWildcards("....", Sequencer(1), { counter++; false; })
+        var word = dictionary.searchWithWildcards("....", DeterministicSequencer(1), { counter++; false; })
         assertEquals(null, word)
         assertEquals(8, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards(".G..", Sequencer(1), { counter++; false; })
+        word = dictionary.searchWithWildcards(".G..", DeterministicSequencer(1), { counter++; false; })
         assertEquals(null, word)
         assertEquals(3, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("A...", Sequencer(1), { counter++; false; })
+        word = dictionary.searchWithWildcards("A...", DeterministicSequencer(1), { counter++; false; })
         assertEquals(null, word)
         assertEquals(6, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("A...", Sequencer(1), { counter++; counter==3; })
+        word = dictionary.searchWithWildcards("A...", DeterministicSequencer(1), { counter++; counter==3; })
         assertEquals("ADDA", word)
         assertEquals(3, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("...A", Sequencer(1), { counter++; counter==4; })
+        word = dictionary.searchWithWildcards("...A", DeterministicSequencer(1), { counter++; counter==4; })
         assertEquals("AFFA", word)
         assertEquals(4, counter)
 
-        word = dictionary.searchWithWildcards(".BB.", Sequencer(1), { true; })
+        word = dictionary.searchWithWildcards(".BB.", DeterministicSequencer(1), { true; })
         assertEquals("ABBA", word)
 
-        word = dictionary.searchWithWildcards("C...", Sequencer(1), { true; })
+        word = dictionary.searchWithWildcards("C...", DeterministicSequencer(1), { true; })
         assertEquals("CGGA", word)
     }
 
@@ -156,7 +156,7 @@ class TrieTest {
 
         var counter = 0
         val buffer = StringBuffer()
-        var word = dictionary.searchWithWildcards("......", Sequencer(1),
+        var word = dictionary.searchWithWildcards("......", DeterministicSequencer(1),
                 { buffer.append(it); counter++; false; })
         assertEquals(null, word)
         assertEquals(6, counter)
@@ -165,7 +165,7 @@ class TrieTest {
 
         counter = 0
         buffer.delete(0, buffer.length)
-        word = dictionary.searchWithWildcards("A.....", Sequencer(1),
+        word = dictionary.searchWithWildcards("A.....", DeterministicSequencer(1),
                 { buffer.append(it); counter++; false; })
         assertEquals(null, word)
         assertEquals(6, counter)
@@ -173,7 +173,7 @@ class TrieTest {
 
         counter = 0
         buffer.delete(0, buffer.length)
-        word = dictionary.searchWithWildcards(".B....", Sequencer(1),
+        word = dictionary.searchWithWildcards(".B....", DeterministicSequencer(1),
                 { buffer.append(it); counter++; false; })
         assertEquals(null, word)
         assertEquals(6, counter)

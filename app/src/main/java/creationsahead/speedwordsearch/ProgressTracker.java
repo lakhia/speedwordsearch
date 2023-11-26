@@ -96,9 +96,8 @@ public class ProgressTracker implements ScoreInterface {
             config = new Config(currentLevel + 5,
                                 currentLevel + 5,
                                 WordList.dictionary,
-                                5,
                                 100 * currentLevel / MAX_LEVEL);
-            game = new Game(config, this);
+            game = new Game(config, this, new RandomSequencer(config));
         }
     }
 }

@@ -69,7 +69,7 @@ public class Trie {
         int i = 0;
         char chosenChar = query.charAt(i);
         if (chosenChar == Cell.EMPTY) {
-            int sequence[] = sequencer.getNextLetterSequence();
+            int sequence[] = sequencer.getLetterSequence();
             for (int j : sequence) {
                 if (p.arr[j] != null) {
                     chosenChar = (char)('A' + j);

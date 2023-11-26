@@ -27,7 +27,8 @@ class GameTest {
     fun test_01_game() {
         val dictionary = init()
 
-        val game = Game(Config(4, 4, dictionary, 1, 1), Scoring())
+        val config = Config(4, 4, dictionary, 1)
+        val game = Game(config, Scoring(), DeterministicSequencer(config))
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(
                 "C A A A \n" +
@@ -52,7 +53,8 @@ class GameTest {
     fun test_02_big_board() {
         val dictionary = init()
         val scoring = Scoring()
-        val game = Game(Config(8, 8, dictionary, 1, 1), scoring)
+        val config = Config(8, 8, dictionary, 1)
+        val game = Game(config, scoring, DeterministicSequencer(config))
 
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(true, game.addOneWord(4, 4))
@@ -118,7 +120,8 @@ class GameTest {
         val dictionary = init()
         dictionary.insert("DDD")
 
-        val game = Game(Config(5, 5, dictionary, 1, 1), Scoring())
+        val config = Config(5, 5, dictionary, 1)
+        val game = Game(config, Scoring(), DeterministicSequencer(config))
         assertEquals(true, game.addOneWord(3, 4))
 
         assertEquals(game.getCell(0, 0).letter, 'C')
@@ -145,7 +148,8 @@ class GameTest {
 
         Answer.callback = AnswerCallback { buffer.append(it.toString() + "\n") }
 
-        val game = Game(Config(6, 6, dictionary, 1, 1), Scoring())
+        val config = Config(6, 6, dictionary, 1)
+        val game = Game(config, Scoring(), DeterministicSequencer(config))
         game.populatePuzzle()
         assertEquals(
                 "G A D D A B \n" +
@@ -177,7 +181,8 @@ class GameTest {
         dictionary.insert("GG")
         dictionary.insert("FF")
 
-        val game = Game(Config(6, 6, dictionary, 1, 80), Scoring())
+        val config = Config(6, 6, dictionary, 80)
+        val game = Game(config, Scoring(), DeterministicSequencer(config))
         game.populatePuzzle()
         assertEquals(
                 "G S A N B N \n" +
@@ -190,7 +195,8 @@ class GameTest {
 
     @Test
     fun test_06_fill() {
-        val game = Game(Config(6, 6, null, 1, 80), Scoring())
+        val config = Config(6, 6, Trie(), 80)
+        val game = Game(config, Scoring(), DeterministicSequencer(config))
         game.fillEmptyCells()
         assertEquals(
                 "F K G D S B \n" +

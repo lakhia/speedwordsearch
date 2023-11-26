@@ -11,8 +11,8 @@ import org.junit.Test
 class PuzzleGridTest {
 
     fun fill_grid(): PuzzleGrid {
-        val config = Config(4, 4, null, 0, 1)
-        val grid = PuzzleGrid(config, Scoring())
+        val config = Config(4, 4, Trie(), 1)
+        val grid = PuzzleGrid(config, Scoring(), DeterministicSequencer(config))
         grid.addWord(Selection(0, 0, Direction.EAST, 4), "test")
         grid.addWord(Selection(3, 0, Direction.SOUTH, 4), "tart")
         grid.addWord(Selection(3, 3, Direction.WEST, 4), "take")
@@ -24,9 +24,9 @@ class PuzzleGridTest {
 
     @Test
     fun test_01_duplicates() {
-        val config = Config(6, 3, null, 0, 1)
+        val config = Config(6, 3, Trie(), 1)
         val scoring = Scoring()
-        val grid = PuzzleGrid(config, scoring)
+        val grid = PuzzleGrid(config, scoring, DeterministicSequencer(config))
         val empty =
                 ". . . . . . \n" +
                 ". . . . . . \n" +
@@ -70,9 +70,9 @@ class PuzzleGridTest {
 
     @Test
     fun test_03_insert_diagonal() {
-        val config = Config(4, 4, null, 0, 1)
+        val config = Config(4, 4, Trie(), 1)
         val scoring = Scoring()
-        val grid = PuzzleGrid(config, scoring)
+        val grid = PuzzleGrid(config, scoring, DeterministicSequencer(config))
         grid.addWord(Selection(0, 0, Direction.SOUTH_EAST, 4), "test")
         grid.addWord(Selection(2, 0, Direction.SOUTH_WEST, 3), "yes")
         grid.addWord(Selection(1, 3, Direction.NORTH_EAST, 3), "ask")
@@ -112,8 +112,8 @@ class PuzzleGridTest {
 
     @Test
     fun test_04_no_successful_inserts() {
-        val config = Config(4, 4, null, 0, 1)
-        val grid = PuzzleGrid(config, Scoring())
+        val config = Config(4, 4, Trie(), 1)
+        val grid = PuzzleGrid(config, Scoring(), DeterministicSequencer(config))
         grid.addWord(Selection(1, 0, Direction.EAST, 4), "test")
         grid.addWord(Selection(0, 1, Direction.SOUTH, 4), "test")
         grid.addWord(Selection(2, 0, Direction.WEST, 4), "test")
