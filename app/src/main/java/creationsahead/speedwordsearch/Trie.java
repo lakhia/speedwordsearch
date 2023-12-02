@@ -10,13 +10,13 @@ import android.support.annotation.Nullable;
  * http://www.programcreek.com/2014/05/leetcode-implement-trie-prefix-tree-java/
  */
 public class Trie {
-    private TrieNode root;
+    private final TrieNode root;
 
     /**
      * A single node in the trie
      */
     public class TrieNode {
-        TrieNode[] arr;
+        final TrieNode[] arr;
         boolean isEnd;
         // Initialize your data structure here.
         TrieNode() {

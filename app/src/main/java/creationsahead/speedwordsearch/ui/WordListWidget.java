@@ -21,7 +21,7 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout
     public WordListWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setBackgroundResource(R.color.black_overlay);
-        setChildSpacing(SPACING_AUTO);
+        setChildSpacing(5);
         setChildSpacingForLastRow(5);
         setRowSpacing(5);
         setPadding(5, 5, 5, 5);

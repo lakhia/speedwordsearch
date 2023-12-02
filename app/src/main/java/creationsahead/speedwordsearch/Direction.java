@@ -23,6 +23,7 @@ public enum Direction {
     SOUTH_WEST(-1, 1);
 
     // All the directions, useful for iterating
+    @NonNull
     public static final Direction ALL_DIRECTIONS[]  =
         { NORTH, EAST, SOUTH, WEST, NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST };
 

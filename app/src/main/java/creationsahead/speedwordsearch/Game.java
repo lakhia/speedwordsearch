@@ -6,10 +6,10 @@ import android.support.annotation.Nullable;
 /**
  * A game manages the puzzle grid
  */
-public class Game {
+public class Game implements TickerCallback {
     @NonNull private final PuzzleGrid grid;
     @NonNull private final Config config;
-    @NonNull private Sequencer sequencer;
+    @NonNull private final Sequencer sequencer;
     @Nullable public GameCallback callback;
     private boolean success;
     private int letterCount;
@@ -23,6 +23,14 @@ public class Game {
         grid = new PuzzleGrid(config, scoreInterface, sequencer);
         this.config = config;
         this.sequencer = sequencer;
+    }
+
+    /**
+     * Called when a preset time elapses
+     */
+    @Override
+    public void onTick(int tickCount) {
+
     }
 
     /**

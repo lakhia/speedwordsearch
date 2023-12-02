@@ -9,7 +9,8 @@ import java.io.IOException;
 public class ProgressTracker implements ScoreInterface {
     public static final String SCORE = "score";
     public static final String LEVEL = "level";
-    private static final int MAX_LEVEL = 10;
+    public static final int MAX_LEVEL = 10;
+    public static final int MAX_DIFFICULTY = 100;
 
     /** Current game's configuration */
     public Config config;
@@ -96,7 +97,7 @@ public class ProgressTracker implements ScoreInterface {
             config = new Config(currentLevel + 5,
                                 currentLevel + 5,
                                 WordList.dictionary,
-                                100 * currentLevel / MAX_LEVEL);
+                                MAX_DIFFICULTY * currentLevel / MAX_LEVEL);
             game = new Game(config, this, new RandomSequencer(config));
         }
     }

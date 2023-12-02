@@ -6,6 +6,7 @@ import java.util.Random
  * A class that allows permutations of letters, in a deterministic manner
  */
 class DeterministicSequencer(seed: Int) : Sequencer {
+
     private val letterRandomGen: Random = Random(seed.toLong())
     private val directionRandomGen: Random = Random((2 + seed).toLong())
     private lateinit var coordinateCombinations: Array<IntArray>
@@ -48,6 +49,13 @@ class DeterministicSequencer(seed: Int) : Sequencer {
 
     override fun getDirectionSequence(): IntArray {
         return directionCombinations[directionRandomGen.nextInt(directionCombinations.size)]
+    }
+    override fun getPositiveBonus(index: Int): Boolean {
+        return index % 2 == 1
+    }
+
+    override fun getNegativeBonus(index: Int): Boolean {
+        return index % 2 == 0
     }
 
     companion object {

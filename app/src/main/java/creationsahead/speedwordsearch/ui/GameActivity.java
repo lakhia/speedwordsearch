@@ -11,14 +11,19 @@ import creationsahead.speedwordsearch.Game;
 import creationsahead.speedwordsearch.GameCallback;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R ;
+import creationsahead.speedwordsearch.TickerCallback;
 
 /**
  * Primary activity for game play
  */
-public class GameActivity extends Activity implements GameCallback {
+public class GameActivity extends Activity implements GameCallback, TickerCallback {
+    private static final int TIME_LIMIT = 60 * 5;
     @Nullable private GridWidget gridWidget;
     @Nullable private WordListWidget wordListWidget;
+    @Nullable private ScoreBar scoreBar;
     private LinearLayout topLayout;
+    private Ticker timer;
+    private Game game;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,17 +34,21 @@ public class GameActivity extends Activity implements GameCallback {
     }
 
     private void reset() {
-        Game game = ProgressTracker.getInstance().game;
+        game = ProgressTracker.getInstance().game;
         game.populatePuzzle();
         game.callback = this;
 
         topLayout = findViewById(R.id.topLayout);
         if (gridWidget == null || wordListWidget == null) {
-            gridWidget = new GridWidget(this, null);
+            scoreBar = new ScoreBar(this, null);
             wordListWidget = new WordListWidget(this, null);
+            gridWidget = new GridWidget(this, null);
         }
-        topLayout.addView(gridWidget);
+        topLayout.addView(scoreBar);
         topLayout.addView(wordListWidget);
+        topLayout.addView(gridWidget);
+
+        timer = new Ticker(this, this, TIME_LIMIT);
     }
 
     @Override
@@ -53,6 +62,18 @@ public class GameActivity extends Activity implements GameCallback {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        timer.startOrResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        timer.pause();
+    }
+
+    @Override
     public void onWin(@NonNull Game game) {
         ProgressTracker.getInstance().incrementLevel();
         game.callback = null;
@@ -62,5 +83,13 @@ public class GameActivity extends Activity implements GameCallback {
         gridWidget = null;
         wordListWidget = null;
         reset();
+    }
+
+    @Override
+    public void onTick(int tickCount) {
+        game.onTick(TIME_LIMIT - tickCount);
+        if (scoreBar != null) {
+            scoreBar.onTick(tickCount);
+        }
     }
 }
