@@ -45,4 +45,8 @@
         <item name="android:layout_width">match_parent</item>
     </style>
 
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="colorControlActivated">@color/colorEditTextLight</item>
+    </style>
 </resources>

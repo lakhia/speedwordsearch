@@ -1,6 +1,7 @@
 package creationsahead.speedwordsearch.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,10 +18,12 @@ import creationsahead.speedwordsearch.TickerCallback;
  * Primary activity for game play
  */
 public class GameActivity extends Activity implements GameCallback, TickerCallback {
+    public static final String LOSE = "lose";
+    public static final String WIN = "win";
     private static final int TIME_LIMIT = 60 * 5;
-    @Nullable private GridWidget gridWidget;
-    @Nullable private WordListWidget wordListWidget;
-    @Nullable private ScoreBar scoreBar;
+    private GridWidget gridWidget;
+    private WordListWidget wordListWidget;
+    private ScoreBar scoreBar;
     private LinearLayout topLayout;
     private Ticker timer;
     private Game game;
@@ -30,16 +33,13 @@ public class GameActivity extends Activity implements GameCallback, TickerCallba
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game);
-        reset();
-    }
 
-    private void reset() {
         game = ProgressTracker.getInstance().game;
         game.populatePuzzle();
         game.callback = this;
 
         topLayout = findViewById(R.id.topLayout);
-        if (gridWidget == null || wordListWidget == null) {
+        if (gridWidget == null || wordListWidget == null || scoreBar == null) {
             scoreBar = new ScoreBar(this, null);
             wordListWidget = new WordListWidget(this, null);
             gridWidget = new GridWidget(this, null);
@@ -48,6 +48,9 @@ public class GameActivity extends Activity implements GameCallback, TickerCallba
         topLayout.addView(wordListWidget);
         topLayout.addView(gridWidget);
 
+        if (timer != null) {
+            timer.pause();
+        }
         timer = new Ticker(this, this, TIME_LIMIT);
     }
 
@@ -76,20 +79,32 @@ public class GameActivity extends Activity implements GameCallback, TickerCallba
     @Override
     public void onWin(@NonNull Game game) {
         ProgressTracker.getInstance().incrementLevel();
-        game.callback = null;
-
-        // Remove and recreate all views
-        topLayout.removeAllViews();
-        gridWidget = null;
-        wordListWidget = null;
-        reset();
+        finishActivity(WIN);
     }
 
     @Override
     public void onTick(int tickCount) {
-        game.onTick(TIME_LIMIT - tickCount);
-        if (scoreBar != null) {
+        if (tickCount <= 0) {
+            finishActivity(LOSE);
+        } else {
+            if (tickCount % 10 == 1) {
+                game.onTick((TIME_LIMIT - tickCount) / 10);
+            }
             scoreBar.onTick(tickCount);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishActivity(LOSE);
+    }
+
+    private void finishActivity(String outcome) {
+        game.callback = null;
+
+        Intent intent = new Intent(this, LevelActivity.class);
+        intent.setAction(outcome);
+        startActivity(intent);
+        finish();
     }
 }
