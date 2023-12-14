@@ -87,9 +87,7 @@ public class GameActivity extends Activity implements GameCallback, TickerCallba
         if (tickCount <= 0) {
             finishActivity(LOSE);
         } else {
-            if (tickCount % 10 == 1) {
-                game.onTick((TIME_LIMIT - tickCount) / 10);
-            }
+            game.onTick(TIME_LIMIT - tickCount);
             scoreBar.onTick(tickCount);
         }
     }

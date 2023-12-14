@@ -26,11 +26,19 @@ public class Game implements TickerCallback {
     }
 
     /**
-     * Called when a preset time elapses
+     * Called when a second has elapsed
      */
     @Override
     public void onTick(int tickCount) {
-
+        if (tickCount % 10 == 5) {
+            tickCount /= 10;
+            if (sequencer.getNegativeBonus(tickCount)) {
+                grid.giveNegativeBonus();
+            }
+            if (sequencer.getPositiveBonus(tickCount)) {
+                grid.givePositiveBonus();
+            }
+        }
     }
 
     /**

@@ -226,6 +226,19 @@ public class PuzzleGrid {
     }
 
     /**
+     * Give a negative bonus in the grid
+     */
+    public void giveNegativeBonus() {
+
+    }
+
+    /**
+     * Give a positive bonus in the grid
+     */
+    public void givePositiveBonus() {
+    }
+
+    /**
      * Get cell at coordinate x and y, assumes coordinates are within range
      */
     public Cell getCell(int x, int y) {
