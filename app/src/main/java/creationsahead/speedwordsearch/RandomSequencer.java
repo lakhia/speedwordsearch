@@ -10,15 +10,12 @@ import static creationsahead.speedwordsearch.ProgressTracker.MAX_DIFFICULTY;
  * random manner
  */
 public class RandomSequencer implements Sequencer {
-    private static final int BONUS_SIZE = 50;
     @NonNull private final int[] letterCombinations = new int[] {
         7, 5, 6, 1, 0, 18, 20, 14, 19, 17, 11, 12, 4, 10, 13, 8, 15, 3, 2
     };
     @NonNull private final int[] directionCombinations = new int[] {
         7, 2, 6, 1, 5, 3, 0, 4
     };
-    @NonNull private final int[] positiveBonus = new int[BONUS_SIZE];
-    @NonNull private final int[] negativeBonus = new int[BONUS_SIZE];
     @NonNull private final int[] coordinateXCombinations;
     @NonNull private final int[] coordinateYCombinations;
 
@@ -48,10 +45,6 @@ public class RandomSequencer implements Sequencer {
         }
         for (int i=0; i<config.sizeY; i++) {
             coordinateYCombinations[i] = i;
-        }
-        for (int i=0; i<BONUS_SIZE; i++) {
-            positiveBonus[i] = bonusRandomGen.nextInt(MAX_DIFFICULTY);
-            negativeBonus[i] = bonusRandomGen.nextInt(MAX_DIFFICULTY);
         }
     }
 
@@ -93,18 +86,14 @@ public class RandomSequencer implements Sequencer {
     }
 
     @Override
-    public boolean getPositiveBonus(int index) {
-        if (index % BONUS_SIZE == 0) {
-            shuffle(positiveBonus, bonusRandomGen);
+    public int getBonus(int index) {
+        for (int i = 0; i < 300; i++) {
+            double val = bonusRandomGen.nextGaussian() * 3;
+            int bonus = (int) (val + (config.difficulty * 9.0 / 50.0));
+            if (bonus >= 0 && bonus <= 20) {
+                return bonus;
+            }
         }
-        return positiveBonus[index % BONUS_SIZE] > config.difficulty;
-    }
-
-    @Override
-    public boolean getNegativeBonus(int index) {
-        if (index % BONUS_SIZE == 0) {
-            shuffle(negativeBonus, bonusRandomGen);
-        }
-        return negativeBonus[index % BONUS_SIZE] < config.difficulty;
+        return -1;
     }
 }

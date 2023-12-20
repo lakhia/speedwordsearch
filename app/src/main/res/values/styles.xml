@@ -26,7 +26,6 @@
     <style name="PuzzleLetter">
         <item name="android:background">@drawable/border</item>
         <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:textSize">26sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
         <item name="android:fontFamily">serif-monospace</item>

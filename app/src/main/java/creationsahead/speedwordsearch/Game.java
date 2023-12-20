@@ -32,11 +32,10 @@ public class Game implements TickerCallback {
     public void onTick(int tickCount) {
         if (tickCount % 10 == 5) {
             tickCount /= 10;
-            if (sequencer.getNegativeBonus(tickCount)) {
-                grid.giveNegativeBonus();
-            }
-            if (sequencer.getPositiveBonus(tickCount)) {
-                grid.givePositiveBonus();
+            int bonusVal = sequencer.getBonus(tickCount);
+            Bonus bonus = Bonus.find(bonusVal);
+            if (bonus != null) {
+                // TODO: Implement
             }
         }
     }

@@ -29,6 +29,13 @@ class ProgressTrackerTest {
         }
     }
 
+    class Score : ScoreCallback {
+        var scores = ""
+        override fun updateScore(score: Int) {
+            scores += "," + score
+        }
+    }
+
     @Test
     fun test_01_init() {
         val storage = Storage()
@@ -46,18 +53,22 @@ class ProgressTrackerTest {
     @Test
     fun test_02_progress() {
         val storage = Storage()
+        val score = Score()
         val progress = ProgressTracker.getInstance()
         progress.init(storage)
+        progress.callback = score
 
         progress.addScore(50)
         progress.addScore(40)
         progress.addScore(30)
         progress.addScore(20)
         progress.addScore(10)
+        assertEquals(",50,90,120,140,150", score.scores)
+
         progress.incrementLevel()
 
-        assertEquals(150, progress.getCurrentScore())
-        assertEquals(1, progress.getCurrentLevel())
+        assertEquals(150, progress.currentScore)
+        assertEquals(1, progress.currentLevel)
         assertEquals(150, storage.map[ProgressTracker.SCORE])
         assertEquals(1, storage.map[ProgressTracker.LEVEL])
 
@@ -67,5 +78,6 @@ class ProgressTrackerTest {
         assertEquals(6, progress.config.sizeY)
 
         assertNotNull(progress.game)
+        assertEquals(",50,90,120,140,150", score.scores)
     }
 }

@@ -11,6 +11,8 @@ class DeterministicSequencer(seed: Int) : Sequencer {
     private val directionRandomGen: Random = Random((2 + seed).toLong())
     private lateinit var coordinateCombinations: Array<IntArray>
     private lateinit var coordinateRandomGen: Random
+    private val bonusRandomGen: Random = Random(seed.toLong())
+    private var difficulty = 1
 
     constructor(seed: Int, maxCoordinate: Int) : this(seed) {
 
@@ -24,7 +26,9 @@ class DeterministicSequencer(seed: Int) : Sequencer {
         }
     }
 
-    constructor(config: Config) : this(1, config.sizeX)
+    constructor(config: Config) : this(1, config.sizeX) {
+        difficulty = config.difficulty
+    }
 
     private fun shuffle(array: IntArray) {
         for (i in array.size - 1 downTo 1) {
@@ -50,12 +54,8 @@ class DeterministicSequencer(seed: Int) : Sequencer {
     override fun getDirectionSequence(): IntArray {
         return directionCombinations[directionRandomGen.nextInt(directionCombinations.size)]
     }
-    override fun getPositiveBonus(index: Int): Boolean {
-        return index % 2 == 1
-    }
-
-    override fun getNegativeBonus(index: Int): Boolean {
-        return index % 2 == 0
+    override fun getBonus(index: Int): Int {
+        return bonusRandomGen.nextInt(20)
     }
 
     companion object {

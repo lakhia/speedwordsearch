@@ -14,6 +14,5 @@ public interface Sequencer {
     int[] getYCoordinateSequence();
     @NonNull
     int[] getDirectionSequence();
-    boolean getPositiveBonus(int index);
-    boolean getNegativeBonus(int index);
+    int getBonus(int index);
 }

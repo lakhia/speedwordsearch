@@ -16,6 +16,8 @@ public class ProgressTracker implements ScoreInterface {
     public Config config;
     /** Current game */
     public Game game;
+    /** Score callback */
+    public ScoreCallback callback;
 
     private int currentLevel = 0;
     private int currentScore = 0;
@@ -90,6 +92,9 @@ public class ProgressTracker implements ScoreInterface {
     @Override
     public void addScore(int score) {
         currentScore += score;
+        if (callback != null) {
+            callback.updateScore(currentScore);
+        }
     }
 
     private void reset() {

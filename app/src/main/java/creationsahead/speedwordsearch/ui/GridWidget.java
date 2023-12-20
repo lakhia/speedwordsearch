@@ -1,9 +1,9 @@
 package creationsahead.speedwordsearch.ui;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.TextViewCompat;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -17,7 +17,7 @@ import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.Selection;
 
-import static android.support.v4.widget.TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM;
+import static android.util.TypedValue.COMPLEX_UNIT_PX;
 
 /**
  * Widget that displays grid
@@ -26,6 +26,8 @@ public class GridWidget extends TableLayout implements CellCallback, View.OnClic
     private int lastX = -1, lastY = -1;
     private int cellSize = -1;
     @Nullable private View lastSelection = null;
+    private Rect bounds = new Rect();
+    private float fontSize = -1;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -44,8 +46,6 @@ public class GridWidget extends TableLayout implements CellCallback, View.OnClic
                 textView.setOnClickListener(this);
                 textView.setTag(R.string.row, i);
                 textView.setTag(R.string.column, j);
-                // TODO: doesn't work
-                TextViewCompat.setAutoSizeTextTypeWithDefaults(textView, AUTO_SIZE_TEXT_TYPE_UNIFORM);
                 row.addView(textView);
                 cell.tag = textView;
             }
@@ -75,19 +75,24 @@ public class GridWidget extends TableLayout implements CellCallback, View.OnClic
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
-            if (child instanceof TableRow) {
-                TableRow row = (TableRow) child;
-                row.measure(widgetSize, cellSize);
-                row.setMinimumWidth(widgetSize);
-                row.setMinimumHeight(cellSize);
+            TableRow row = (TableRow) child;
+            row.measure(widgetSize, cellSize);
+            row.setMinimumWidth(widgetSize);
+            row.setMinimumHeight(cellSize);
 
-                int cellCount = row.getChildCount();
-                for (int j = 0; j < cellCount; j++) {
-                    View cell = row.getChildAt(j);
-                    cell.measure(cellSize, cellSize);
-                    cell.setMinimumHeight(cellSize);
-                    cell.setMinimumWidth(cellSize);
+            int cellCount = row.getChildCount();
+            for (int j = 0; j < cellCount; j++) {
+                View cell = row.getChildAt(j);
+                TextView textView = (TextView) cell;
+                if (fontSize == -1) {
+                    textView.getPaint().getTextBounds("W", 0, 1, bounds);
+                    int max = Math.max(bounds.width(), bounds.height());
+                    fontSize = 0.6f * textView.getTextSize() * cellSize / max;
                 }
+                textView.setTextSize(COMPLEX_UNIT_PX, fontSize);
+                textView.measure(cellSize, cellSize);
+                textView.setMinimumHeight(cellSize);
+                textView.setMinimumWidth(cellSize);
             }
         }
     }
