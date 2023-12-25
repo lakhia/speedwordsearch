@@ -5,10 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
-import android.view.View;
 import android.widget.TextView;
+import com.joanzapata.iconify.widget.IconTextView;
 import creationsahead.speedwordsearch.Answer;
 import creationsahead.speedwordsearch.AnswerCallback;
+import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 
@@ -41,17 +42,25 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout
     }
 
     @Override
-    public void onUpdate(@NonNull Answer answer) {
-        if (answer.tag == null) {
-            ContextThemeWrapper newContext = new ContextThemeWrapper(getContext(), R.style.WordList);
-            TextView textView = new TextView(newContext, null);
-            textView.setText(answer.word);
-            addView(textView);
-            answer.tag = textView;
-        } else {
-            View view = (View) answer.tag;
-            removeView(view);
+    public void onUpdate(@NonNull Answer answer, Event event) {
+        TextView textView;
+        switch (event) {
+            case WORD_ADDED:
+            case VISIT:
+                ContextThemeWrapper newContext = new ContextThemeWrapper(getContext(), R.style.WordList);
+                textView = new IconTextView(newContext, null);
+                textView.setText(answer.getDisplay());
+                addView(textView);
+                answer.tag = textView;
+                break;
+            case SCORE_AWARDED:
+                textView = (TextView) answer.tag;
+                removeView(textView);
+                break;
+            case BONUS_ADDED:
+                textView = (TextView) answer.tag;
+                textView.setText(answer.getDisplay());
+                break;
         }
     }
-
 }

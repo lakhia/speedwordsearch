@@ -11,6 +11,7 @@ class DeterministicSequencer(seed: Int) : Sequencer {
     private val directionRandomGen: Random = Random((2 + seed).toLong())
     private lateinit var coordinateCombinations: Array<IntArray>
     private lateinit var coordinateRandomGen: Random
+    private val miscRandomGen: Random = Random(seed.toLong())
     private val bonusRandomGen: Random = Random(seed.toLong())
     private var difficulty = 1
 
@@ -54,6 +55,11 @@ class DeterministicSequencer(seed: Int) : Sequencer {
     override fun getDirectionSequence(): IntArray {
         return directionCombinations[directionRandomGen.nextInt(directionCombinations.size)]
     }
+
+    override fun getMisc(max: Int): Int {
+        return miscRandomGen.nextInt(max)
+    }
+
     override fun getBonus(index: Int): Int {
         return bonusRandomGen.nextInt(20)
     }

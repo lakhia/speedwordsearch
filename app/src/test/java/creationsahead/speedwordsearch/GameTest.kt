@@ -10,8 +10,8 @@ import org.junit.Assert.*
  */
 class GameTest {
 
-    fun init(): Trie {
-        val dictionary: Trie = Trie()
+    private fun init(): Trie {
+        val dictionary = Trie()
         dictionary.insert("ABAC")
         dictionary.insert("BBAC")
         dictionary.insert("BAAC")
@@ -77,7 +77,7 @@ class GameTest {
 
         // Visit answers
         val buffer = StringBuffer()
-        game.visitAnswers { buffer.append(it.word + " ") }
+        game.visitAnswers { answer, _ -> buffer.append(answer.display + " ") }
         assertEquals("AAAC ACCC ABAC BBAC BABC ABCC CAAC BAAC ",
                 buffer.toString())
 
@@ -98,7 +98,7 @@ class GameTest {
 
         // Visit answers again
         buffer.delete(0, buffer.length)
-        game.visitAnswers { buffer.append(it.word + " ") }
+        game.visitAnswers { answer, _ -> buffer.append(answer.display + " ") }
         assertEquals("AAAC BBAC BABC ABCC ",
                 buffer.toString())
 
@@ -146,7 +146,7 @@ class GameTest {
         dictionary.insert("GG")
         dictionary.insert("FF")
 
-        Answer.callback = AnswerCallback { buffer.append(it.toString() + "\n") }
+        Answer.callback = AnswerCallback { answer, _ -> buffer.append(answer.toString() + "\n") }
 
         val config = Config(6, 6, dictionary, 1)
         val game = Game(config, Scoring(), DeterministicSequencer(config))

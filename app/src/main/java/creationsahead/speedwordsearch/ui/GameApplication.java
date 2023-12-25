@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.StorageInterface;
 import java.io.IOException;
@@ -21,6 +23,7 @@ public class GameApplication extends Application implements StorageInterface {
     @Override
     public void onCreate() {
         super.onCreate();
+        Iconify.with(new FontAwesomeModule());
         ProgressTracker.getInstance().init(this);
     }
 

@@ -2,7 +2,9 @@ package creationsahead.speedwordsearch;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import static creationsahead.speedwordsearch.Direction.ALL_DIRECTIONS;
 
@@ -226,16 +228,17 @@ public class PuzzleGrid {
     }
 
     /**
-     * Give a negative bonus in the grid
+     * Give a bonus to a random word in the grid
      */
-    public void giveNegativeBonus() {
-
-    }
-
-    /**
-     * Give a positive bonus in the grid
-     */
-    public void givePositiveBonus() {
+    public void giveBonus(Bonus bonus) {
+        Collection<Answer> set = answerMap.values();
+        int index = mSequencer.getMisc(set.size());
+        Iterator<Answer> iterator = set.iterator();
+        for (int i = 0; i < index; i++) {
+            iterator.next();
+        }
+        Answer answer = iterator.next();
+        answer.setBonus(bonus);
     }
 
     /**

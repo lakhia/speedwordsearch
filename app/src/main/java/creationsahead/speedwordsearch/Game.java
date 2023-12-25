@@ -35,7 +35,7 @@ public class Game implements TickerCallback {
             int bonusVal = sequencer.getBonus(tickCount);
             Bonus bonus = Bonus.find(bonusVal);
             if (bonus != null) {
-                // TODO: Implement
+                grid.giveBonus(bonus);
             }
         }
     }
@@ -138,7 +138,7 @@ public class Game implements TickerCallback {
      */
     public void visitAnswers(@NonNull AnswerCallback callback) {
         for (Answer answer : grid.answerMap.values()) {
-            callback.onUpdate(answer);
+            callback.onUpdate(answer, Event.VISIT);
         }
     }
 

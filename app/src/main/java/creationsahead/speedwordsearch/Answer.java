@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 public class Answer {
     @NonNull public final String word;
     @NonNull public final Selection selection;
+    @Nullable public Bonus bonus;
     @Nullable public Object tag;
     @Nullable public static AnswerCallback callback;
     public final int score;
@@ -21,7 +22,7 @@ public class Answer {
         this.word = word;
         this.score = score;
         if (callback != null) {
-            callback.onUpdate(this);
+            callback.onUpdate(this, Event.WORD_ADDED);
         }
     }
 
@@ -30,13 +31,31 @@ public class Answer {
      */
     public void notifyScoreClaimed() {
         if (callback != null) {
-            callback.onUpdate(this);
+            callback.onUpdate(this, Event.SCORE_AWARDED);
         }
+    }
+
+    /**
+     * Get display string
+     */
+    public String getDisplay() {
+        String ret = word;
+        if (bonus != null) {
+            ret += " {" + bonus.name + " @color/colorEditTextLight}";
+        }
+        return ret;
     }
 
     @NonNull
     @Override
     public String toString() {
         return selection.toString() + ", word: " + word;
+    }
+
+    public void setBonus(@NonNull Bonus bonus) {
+        this.bonus = bonus;
+        if (callback != null) {
+            callback.onUpdate(this, Event.BONUS_ADDED);
+        }
     }
 }
