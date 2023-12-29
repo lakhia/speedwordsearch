@@ -66,41 +66,31 @@ public class Trie {
         }
 
         // Recursive case
-        int i = 0;
-        char chosenChar = query.charAt(i);
+        char chosenChar = query.charAt(0);
+        SequenceIterator<Character> iterator = null;
+
         if (chosenChar == Cell.EMPTY) {
-            int sequence[] = sequencer.getLetterSequence();
-            for (int j : sequence) {
-                if (p.arr[j] != null) {
-                    chosenChar = (char)('A' + j);
-                    String subString = searchWithWildcards(p.arr[j], query.substring(i + 1),
-                                                           result + chosenChar, sequencer, callback);
-                    if (subString == null && p.arr[j].isEnd) {
-                        subString = result + chosenChar;
-                    }
-                    if (callback != null) {
-                        if (subString == null || !callback.onValid(subString)) {
-                            continue;
-                        } else {
-                            // Hack to unwind stack
-                            throw new IllegalMonitorStateException(subString);
-                        }
-                    }
-                    return subString;
-                }
+            iterator = sequencer.getLetterSequence();
+        }
+
+        do {
+            if (iterator != null) {
+                chosenChar = iterator.next();
             }
-            return null;
-        } else {
-            int j = chosenChar - 'A';
-            if (p.arr[j] != null) {
-                String subString = searchWithWildcards(p.arr[j], query.substring(i + 1),
+            TrieNode node = p.arr[chosenChar - 'A'];
+            if (node != null) {
+                String subString = searchWithWildcards(node, query.substring(1),
                                                        result + chosenChar, sequencer, callback);
-                if (subString == null && p.arr[j].isEnd) {
-                    subString = result + chosenChar;
+                if (subString == null) {
+                    if (node.isEnd) {
+                        subString = result + chosenChar;
+                    } else {
+                        continue;
+                    }
                 }
                 if (callback != null) {
-                    if (subString == null || !callback.onValid(subString)) {
-                        return null;
+                    if (!callback.onValid(subString)) {
+                        continue;
                     } else {
                         // Hack to unwind stack
                         throw new IllegalMonitorStateException(subString);
@@ -108,7 +98,8 @@ public class Trie {
                 }
                 return subString;
             }
-        }
+        } while (iterator != null && iterator.hasNext());
+
         return null;
     }
 }

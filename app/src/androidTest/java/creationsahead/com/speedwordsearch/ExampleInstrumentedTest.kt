@@ -2,6 +2,8 @@ package creationsahead.com.speedwordsearch
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import creationsahead.speedwordsearch.ui.GridWidget
+import creationsahead.speedwordsearch.ui.WordListWidget
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,5 +22,21 @@ class ExampleInstrumentedTest {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
         assertEquals("creationsahead.com.speedwordsearch", appContext.packageName)
+    }
+
+    @Test
+    fun gridWidget() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getTargetContext()
+        val widget = GridWidget(appContext, null)
+        assertNotNull(widget)
+    }
+
+    @Test
+    fun wordListWidget() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getTargetContext()
+        val widget = WordListWidget(appContext, null)
+        assertNotNull(widget)
     }
 }

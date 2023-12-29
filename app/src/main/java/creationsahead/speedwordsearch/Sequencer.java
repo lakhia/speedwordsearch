@@ -6,14 +6,15 @@ import android.support.annotation.NonNull;
  * A class that specifies permutations of letters, directions, and coordinates
  */
 public interface Sequencer {
+
     @NonNull
-    int[] getLetterSequence();
+    SequenceIterator<Character> getLetterSequence();
     @NonNull
-    int[] getXCoordinateSequence();
+    SequenceIterator<Integer> getXCoordinateSequence();
     @NonNull
-    int[] getYCoordinateSequence();
+    SequenceIterator<Integer> getYCoordinateSequence();
     @NonNull
-    int[] getDirectionSequence();
+    SequenceIterator<Direction> getDirectionSequence();
 
     int getMisc(int max);
 

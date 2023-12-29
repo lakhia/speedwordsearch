@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import static creationsahead.speedwordsearch.Direction.ALL_DIRECTIONS;
-
 /**
  * A puzzle grid
  */
@@ -122,10 +120,12 @@ public class PuzzleGrid {
      */
     @Nullable
     public Position findUnusedCells(@Nullable PositionCallback callback) {
-        int rows[] = mSequencer.getXCoordinateSequence();
-        for (int x : rows) {
-            int cols[] = mSequencer.getYCoordinateSequence();
-            for (int y : cols) {
+        SequenceIterator<Integer> rows = mSequencer.getXCoordinateSequence();
+        while (rows.hasNext()) {
+            int x = rows.next();
+            SequenceIterator<Integer> cols = mSequencer.getYCoordinateSequence();
+            while (cols.hasNext()) {
+                int y = cols.next();
                 if (mGrid[x][y].isUnused()) {
                     Position newPos = new Position(x, y);
                     if (callback != null) {
@@ -148,10 +148,9 @@ public class PuzzleGrid {
      */
     public void findUnusedSelection(final int length, @NonNull final SelectionCallback callback) {
         findUnusedCells(position -> {
-            int dirs[] = mSequencer.getDirectionSequence();
-            for (int dirIndex: dirs) {
-                Direction dir = ALL_DIRECTIONS[dirIndex];
-
+            SequenceIterator<Direction> dirs = mSequencer.getDirectionSequence();
+            while (dirs.hasNext()) {
+                Direction dir = dirs.next();
                 // If position can accommodate length, process it
                 if (Selection.inBounds(position, dir, mConfig.sizeX, mConfig.sizeY, length)) {
                     Selection selection = new Selection(position, dir, length);
@@ -168,15 +167,16 @@ public class PuzzleGrid {
      * @param callback called for each assignment that is possible
      */
     public void findRandomSelection(final int length, @NonNull final SelectionCallback callback) {
-        int rows[] = mSequencer.getXCoordinateSequence();
-        for (int x : rows) {
-            int cols[] = mSequencer.getYCoordinateSequence();
-            for (int y : cols) {
+        SequenceIterator<Integer> rows = mSequencer.getXCoordinateSequence();
+        while (rows.hasNext()) {
+            int x = rows.next();
+            SequenceIterator<Integer> cols = mSequencer.getYCoordinateSequence();
+            while (cols.hasNext()) {
+                int y = cols.next();
                 Position position = new Position(x, y);
-                int dirs[] = mSequencer.getDirectionSequence();
-                for (int dirIndex: dirs) {
-                    Direction dir = ALL_DIRECTIONS[dirIndex];
-
+                SequenceIterator<Direction> dirs = mSequencer.getDirectionSequence();
+                for (; dirs.hasNext(); ) {
+                    Direction dir  = dirs.next();
                     // If position can accommodate length, process it
                     if (Selection.inBounds(position, dir, mConfig.sizeX, mConfig.sizeY, length)) {
                         Selection selection = new Selection(position, dir, length);

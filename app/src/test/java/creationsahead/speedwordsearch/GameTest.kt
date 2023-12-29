@@ -28,22 +28,22 @@ class GameTest {
         val dictionary = init()
 
         val config = Config(4, 4, dictionary, 1)
-        val game = Game(config, Scoring(), DeterministicSequencer(config))
+        val game = Game(config, Scoring(), RandomSequencer(config, 1))
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(
-                "C A A A \n" +
-                ". . . . \n" +
-                ". . . . \n" +
-                ". . . . \n", game.toString())
+        ". . . C \n" +
+                ". . . A \n" +
+                ". . . A \n" +
+                ". . . C \n", game.toString())
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(
-                "C A A A \n" +
-                "C A A C \n" +
-                "B A A C \n" +
-                "A C C C \n", game.toString())
-        assertEquals(false, game.addOneWord(4, 4))
+        "B C . C \n" +
+                ". B A A \n" +
+                ". A A A \n" +
+                "B B . C \n", game.toString())
+        assertEquals(true, game.addOneWord(4, 4))
         assertEquals(false, game.addOneWord(3, 3))
         assertEquals(false, game.addOneWord(1, 1))
         assertEquals(false, game.addOneWord(0, 3))
@@ -54,7 +54,7 @@ class GameTest {
         val dictionary = init()
         val scoring = Scoring()
         val config = Config(8, 8, dictionary, 1)
-        val game = Game(config, scoring, DeterministicSequencer(config))
+        val game = Game(config, scoring, RandomSequencer(config, 1))
 
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(true, game.addOneWord(4, 4))
@@ -66,53 +66,53 @@ class GameTest {
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(false, game.addOneWord(4, 4))
         assertEquals(
-                ". . . . . . . . \n" +
-                ". . . C C C A . \n" +
-                "C A A C . . . . \n" +
-                ". . C A B B A . \n" +
-                ". . . B . . B . \n" +
-                ". . . C A A A . \n" +
-                ". . . C . B C . \n" +
-                ". . . B A A C . \n", game.toString())
+                "C . B B . . . . \n" +
+                        ". A A B . . . . \n" +
+                        ". B A . A . . A \n" +
+                        "C C C C A C . B \n" +
+                        ". . C A B A . C \n" +
+                        ". . A A A C . C \n" +
+                        ". . . C A A B . \n" +
+                        ". . . . . . . . \n", game.toString())
 
         // Visit answers
         val buffer = StringBuffer()
         game.visitAnswers { answer, _ -> buffer.append(answer.display + " ") }
-        assertEquals("AAAC ACCC ABAC BBAC BABC ABCC CAAC BAAC ",
+        assertEquals("ACCC AAAC ABAC BBAC BABC CAAC BAAC ABCC ",
                 buffer.toString())
 
         // Correct direction guessing
         assertFalse(game.guess(Selection(1, 2, Direction.EAST, 4)))
-        assertFalse(game.guess(Selection(0, 2, Direction.SOUTH, 4)))
-        assertTrue(game.guess(Selection(6, 3, Direction.SOUTH, 4)))
-        assertTrue(game.guess(Selection(6, 1, Direction.WEST, 4)))
+        assertFalse(game.guess(Selection(7, 2, Direction.WEST, 4)))
+        assertTrue(game.guess(Selection(7, 2, Direction.SOUTH, 4)))
+        assertTrue(game.guess(Selection(2, 5, Direction.EAST, 4)))
         assertEquals(10, scoring.totalScore)
 
         // Opposite direction guessing
-        assertTrue(game.guess(Selection(3, 7, Direction.EAST, 4)))
+        assertTrue(game.guess(Selection(4, 3, Direction.WEST, 4)))
         assertEquals(15, scoring.totalScore)
 
         // Palindrome
-        assertTrue(game.guess(Selection(0, 2, Direction.EAST, 4)))
+        assertTrue(game.guess(Selection(0, 0, Direction.SOUTH_EAST, 4)))
         assertEquals(20, scoring.totalScore)
 
         // Visit answers again
         buffer.delete(0, buffer.length)
         game.visitAnswers { answer, _ -> buffer.append(answer.display + " ") }
-        assertEquals("AAAC BBAC BABC ABCC ",
+        assertEquals("ABAC BBAC BABC BAAC ",
                 buffer.toString())
 
         // Clear placeholders
         game.clearPlaceholders(30)
         assertEquals(
-                ". . . . . . . . \n" +
-                ". . . . . . . . \n" +
-                ". . . . . . . . \n" +
-                ". . C A B B . . \n" +
-                ". . . B . . . . \n" +
-                ". . . C A A A . \n" +
-                ". . . C . B . . \n" +
-                ". . . . . . . . \n", game.toString())
+                ". . B B . . . . \n" +
+                        ". . A B . . . . \n" +
+                        ". B . . A . . . \n" +
+                        "C . . . . C . . \n" +
+                        ". . C A B A . . \n" +
+                        ". . . . . . . . \n" +
+                        ". . . C A A B . \n" +
+                        ". . . . . . . . \n", game.toString())
     }
 
     @Test
@@ -121,18 +121,18 @@ class GameTest {
         dictionary.insert("DDD")
 
         val config = Config(5, 5, dictionary, 1)
-        val game = Game(config, Scoring(), DeterministicSequencer(config))
+        val game = Game(config, Scoring(), RandomSequencer(config, 5))
         assertEquals(true, game.addOneWord(3, 4))
 
-        assertEquals(game.getCell(0, 0).letter, 'C')
-        assertEquals(game.getCell(0, 1).letter, 'A')
-        assertEquals(game.getCell(0, 2).letter, 'A')
-        assertEquals(game.getCell(0, 3).letter, 'A')
+        assertEquals('C', game.getCell(4, 1).letter)
+        assertEquals('C', game.getCell(4, 2).letter)
+        assertEquals('C', game.getCell(4, 3).letter)
+        assertEquals('A', game.getCell(4, 4).letter)
 
         assertEquals(true, game.addOneWord(3, 3))
-        assertEquals(game.getCell(0, 4).letter, 'D')
-        assertEquals(game.getCell(1, 4).letter, 'D')
-        assertEquals(game.getCell(2, 4).letter, 'D')
+        assertEquals(game.getCell(1, 1).letter, 'D')
+        assertEquals(game.getCell(2, 2).letter, 'D')
+        assertEquals(game.getCell(3, 3).letter, 'D')
 
         assertEquals(false, game.addOneWord(3, 3))
     }
@@ -149,27 +149,26 @@ class GameTest {
         Answer.callback = AnswerCallback { answer, _ -> buffer.append(answer.toString() + "\n") }
 
         val config = Config(6, 6, dictionary, 1)
-        val game = Game(config, Scoring(), DeterministicSequencer(config))
+        val game = Game(config, Scoring(), RandomSequencer(config, 1))
         game.populatePuzzle()
         assertEquals(
-                "G A D D A B \n" +
-                "G H C O A A \n" +
-                "C C C A B A \n" +
-                "F C A C A C \n" +
-                "F B B A C A \n" +
-                "C D D A C A \n", game.toString())
+                "A B C C A C \n" +
+                        "N B A A D D \n" +
+                        "C A A D B R \n" +
+                        "A C A B D B \n" +
+                        "A C A A C A \n" +
+                        "B C A B A C \n", game.toString())
         assertEquals(
-                "pos: (1, 4), dir: EAST, len: 4, word: BBAC\n" +
-                "pos: (5, 4), dir: NORTH_WEST, len: 4, word: AAAC\n" +
-                "pos: (4, 5), dir: NORTH_WEST, len: 4, word: CAAC\n" +
-                "pos: (5, 5), dir: NORTH_WEST, len: 4, word: ACCC\n" +
-                "pos: (3, 5), dir: NORTH_WEST, len: 4, word: ABCC\n" +
-                "pos: (4, 1), dir: SOUTH, len: 4, word: ABAC\n" +
-                "pos: (5, 0), dir: SOUTH, len: 4, word: BAAC\n" +
-                "pos: (1, 0), dir: EAST, len: 4, word: ADDA\n" +
-                "pos: (0, 5), dir: EAST, len: 4, word: CDDA\n" +
-                "pos: (0, 3), dir: SOUTH, len: 2, word: FF\n" +
-                "pos: (0, 0), dir: SOUTH, len: 2, word: GG\n",
+                "pos: (2, 1), dir: SOUTH_EAST, len: 4, word: ADDA\n" +
+                        "pos: (1, 2), dir: SOUTH, len: 4, word: ACCC\n" +
+                        "pos: (4, 4), dir: WEST, len: 4, word: CAAC\n" +
+                        "pos: (5, 0), dir: SOUTH_WEST, len: 4, word: CDDA\n" +
+                        "pos: (4, 0), dir: SOUTH_WEST, len: 4, word: AAAC\n" +
+                        "pos: (2, 5), dir: EAST, len: 4, word: ABAC\n" +
+                        "pos: (5, 3), dir: NORTH_WEST, len: 4, word: BBAC\n" +
+                        "pos: (0, 5), dir: NORTH, len: 4, word: BAAC\n" +
+                        "pos: (0, 0), dir: EAST, len: 4, word: ABCC\n" +
+                        "pos: (1, 1), dir: SOUTH_EAST, len: 4, word: BABC\n",
                 buffer.toString())
     }
 
@@ -182,28 +181,28 @@ class GameTest {
         dictionary.insert("FF")
 
         val config = Config(6, 6, dictionary, 80)
-        val game = Game(config, Scoring(), DeterministicSequencer(config))
+        val game = Game(config, Scoring(), RandomSequencer(config, 1))
         game.populatePuzzle()
         assertEquals(
-                "G S A N B N \n" +
-                "P O C C T I \n" +
-                "M C E A I L \n" +
-                "U D A A A H \n" +
-                "T B B A C A \n" +
-                "B R F G C K \n", game.toString())
+                "S S B N A B \n" +
+                        "F I A R E P \n" +
+                        "M A E D I T \n" +
+                        "D C A L D H \n" +
+                        "G C A A C A \n" +
+                        "K C G C U O \n", game.toString())
     }
 
     @Test
     fun test_06_fill() {
         val config = Config(6, 6, Trie(), 80)
-        val game = Game(config, Scoring(), DeterministicSequencer(config))
+        val game = Game(config, Scoring(), RandomSequencer(config, 1))
         game.fillEmptyCells()
         assertEquals(
-                "F K G D S B \n" +
-                "L R E N R N \n" +
-                "M H A F K O \n" +
-                "U D P U H C \n" +
-                "P G L C O A \n" +
-                "T S M I E I \n", game.toString())
+                "K I P N M H \n" +
+                        "M G O E T U \n" +
+                        "O H K P F B \n" +
+                        "I L R T C D \n" +
+                        "S A S R E A \n" +
+                        "C N B L D G \n", game.toString())
     }
 }

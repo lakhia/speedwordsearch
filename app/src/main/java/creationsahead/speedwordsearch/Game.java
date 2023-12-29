@@ -63,22 +63,19 @@ public class Game implements TickerCallback {
      * Fill all the empty cells with random letters
      */
     public void fillEmptyCells() {
-        // Need indirection to allow modification in lambda function
-        final int[][] letterSeq = { sequencer.getLetterSequence() };
-        final int[] index = { 0 };
+        final SequenceIterator<Character> iterator = sequencer.getLetterSequence();
+
         grid.findUnusedCells((position) -> {
             // Ignore placeholder cells
             if (!grid.getCell(position.x, position.y).isEmpty()) {
                 return false;
             }
-            char letter = (char) ('A' + letterSeq[0][index[0]]);
+            char letter = iterator.next();
             if (!grid.addLetter(position, letter)) {
                 throw new RuntimeException("Could not add letter");
             }
-            index[0]++;
-            if (index[0] >= letterSeq[0].length) {
-                index[0] = 0;
-                letterSeq[0] = sequencer.getLetterSequence();
+            if (!iterator.hasNext()) {
+                iterator.shuffle();
             }
             return false;
         });

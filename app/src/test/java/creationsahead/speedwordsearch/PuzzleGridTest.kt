@@ -10,9 +10,9 @@ import org.junit.Test
  */
 class PuzzleGridTest {
 
-    fun fill_grid(): PuzzleGrid {
+    private fun fill_grid(): PuzzleGrid {
         val config = Config(4, 4, Trie(), 1)
-        val grid = PuzzleGrid(config, Scoring(), DeterministicSequencer(config))
+        val grid = PuzzleGrid(config, Scoring(), RandomSequencer(config, 1))
         grid.addWord(Selection(0, 0, Direction.EAST, 4), "test")
         grid.addWord(Selection(3, 0, Direction.SOUTH, 4), "tart")
         grid.addWord(Selection(3, 3, Direction.WEST, 4), "take")
@@ -26,7 +26,7 @@ class PuzzleGridTest {
     fun test_01_duplicates() {
         val config = Config(6, 3, Trie(), 1)
         val scoring = Scoring()
-        val grid = PuzzleGrid(config, scoring, DeterministicSequencer(config))
+        val grid = PuzzleGrid(config, scoring, RandomSequencer(config, 1))
         val empty =
                 ". . . . . . \n" +
                 ". . . . . . \n" +
@@ -72,7 +72,7 @@ class PuzzleGridTest {
     fun test_03_insert_diagonal() {
         val config = Config(4, 4, Trie(), 1)
         val scoring = Scoring()
-        val grid = PuzzleGrid(config, scoring, DeterministicSequencer(config))
+        val grid = PuzzleGrid(config, scoring, RandomSequencer(config, 1))
         grid.addWord(Selection(0, 0, Direction.SOUTH_EAST, 4), "test")
         grid.addWord(Selection(2, 0, Direction.SOUTH_WEST, 3), "yes")
         grid.addWord(Selection(1, 3, Direction.NORTH_EAST, 3), "ask")
@@ -113,7 +113,7 @@ class PuzzleGridTest {
     @Test
     fun test_04_no_successful_inserts() {
         val config = Config(4, 4, Trie(), 1)
-        val grid = PuzzleGrid(config, Scoring(), DeterministicSequencer(config))
+        val grid = PuzzleGrid(config, Scoring(), RandomSequencer(config, 1))
         grid.addWord(Selection(1, 0, Direction.EAST, 4), "test")
         grid.addWord(Selection(0, 1, Direction.SOUTH, 4), "test")
         grid.addWord(Selection(2, 0, Direction.WEST, 4), "test")
@@ -136,24 +136,27 @@ class PuzzleGridTest {
         var pos = grid.findUnusedCells(null)
         assertEquals(null, pos)
 
-        // Remove one word that does not free any cells
+        // Remove two words that do not free any cells
         grid.removeWord("tart")
         pos = grid.findUnusedCells(null)
         assertEquals(null, pos)
+        grid.removeWord("east")
+        pos = grid.findUnusedCells(null)
+        assertEquals(null, pos)
 
-        // Remove one word that makes exactly one cell unused
-        grid.removeWord("afar")
+        // Remove one word that makes a few cells unused
+        grid.removeWord("saga")
         pos = grid.findUnusedCells(null)
         assertNotNull(pos)
         assertEquals(3, pos?.x)
-        assertEquals(2, pos?.y)
+        assertEquals(1, pos?.y)
 
         // Test cell
-        var cell = grid.getCell(3, 2)
+        var cell = grid.getCell(3, 1)
         assertFalse(cell.isEmpty)
         assertTrue(cell.isUnused)
         assertEquals(Cell.EMPTY, cell.searchValue)
-        assertEquals('r', cell.letter)
+        assertEquals('a', cell.letter)
 
         cell = grid.getCell(2, 3)
         assertFalse(cell.isEmpty)
@@ -161,11 +164,11 @@ class PuzzleGridTest {
         assertEquals('a', cell.searchValue)
 
         // Clear unused cell
-        assertTrue(grid.clearLetter(Position(3, 2)))
+        assertTrue(grid.clearLetter(Position(3, 1)))
         assertFalse(grid.clearLetter(Position(2, 3)))
 
         // Test cell again
-        cell = grid.getCell(3, 2)
+        cell = grid.getCell(3, 1)
         assertTrue(cell.isEmpty)
         assertTrue(cell.isUnused)
         assertEquals(Cell.EMPTY, cell.searchValue)

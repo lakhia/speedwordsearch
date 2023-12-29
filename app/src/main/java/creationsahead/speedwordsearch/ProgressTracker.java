@@ -103,7 +103,9 @@ public class ProgressTracker implements ScoreInterface {
                                 currentLevel + 5,
                                 WordList.dictionary,
                                 MAX_DIFFICULTY * currentLevel / MAX_LEVEL);
-            game = new Game(config, this, new RandomSequencer(config));
+            game = new Game(config,
+                            this,
+                            new RandomSequencer(config, (int) System.currentTimeMillis()));
         }
     }
 }
