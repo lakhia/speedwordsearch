@@ -1,7 +1,9 @@
 package creationsahead.speedwordsearch
 
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Before
 import org.junit.Test
 import java.io.Reader
 import java.io.StringReader
@@ -29,19 +31,21 @@ class ProgressTrackerTest {
         }
     }
 
-    class Score : ScoreCallback {
-        var scores = ""
-        override fun updateScore(score: Int) {
-            scores += "," + score
-        }
+    private val storage = Storage()
+    private val progress = ProgressTracker.getInstance()
+
+    @Before
+    fun init() {
+        progress.init(storage)
+    }
+
+    @After
+    fun cleanup() {
+        progress.destroy()
     }
 
     @Test
     fun test_01_init() {
-        val storage = Storage()
-        val progress = ProgressTracker.getInstance()
-        progress.init(storage)
-
         assertNotNull(progress.config)
         assertNotNull(progress.config.dictionary)
         assertEquals(5, progress.config.sizeX)
@@ -52,18 +56,18 @@ class ProgressTrackerTest {
 
     @Test
     fun test_02_progress() {
-        val storage = Storage()
-        val score = Score()
-        val progress = ProgressTracker.getInstance()
-        progress.init(storage)
-        progress.callback = score
+        val selection = Selection(0, 0, Direction.NORTH, 5)
 
-        progress.addScore(50)
-        progress.addScore(40)
-        progress.addScore(30)
-        progress.addScore(20)
-        progress.addScore(10)
-        assertEquals(",50,90,120,140,150", score.scores)
+        var answer = Answer(selection, "h", 50)
+        answer.notifyScoreClaimed()
+        answer = Answer(selection, "h", 40)
+        answer.notifyScoreClaimed()
+        answer = Answer(selection, "h", 30)
+        answer.notifyScoreClaimed()
+        answer = Answer(selection, "h", 20)
+        answer.notifyScoreClaimed()
+        answer = Answer(selection, "h", 10)
+        answer.notifyScoreClaimed()
 
         progress.incrementLevel()
 
@@ -78,6 +82,5 @@ class ProgressTrackerTest {
         assertEquals(6, progress.config.sizeY)
 
         assertNotNull(progress.game)
-        assertEquals(",50,90,120,140,150", score.scores)
     }
 }

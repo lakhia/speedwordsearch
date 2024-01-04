@@ -108,7 +108,6 @@ public class PuzzleGrid {
             y += selection.direction.y;
         }
         answerMap.remove(word);
-        mScoreTracker.addScore(answer.score);
         answer.notifyScoreClaimed();
         return true;
     }

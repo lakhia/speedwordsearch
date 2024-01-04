@@ -1,7 +1,7 @@
 package creationsahead.speedwordsearch;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * A game manages the puzzle grid
@@ -10,7 +10,6 @@ public class Game implements TickerCallback {
     @NonNull private final PuzzleGrid grid;
     @NonNull private final Config config;
     @NonNull private final Sequencer sequencer;
-    @Nullable public GameCallback callback;
     private boolean success;
     private int letterCount;
 
@@ -30,6 +29,10 @@ public class Game implements TickerCallback {
      */
     @Override
     public void onTick(int tickCount) {
+        // TODO: convert tick to events, and unregister on win
+        if (grid.answerMap.isEmpty()) {
+            return;
+        }
         if (tickCount % 10 == 5) {
             tickCount /= 10;
             int bonusVal = sequencer.getBonus(tickCount);
@@ -133,9 +136,10 @@ public class Game implements TickerCallback {
     /**
      * Visit all the answers
      */
-    public void visitAnswers(@NonNull AnswerCallback callback) {
+    public void visitAnswers() {
         for (Answer answer : grid.answerMap.values()) {
-            callback.onUpdate(answer, Event.VISIT);
+            answer.event = Event.WORD_ADDED;
+            EventBus.getDefault().post(answer);
         }
     }
 
@@ -148,10 +152,14 @@ public class Game implements TickerCallback {
         // Use placeholder letters to find word so that accidental words are found
         String answer = grid.findContents(selection, false);
         boolean success = grid.removeWord(answer);
-        if (grid.answerMap.isEmpty() && callback != null) {
-            callback.onWin(this);
+        if (grid.answerMap.isEmpty()) {
+            onWin();
         }
         return success;
+    }
+
+    private void onWin() {
+        EventBus.getDefault().post(Event.LEVEL_WON);
     }
 
     @NonNull

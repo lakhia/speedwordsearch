@@ -2,6 +2,7 @@ package creationsahead.speedwordsearch;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * A word that is stored in puzzle grid
@@ -11,7 +12,7 @@ public class Answer {
     @NonNull public final Selection selection;
     @Nullable public Bonus bonus;
     @Nullable public Object tag;
-    @Nullable public static AnswerCallback callback;
+    public Event event;
     public final int score;
 
     /**
@@ -21,18 +22,16 @@ public class Answer {
         this.selection = selection;
         this.word = word;
         this.score = score;
-        if (callback != null) {
-            callback.onUpdate(this, Event.WORD_ADDED);
-        }
+        event = Event.WORD_ADDED;
+        EventBus.getDefault().post(this);
     }
 
     /**
      * Called when word is removed and score claimed
      */
     public void notifyScoreClaimed() {
-        if (callback != null) {
-            callback.onUpdate(this, Event.SCORE_AWARDED);
-        }
+        event = Event.SCORE_AWARDED;
+        EventBus.getDefault().post(this);
     }
 
     /**
@@ -54,8 +53,7 @@ public class Answer {
 
     public void setBonus(@NonNull Bonus bonus) {
         this.bonus = bonus;
-        if (callback != null) {
-            callback.onUpdate(this, Event.BONUS_ADDED);
-        }
+        event = Event.BONUS_ADDED;
+        EventBus.getDefault().post(this);
     }
 }

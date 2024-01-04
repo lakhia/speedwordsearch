@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
+import creationsahead.speedwordsearch.BuildConfig;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.StorageInterface;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.zip.GZIPInputStream;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * The application instance is started on app launch and initializes other
@@ -24,7 +26,15 @@ public class GameApplication extends Application implements StorageInterface {
     public void onCreate() {
         super.onCreate();
         Iconify.with(new FontAwesomeModule());
+        EventBus.builder().throwSubscriberException(BuildConfig.DEBUG).
+            sendNoSubscriberEvent(false).installDefaultEventBus();
         ProgressTracker.getInstance().init(this);
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        ProgressTracker.getInstance().destroy();
     }
 
     @NonNull

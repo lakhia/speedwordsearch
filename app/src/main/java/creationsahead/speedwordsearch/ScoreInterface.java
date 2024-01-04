@@ -7,5 +7,4 @@ import android.support.annotation.NonNull;
  */
 public interface ScoreInterface {
     int computeScore(@NonNull String word);
-    void addScore(int score);
 }

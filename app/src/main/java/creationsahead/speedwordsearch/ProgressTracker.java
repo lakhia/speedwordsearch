@@ -2,6 +2,9 @@ package creationsahead.speedwordsearch;
 
 import android.support.annotation.NonNull;
 import java.io.IOException;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Tracks progress and manages instance of current game
@@ -16,8 +19,6 @@ public class ProgressTracker implements ScoreInterface {
     public Config config;
     /** Current game */
     public Game game;
-    /** Score callback */
-    public ScoreCallback callback;
 
     private int currentLevel = 0;
     private int currentScore = 0;
@@ -46,11 +47,16 @@ public class ProgressTracker implements ScoreInterface {
         storageInterface = storage;
         currentScore = storageInterface.getPreference(SCORE);
         currentLevel = storageInterface.getPreference(LEVEL);
+        EventBus.getDefault().register(this);
         try {
             WordList.init(storageInterface.getAssetInputStream("words_9k.db"));
             reset();
         } catch (IOException ignored) {
         }
+    }
+
+    public void destroy() {
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -89,11 +95,10 @@ public class ProgressTracker implements ScoreInterface {
     /**
      * Add score to current user score
      */
-    @Override
-    public void addScore(int score) {
-        currentScore += score;
-        if (callback != null) {
-            callback.updateScore(currentScore);
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void addScore(Answer answer) {
+        if (answer.event == Event.SCORE_AWARDED) {
+            currentScore += answer.score;
         }
     }
 

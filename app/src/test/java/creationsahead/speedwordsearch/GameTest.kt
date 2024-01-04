@@ -1,7 +1,12 @@
 package creationsahead.speedwordsearch
 
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.junit.After
 import org.junit.Test
 import org.junit.Assert.*
+import org.junit.Before
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -9,9 +14,18 @@ import org.junit.Assert.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class GameTest {
+    private val dictionary: Trie = Trie()
+    private lateinit var displayBuffer: StringBuffer
+    private lateinit var answerBuffer: StringBuffer
+    private var totalScore: Int = 0
 
-    private fun init(): Trie {
-        val dictionary = Trie()
+    @Before
+    fun init() {
+        EventBus.getDefault().register(this)
+        displayBuffer = StringBuffer()
+        answerBuffer = StringBuffer()
+        totalScore = 0
+
         dictionary.insert("ABAC")
         dictionary.insert("BBAC")
         dictionary.insert("BAAC")
@@ -20,13 +34,25 @@ class GameTest {
         dictionary.insert("BABC")
         dictionary.insert("ACCC")
         dictionary.insert("ABCC")
-        return dictionary
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdate(answer: Answer) {
+        if (answer.event == Event.WORD_ADDED) {
+            displayBuffer.append(answer.display + " ")
+        } else if (answer.event == Event.SCORE_AWARDED) {
+            totalScore += answer.score
+        }
+        answerBuffer.append(answer.toString() + "\n")
+    }
+
+    @After
+    fun cleanup() {
+        EventBus.getDefault().unregister(this)
     }
 
     @Test
     fun test_01_game() {
-        val dictionary = init()
-
         val config = Config(4, 4, dictionary, 1)
         val game = Game(config, Scoring(), RandomSequencer(config, 1))
         assertEquals(true, game.addOneWord(4, 4))
@@ -51,7 +77,6 @@ class GameTest {
 
     @Test
     fun test_02_big_board() {
-        val dictionary = init()
         val scoring = Scoring()
         val config = Config(8, 8, dictionary, 1)
         val game = Game(config, scoring, RandomSequencer(config, 1))
@@ -75,32 +100,29 @@ class GameTest {
                         ". . . C A A B . \n" +
                         ". . . . . . . . \n", game.toString())
 
-        // Visit answers
-        val buffer = StringBuffer()
-        game.visitAnswers { answer, _ -> buffer.append(answer.display + " ") }
-        assertEquals("ACCC AAAC ABAC BBAC BABC CAAC BAAC ABCC ",
-                buffer.toString())
+        assertEquals("CAAC ABAC ACCC BABC AAAC BBAC BAAC ABCC ",
+                displayBuffer.toString())
 
         // Correct direction guessing
         assertFalse(game.guess(Selection(1, 2, Direction.EAST, 4)))
         assertFalse(game.guess(Selection(7, 2, Direction.WEST, 4)))
         assertTrue(game.guess(Selection(7, 2, Direction.SOUTH, 4)))
         assertTrue(game.guess(Selection(2, 5, Direction.EAST, 4)))
-        assertEquals(10, scoring.totalScore)
+        assertEquals(10, totalScore)
 
         // Opposite direction guessing
         assertTrue(game.guess(Selection(4, 3, Direction.WEST, 4)))
-        assertEquals(15, scoring.totalScore)
+        assertEquals(15, totalScore)
 
         // Palindrome
         assertTrue(game.guess(Selection(0, 0, Direction.SOUTH_EAST, 4)))
-        assertEquals(20, scoring.totalScore)
+        assertEquals(20, totalScore)
 
         // Visit answers again
-        buffer.delete(0, buffer.length)
-        game.visitAnswers { answer, _ -> buffer.append(answer.display + " ") }
+        displayBuffer.delete(0, displayBuffer.length)
+        game.visitAnswers()
         assertEquals("ABAC BBAC BABC BAAC ",
-                buffer.toString())
+                displayBuffer.toString())
 
         // Clear placeholders
         game.clearPlaceholders(30)
@@ -117,7 +139,6 @@ class GameTest {
 
     @Test
     fun test_03_min_max() {
-        val dictionary = init()
         dictionary.insert("DDD")
 
         val config = Config(5, 5, dictionary, 1)
@@ -139,14 +160,10 @@ class GameTest {
 
     @Test
     fun test_04_populate() {
-        val dictionary = init()
-        val buffer = StringBuffer()
         dictionary.insert("ADDA")
         dictionary.insert("CDDA")
         dictionary.insert("GG")
         dictionary.insert("FF")
-
-        Answer.callback = AnswerCallback { answer, _ -> buffer.append(answer.toString() + "\n") }
 
         val config = Config(6, 6, dictionary, 1)
         val game = Game(config, Scoring(), RandomSequencer(config, 1))
@@ -169,12 +186,11 @@ class GameTest {
                         "pos: (0, 5), dir: NORTH, len: 4, word: BAAC\n" +
                         "pos: (0, 0), dir: EAST, len: 4, word: ABCC\n" +
                         "pos: (1, 1), dir: SOUTH_EAST, len: 4, word: BABC\n",
-                buffer.toString())
+                answerBuffer.toString())
     }
 
     @Test
     fun test_05_populate_difficult() {
-        val dictionary = init()
         dictionary.insert("ADDA")
         dictionary.insert("CDDA")
         dictionary.insert("GG")
@@ -194,7 +210,7 @@ class GameTest {
 
     @Test
     fun test_06_fill() {
-        val config = Config(6, 6, Trie(), 80)
+        val config = Config(6, 6, dictionary, 80)
         val game = Game(config, Scoring(), RandomSequencer(config, 1))
         game.fillEmptyCells()
         assertEquals(

@@ -8,16 +8,19 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.Game;
-import creationsahead.speedwordsearch.GameCallback;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R ;
 import creationsahead.speedwordsearch.TickerCallback;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Primary activity for game play
  */
-public class GameActivity extends Activity implements GameCallback, TickerCallback {
+public class GameActivity extends Activity implements TickerCallback {
     public static final String LOSE = "lose";
     public static final String WIN = "win";
     private static final int TIME_LIMIT = 60 * 5;
@@ -36,7 +39,6 @@ public class GameActivity extends Activity implements GameCallback, TickerCallba
 
         game = ProgressTracker.getInstance().game;
         game.populatePuzzle();
-        game.callback = this;
 
         topLayout = findViewById(R.id.topLayout);
         if (gridWidget == null || wordListWidget == null || scoreBar == null) {
@@ -67,19 +69,23 @@ public class GameActivity extends Activity implements GameCallback, TickerCallba
     @Override
     protected void onResume() {
         super.onResume();
+        EventBus.getDefault().register(this);
         timer.startOrResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        EventBus.getDefault().unregister(this);
         timer.pause();
     }
 
-    @Override
-    public void onWin(@NonNull Game game) {
-        ProgressTracker.getInstance().incrementLevel();
-        finishActivity(WIN);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWin(@NonNull Event event) {
+        if (event == Event.LEVEL_WON) {
+            ProgressTracker.getInstance().incrementLevel();
+            finishActivity(WIN);
+        }
     }
 
     @Override
@@ -98,8 +104,6 @@ public class GameActivity extends Activity implements GameCallback, TickerCallba
     }
 
     private void finishActivity(String outcome) {
-        game.callback = null;
-
         Intent intent = new Intent(this, LevelActivity.class);
         intent.setAction(outcome);
         startActivity(intent);

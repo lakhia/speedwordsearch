@@ -12,17 +12,20 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import creationsahead.speedwordsearch.Cell;
-import creationsahead.speedwordsearch.CellCallback;
+import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.Selection;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import static android.util.TypedValue.COMPLEX_UNIT_PX;
 
 /**
  * Widget that displays grid
  */
-public class GridWidget extends TableLayout implements CellCallback, View.OnClickListener {
+public class GridWidget extends TableLayout implements View.OnClickListener {
     private int lastX = -1, lastY = -1;
     private int cellSize = -1;
     @Nullable private View lastSelection = null;
@@ -55,13 +58,13 @@ public class GridWidget extends TableLayout implements CellCallback, View.OnClic
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        Cell.callback = this;
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Cell.callback = null;
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -88,6 +91,9 @@ public class GridWidget extends TableLayout implements CellCallback, View.OnClic
                     textView.getPaint().getTextBounds("W", 0, 1, bounds);
                     int max = Math.max(bounds.width(), bounds.height());
                     fontSize = 0.6f * textView.getTextSize() * cellSize / max;
+                    Event event = Event.FONT_SIZE;
+                    event.fontSize = fontSize;
+                    EventBus.getDefault().post(event);
                 }
                 textView.setTextSize(COMPLEX_UNIT_PX, fontSize);
                 textView.measure(cellSize, cellSize);
@@ -97,7 +103,7 @@ public class GridWidget extends TableLayout implements CellCallback, View.OnClic
         }
     }
 
-    @Override
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChanged(@NonNull Cell cell) {
         if (cell.tag != null) {
             TextView textView = (TextView) cell.tag;

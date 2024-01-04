@@ -6,21 +6,27 @@ import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import creationsahead.speedwordsearch.Answer;
+import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
-import creationsahead.speedwordsearch.ScoreCallback;
 import creationsahead.speedwordsearch.TickerCallback;
 import java.util.Locale;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Top bar showing time
  */
-public class ScoreBar extends LinearLayout implements TickerCallback, ScoreCallback {
+public class ScoreBar extends LinearLayout implements TickerCallback {
     @NonNull private final TextView timeWidget;
     @NonNull private final TextView scoreWidget;
 
     public ScoreBar(Context context, AttributeSet attrs) {
         super(context, attrs);
+        EventBus.getDefault().register(this);
+
         setOrientation(HORIZONTAL);
 
         ContextThemeWrapper newContext = new ContextThemeWrapper(getContext(), R.style.WordList);
@@ -31,7 +37,13 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ScoreCallb
         if (isInEditMode()) {
             timeWidget.setText("4:55");
         }
-        updateScore(ProgressTracker.getInstance().getCurrentScore());
+        updateScore(null);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -42,21 +54,12 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ScoreCallb
                                          "%02d:%02d", minutes, seconds));
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        ProgressTracker.getInstance().callback = this;
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        ProgressTracker.getInstance().callback = null;
-    }
-
-    @Override
-    public void updateScore(int score) {
-        scoreWidget.setText(String.format(Locale.ENGLISH,
-                                          "%03d", score));
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateScore(Answer answer) {
+        if (answer == null || answer.event == Event.SCORE_AWARDED) {
+            scoreWidget.setText(String.format(Locale.ENGLISH,
+                                              "%03d",
+                                              ProgressTracker.getInstance().getCurrentScore()));
+        }
     }
 }

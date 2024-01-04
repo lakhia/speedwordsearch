@@ -37,12 +37,10 @@ class PuzzleGridTest {
         grid.addWord(Selection(1, 0, Direction.EAST, 4), "test")
         assertFalse(grid.addWord(Selection(2, 0, Direction.EAST, 4), "test"))
         assertTrue(grid.removeWord("test"))
-        assertEquals(5, scoring.totalScore)
 
         // Add again
         assertTrue(grid.addWord(Selection(1, 0, Direction.EAST, 4), "test"))
         assertTrue(grid.removeWord("test"))
-        assertEquals(10, scoring.totalScore)
     }
 
     @Test
@@ -94,7 +92,6 @@ class PuzzleGridTest {
         assertFalse(grid.removeWord("tok"))
         assertFalse(grid.removeWord("kakt"))
         assertEquals(string, grid.toString())
-        assertEquals(0, scoring.totalScore)
 
         // Remove word
         grid.removeWord("test")

@@ -2,12 +2,12 @@ package creationsahead.speedwordsearch;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * A cell in a puzzle grid contains a letter and reference count
  */
 public class Cell {
-    @Nullable public static CellCallback callback;
     public static final char EMPTY = '.';
     public char letter;
     @Nullable public Object tag;
@@ -43,9 +43,7 @@ public class Cell {
     public boolean clear() {
         if (refCount == 0) {
             letter = EMPTY;
-            if (callback != null) {
-                callback.onChanged(this);
-            }
+            EventBus.getDefault().post(this);
             return true;
         }
         return false;
@@ -75,9 +73,7 @@ public class Cell {
             return false;
         }
         this.letter = letter;
-        if (callback != null) {
-            callback.onChanged(this);
-        }
+        EventBus.getDefault().post(this);
         return true;
     }
 
