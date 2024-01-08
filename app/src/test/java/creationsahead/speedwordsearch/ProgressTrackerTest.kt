@@ -17,6 +17,18 @@ class ProgressTrackerTest {
 
     class Storage : StorageInterface {
         var map: HashMap<String, Int> = HashMap()
+        var level : Level? = null
+
+        override fun getLevel(index: Int): Level? {
+            if (level != null && level!!.number == index) {
+                return level;
+            }
+            return null
+        }
+
+        override fun storeLevel(level: Level) {
+            this.level = level
+        }
 
         override fun getPreference(key: String): Int {
             return map[key] ?: return 0
@@ -68,13 +80,17 @@ class ProgressTrackerTest {
         answer.notifyScoreClaimed()
         answer = Answer(selection, "h", 10)
         answer.notifyScoreClaimed()
+        assertEquals(150, progress.currentScore)
 
         progress.incrementLevel()
+        assertEquals(0, storage.level!!.number)
+        assertEquals(150, storage.level!!.score)
+        assertEquals(2, storage.level!!.stars)
 
-        assertEquals(150, progress.currentScore)
+        assertEquals(0, progress.currentScore)
         assertEquals(1, progress.currentLevel)
-        assertEquals(150, storage.map[ProgressTracker.SCORE])
         assertEquals(1, storage.map[ProgressTracker.LEVEL])
+        assertEquals(1, storage.map[ProgressTracker.LEVEL_VISIBLE])
 
         assertNotNull(progress.config)
         assertNotNull(progress.config.dictionary)

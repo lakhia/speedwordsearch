@@ -33,8 +33,8 @@ public class Game implements TickerCallback {
         if (grid.answerMap.isEmpty()) {
             return;
         }
-        if (tickCount % 10 == 5) {
-            tickCount /= 10;
+        if (tickCount % 20 == 5) {
+            tickCount /= 20;
             int bonusVal = sequencer.getBonus(tickCount);
             Bonus bonus = Bonus.find(bonusVal);
             if (bonus != null) {

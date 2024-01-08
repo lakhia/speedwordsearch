@@ -23,7 +23,6 @@ import org.greenrobot.eventbus.ThreadMode;
 public class GameActivity extends Activity implements TickerCallback {
     public static final String LOSE = "lose";
     public static final String WIN = "win";
-    private static final int TIME_LIMIT = 60 * 5;
     private GridWidget gridWidget;
     private WordListWidget wordListWidget;
     private ScoreBar scoreBar;
@@ -53,7 +52,7 @@ public class GameActivity extends Activity implements TickerCallback {
         if (timer != null) {
             timer.pause();
         }
-        timer = new Ticker(this, this, TIME_LIMIT);
+        timer = new Ticker(this, this, ProgressTracker.getInstance().config.timeLimit);
     }
 
     @Override
@@ -93,7 +92,7 @@ public class GameActivity extends Activity implements TickerCallback {
         if (tickCount <= 0) {
             finishActivity(LOSE);
         } else {
-            game.onTick(TIME_LIMIT - tickCount);
+            game.onTick(tickCount);
             scoreBar.onTick(tickCount);
         }
     }

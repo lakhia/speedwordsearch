@@ -12,12 +12,14 @@ public class Config {
     public final int difficulty;
     /** Desired letter ratio, out of 100 */
     public final int letterRatio;
+    public int timeLimit;
 
     public Config(int sizeX, int sizeY, @NonNull Trie dictionary, int difficulty) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.dictionary = dictionary;
         this.difficulty = difficulty;
-        this.letterRatio = (int) ((100-difficulty) * 1.5f);
+        timeLimit = 60 + (100 - difficulty) * 60 / 100;
+        letterRatio = (int) ((100-difficulty) * 1.5f);
     }
 }

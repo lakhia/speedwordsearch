@@ -11,11 +11,14 @@ public enum Event {
 
     // UI related events
     FONT_SIZE,
+    SYNC,
 
     // Game related events
+    LEVEL_STARTED,
     LEVEL_WON,
     GAME_WON;
 
     // Event specific payload
     public float fontSize;
+    public int levelNumber;
 }
