@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RatingBar;
 import creationsahead.speedwordsearch.Event;
-import creationsahead.speedwordsearch.Level;
+import creationsahead.speedwordsearch.mod.Level;
 import creationsahead.speedwordsearch.R;
 import org.greenrobot.eventbus.EventBus;
 

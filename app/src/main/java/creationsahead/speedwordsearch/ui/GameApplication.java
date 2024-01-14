@@ -12,7 +12,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import creationsahead.speedwordsearch.BuildConfig;
-import creationsahead.speedwordsearch.Level;
+import creationsahead.speedwordsearch.mod.Level;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.StorageInterface;
 import java.io.FileInputStream;

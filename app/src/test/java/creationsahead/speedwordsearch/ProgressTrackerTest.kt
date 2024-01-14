@@ -1,5 +1,6 @@
 package creationsahead.speedwordsearch
 
+import creationsahead.speedwordsearch.mod.Level
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull

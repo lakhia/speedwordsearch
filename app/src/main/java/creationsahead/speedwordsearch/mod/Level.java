@@ -1,4 +1,4 @@
-package creationsahead.speedwordsearch;
+package creationsahead.speedwordsearch.mod;
 
 /**
  * A single level
