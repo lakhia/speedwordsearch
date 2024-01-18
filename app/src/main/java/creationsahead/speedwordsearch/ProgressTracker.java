@@ -78,11 +78,13 @@ public class ProgressTracker implements ScoreInterface {
 
     /**
      * User has finished current level
+     * @param timeLeft
      */
-    public void incrementLevel() {
+    public void incrementLevel(int timeLeft) {
         // Store progress
         Level level = levels.get(currentLevel);
         level.stars = 4 * level.score / 300;
+        level.timeUsed = config.timeLimit - timeLeft;
 
         // Create new level or post game won event
         if (currentLevel > MAX_LEVEL) {
@@ -154,8 +156,8 @@ public class ProgressTracker implements ScoreInterface {
             levels.add(levelNum, null);
         }
         if (levels.get(levelNum) == null) {
-            // TODO: Hardcoded level name
-            levels.set(levelNum, new Level("The easy level", levelNum));
+            levels.set(levelNum, new Level("Easy level " + (levelNum + 1),
+                                           levelNum));
         }
     }
 }

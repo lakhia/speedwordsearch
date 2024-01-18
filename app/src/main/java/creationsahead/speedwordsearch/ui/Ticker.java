@@ -13,16 +13,16 @@ public class Ticker implements Runnable {
     @NonNull private final Handler handler;
     @NonNull public final TickerCallback callback;
     private boolean stop;
-    private int timeLimit = 0;
+    protected int timeLeft = 0;
 
     /**
      * Create a ticker
      */
-    public Ticker(@NonNull Context context, @NonNull TickerCallback callback, int timeLimit) {
+    public Ticker(@NonNull Context context, @NonNull TickerCallback cb, int timeLimit) {
         handler = new Handler(context.getMainLooper());
-        this.timeLimit = timeLimit;
-        this.callback = callback;
-        this.stop = true;
+        timeLeft = timeLimit;
+        callback = cb;
+        stop = true;
     }
 
     /**
@@ -51,7 +51,7 @@ public class Ticker implements Runnable {
             handler.postDelayed(this, 1000);
         }
 
-        callback.onTick(timeLimit);
-        timeLimit--;
+        callback.onTick(timeLeft);
+        timeLeft--;
     }
 }

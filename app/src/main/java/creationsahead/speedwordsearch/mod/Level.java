@@ -8,8 +8,7 @@ public class Level {
     public int number;
     public int stars;
     public int score;
-    public int seed;
-    public int timeRemaining;
+    public int timeUsed;
 
     public Level() {}
 

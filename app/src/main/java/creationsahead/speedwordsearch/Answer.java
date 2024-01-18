@@ -51,9 +51,9 @@ public class Answer {
         return selection.toString() + ", word: " + word;
     }
 
-    public void setBonus(@NonNull Bonus bonus) {
-        this.bonus = bonus;
-        event = Event.BONUS_ADDED;
+    public void setBonus(@Nullable Bonus answerBonus) {
+        bonus = answerBonus;
+        event = Event.BONUS_UPDATED;
         EventBus.getDefault().post(this);
     }
 }

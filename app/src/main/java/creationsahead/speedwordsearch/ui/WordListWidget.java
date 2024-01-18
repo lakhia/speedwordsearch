@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import com.joanzapata.iconify.widget.IconTextView;
 import creationsahead.speedwordsearch.Answer;
@@ -62,7 +61,7 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
                 textView = (TextView) answer.tag;
                 removeView(textView);
                 break;
-            case BONUS_ADDED:
+            case BONUS_UPDATED:
                 textView = (TextView) answer.tag;
                 textView.setText(answer.getDisplay());
                 break;

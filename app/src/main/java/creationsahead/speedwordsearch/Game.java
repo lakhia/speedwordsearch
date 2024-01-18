@@ -38,8 +38,10 @@ public class Game implements TickerCallback {
             int bonusVal = sequencer.getBonus(tickCount);
             Bonus bonus = Bonus.find(bonusVal);
             if (bonus != null) {
-                grid.giveBonus(bonus);
+                grid.assignBonus(bonus);
             }
+        } else if (tickCount % 20 == 0) {
+            grid.removeLastBonus();
         }
     }
 

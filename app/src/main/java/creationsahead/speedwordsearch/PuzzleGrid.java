@@ -15,6 +15,7 @@ public class PuzzleGrid {
     @NonNull private final Config mConfig;
     @NonNull private final ScoreInterface mScoreTracker;
     @NonNull private final Sequencer mSequencer;
+    @Nullable private Answer lastBonusAnswer;
 
     /**
      * Create a grid using specified x and y size
@@ -229,15 +230,24 @@ public class PuzzleGrid {
     /**
      * Give a bonus to a random word in the grid
      */
-    public void giveBonus(Bonus bonus) {
+    public void assignBonus(Bonus bonus) {
         Collection<Answer> set = answerMap.values();
         int index = mSequencer.getMisc(set.size());
         Iterator<Answer> iterator = set.iterator();
         for (int i = 0; i < index; i++) {
             iterator.next();
         }
-        Answer answer = iterator.next();
-        answer.setBonus(bonus);
+        lastBonusAnswer = iterator.next();
+        lastBonusAnswer.setBonus(bonus);
+    }
+
+    /**
+     * Remove last bonus that was assigned
+     */
+    public void removeLastBonus() {
+        if (lastBonusAnswer != null) {
+            lastBonusAnswer.setBonus(null);
+        }
     }
 
     /**

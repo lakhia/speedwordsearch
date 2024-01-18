@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.mod.Level;
 import creationsahead.speedwordsearch.R;
+import creationsahead.speedwordsearch.utils.Utils;
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -32,6 +34,9 @@ public class LevelAdapter extends ArrayAdapter<Level> implements View.OnClickLis
         Level level = getItem(position);
         Button button = convertView.findViewById(R.id.toggleButton);
         button.setText(level.name);
+        TextView textView = convertView.findViewById(R.id.time);
+        textView.setText(Utils.formatTime(level.timeUsed));
+
         RatingBar bar = convertView.findViewById(R.id.ratingBar);
         bar.setNumStars(level.stars);
         convertView.setTag(level);

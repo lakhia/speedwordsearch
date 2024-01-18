@@ -82,7 +82,7 @@ public class GameActivity extends Activity implements TickerCallback {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWin(@NonNull Event event) {
         if (event == Event.LEVEL_WON) {
-            ProgressTracker.getInstance().incrementLevel();
+            ProgressTracker.getInstance().incrementLevel(timer.timeLeft);
             finishActivity(WIN);
         }
     }

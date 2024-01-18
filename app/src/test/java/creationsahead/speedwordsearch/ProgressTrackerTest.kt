@@ -61,8 +61,8 @@ class ProgressTrackerTest {
     fun test_01_init() {
         assertNotNull(progress.config)
         assertNotNull(progress.config.dictionary)
-        assertEquals(5, progress.config.sizeX)
-        assertEquals(5, progress.config.sizeY)
+        assertEquals(4, progress.config.sizeX)
+        assertEquals(4, progress.config.sizeY)
 
         assertNotNull(progress.game)
     }
@@ -70,6 +70,7 @@ class ProgressTrackerTest {
     @Test
     fun test_02_progress() {
         val selection = Selection(0, 0, Direction.NORTH, 5)
+        var timeLimit = progress.config.timeLimit
 
         var answer = Answer(selection, "h", 50)
         answer.notifyScoreClaimed()
@@ -83,10 +84,11 @@ class ProgressTrackerTest {
         answer.notifyScoreClaimed()
         assertEquals(150, progress.currentScore)
 
-        progress.incrementLevel()
+        progress.incrementLevel(5)
         assertEquals(0, storage.level!!.number)
         assertEquals(150, storage.level!!.score)
         assertEquals(2, storage.level!!.stars)
+        assertEquals(timeLimit - 5, storage.level!!.timeUsed)
 
         assertEquals(0, progress.currentScore)
         assertEquals(1, progress.currentLevel)
@@ -95,8 +97,8 @@ class ProgressTrackerTest {
 
         assertNotNull(progress.config)
         assertNotNull(progress.config.dictionary)
-        assertEquals(6, progress.config.sizeX)
-        assertEquals(6, progress.config.sizeY)
+        assertEquals(5, progress.config.sizeX)
+        assertEquals(5, progress.config.sizeY)
 
         assertNotNull(progress.game)
     }
