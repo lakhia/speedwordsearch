@@ -21,5 +21,5 @@ public enum Event {
     // Event specific payload
     public float fontSize;
     public int levelNumber;
-    public int timeLeft;
+    public boolean lastWordGuessed;
 }

@@ -49,7 +49,7 @@ public class Game implements TickerCallback {
      * Populate entire puzzle based on configuration
      */
     public void populatePuzzle() {
-        int letterLimit = config.sizeX * config.sizeY * config.letterRatio / 100;
+        int letterLimit = config.letterLimit;
         int maxSize = config.sizeX;
         int minSize = config.sizeX;
         while (letterCount < letterLimit) {
@@ -154,14 +154,10 @@ public class Game implements TickerCallback {
         // Use placeholder letters to find word so that accidental words are found
         String answer = grid.findContents(selection, false);
         boolean success = grid.removeWord(answer);
-        if (grid.answerMap.isEmpty()) {
-            onWin();
-        }
+        Event event = Event.SCORE_AWARDED;
+        event.lastWordGuessed = grid.answerMap.isEmpty();
+        EventBus.getDefault().post(event);
         return success;
-    }
-
-    private void onWin() {
-        EventBus.getDefault().post(Event.LEVEL_WON);
     }
 
     @NonNull

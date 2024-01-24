@@ -28,18 +28,20 @@ public class LevelAdapter extends ArrayAdapter<Level> implements View.OnClickLis
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
             convertView = View.inflate(getContext(), R.layout.single_level, null);
-            convertView.setOnClickListener(this);
         }
 
         Level level = getItem(position);
+
         Button button = convertView.findViewById(R.id.toggleButton);
         button.setText(level.name);
+        button.setOnClickListener(this);
+        button.setTag(level);
+
         TextView textView = convertView.findViewById(R.id.time);
         textView.setText(Utils.formatTime(level.timeUsed));
 
         RatingBar bar = convertView.findViewById(R.id.ratingBar);
         bar.setNumStars(level.stars);
-        convertView.setTag(level);
         return convertView;
     }
 

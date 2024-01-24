@@ -1,5 +1,6 @@
 package creationsahead.speedwordsearch.ui;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,7 +9,6 @@ import android.view.ContextThemeWrapper;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import creationsahead.speedwordsearch.Answer;
 import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
@@ -61,10 +61,10 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateScore(Answer answer) {
-        if (answer == null) {
+    public void updateScore(Event event) {
+        if (event == null) {
             updateScoreWidget();
-        } else if (answer.event == Event.SCORE_AWARDED) {
+        } else if (event == Event.SCORE_AWARDED) {
             if (anim != null) {
                 anim.cancel();
             }
@@ -75,6 +75,24 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
             anim.setDuration(1000);
             anim.setInterpolator(new AccelerateDecelerateInterpolator());
             anim.addUpdateListener(this);
+            if (event.lastWordGuessed) {
+                // Last word guessed, trigger event after animation is finished
+                anim.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {}
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        EventBus.getDefault().post(Event.LEVEL_WON);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {}
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {}
+                });
+            }
             anim.start();
         }
     }
