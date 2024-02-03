@@ -154,9 +154,19 @@ public class Game implements TickerCallback {
         // Use placeholder letters to find word so that accidental words are found
         String answer = grid.findContents(selection, false);
         boolean success = grid.removeWord(answer);
-        Event event = Event.SCORE_AWARDED;
-        event.lastWordGuessed = grid.answerMap.isEmpty();
-        EventBus.getDefault().post(event);
+
+        // Create score awarded event
+        if (success) {
+            Event event = Event.SCORE_AWARDED;
+            event.lastWordGuessed = grid.answerMap.isEmpty();
+            EventBus.getDefault().post(event);
+        }
+
+        // Create selection event
+        grid.visitSelection(selection,
+                            success ? Event.CELL_SELECTION_CORRECT :
+                            Event.CELL_SELECTION_INCORRECT);
+
         return success;
     }
 

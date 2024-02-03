@@ -2,7 +2,8 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorEditTextLight">#3ef</color>
+    <color name="colorLetters">#AF1021</color>
+    <color name="pinkAccent">#FF4081</color>
+    <color name="lightBlue">#3ef</color>
     <color name="black_overlay">#000000</color>
 </resources>

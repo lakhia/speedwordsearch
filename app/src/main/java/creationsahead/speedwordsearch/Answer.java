@@ -40,7 +40,7 @@ public class Answer {
     public String getDisplay() {
         String ret = word;
         if (bonus != null) {
-            ret += " {" + bonus.name + " @color/colorEditTextLight}";
+            ret += " {" + bonus.name + " @color/lightBlue}";
         }
         return ret;
     }

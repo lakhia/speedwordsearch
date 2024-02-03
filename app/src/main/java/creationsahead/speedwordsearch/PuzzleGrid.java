@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * A puzzle grid
@@ -247,6 +248,19 @@ public class PuzzleGrid {
     public void removeLastBonus() {
         if (lastBonusAnswer != null) {
             lastBonusAnswer.setBonus(null);
+        }
+    }
+
+    /**
+     * Visit selection using event
+     */
+    public void visitSelection(Selection selection, Event event) {
+        for (int x = selection.position.x, y = selection.position.y, i=0; i < selection.length; i++) {
+            Cell cell = mGrid[x][y];
+            cell.event = event;
+            EventBus.getDefault().post(cell);
+            x += selection.direction.x;
+            y += selection.direction.y;
         }
     }
 

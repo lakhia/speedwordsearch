@@ -31,6 +31,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     @Nullable private View lastSelection = null;
     private Rect bounds = new Rect();
     private float fontSize = -1;
+    private CellAnimator anim;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -107,7 +108,15 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     public void onChanged(@NonNull Cell cell) {
         if (cell.tag != null) {
             TextView textView = (TextView) cell.tag;
-            textView.setText(cell.toString());
+            if (cell.event == Event.CELL_STORED) {
+                textView.setText(cell.toString());
+            } else if (cell.event == Event.CELL_SELECTION_CORRECT ||
+                cell.event == Event.CELL_SELECTION_INCORRECT) {
+                if (anim == null) {
+                    anim = new CellAnimator(cell.event == Event.CELL_SELECTION_CORRECT);
+                }
+                anim.add(textView);
+            }
         }
     }
 
@@ -120,23 +129,18 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
             lastX = currentX;
             lastY = currentY;
             lastSelection = view;
-            view.setBackgroundResource(R.drawable.border_selected);
+            anim = null;
+            view.setBackgroundResource(R.drawable.cell_selected);
         } else {
-            lastSelection.setBackgroundResource(R.drawable.border);
+            lastSelection.setBackgroundResource(R.drawable.cell);
             lastSelection = null;
             Selection selection = Selection.isValid(lastX, lastY, currentX, currentY);
-            String error = null;
             if (selection != null) {
-                if (!ProgressTracker.getInstance().game.guess(selection)) {
-                    error = "Did not find word";
-                }
+                ProgressTracker.getInstance().game.guess(selection);
             } else {
                 if (currentX != lastX && currentY != lastY) {
-                    error = "Invalid Selection";
+                    Toast.makeText(getContext(), "Invalid Selection", Toast.LENGTH_SHORT).show();
                 }
-            }
-            if (error != null) {
-                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -11,7 +11,11 @@ public enum Event {
 
     // UI related events
     FONT_SIZE,
-    SYNC,
+
+    // Cell related events
+    CELL_STORED,
+    CELL_SELECTION_CORRECT,
+    CELL_SELECTION_INCORRECT,
 
     // Game related events
     LEVEL_STARTED,

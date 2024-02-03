@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import org.greenrobot.eventbus.EventBus;
 
+import static creationsahead.speedwordsearch.Event.CELL_STORED;
+
 /**
  * A cell in a puzzle grid contains a letter and reference count
  */
@@ -11,6 +13,7 @@ public class Cell {
     public static final char EMPTY = '.';
     public char letter;
     @Nullable public Object tag;
+    @Nullable public Event event;
     private int refCount;
 
     /**
@@ -73,6 +76,7 @@ public class Cell {
             return false;
         }
         this.letter = letter;
+        this.event = CELL_STORED;
         EventBus.getDefault().post(this);
         return true;
     }
