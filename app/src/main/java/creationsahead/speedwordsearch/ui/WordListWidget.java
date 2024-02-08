@@ -63,7 +63,9 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
                 break;
             case BONUS_UPDATED:
                 textView = (TextView) answer.tag;
-                textView.setText(answer.getDisplay());
+                if (textView != null) {
+                    textView.setText(answer.getDisplay());
+                }
                 break;
         }
     }

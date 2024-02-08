@@ -87,7 +87,7 @@ class ProgressTrackerTest {
         progress.incrementLevel(5)
         assertEquals(0, storage.level!!.number)
         assertEquals(150, storage.level!!.score)
-        assertEquals(2, storage.level!!.stars)
+        assertEquals(3.0f, storage.level!!.stars)
         assertEquals(timeLimit - 5, storage.level!!.timeUsed)
 
         assertEquals(0, progress.currentScore)

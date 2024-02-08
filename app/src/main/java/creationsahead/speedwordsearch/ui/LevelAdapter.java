@@ -41,7 +41,7 @@ public class LevelAdapter extends ArrayAdapter<Level> implements View.OnClickLis
         textView.setText(Utils.formatTime(level.timeUsed));
 
         RatingBar bar = convertView.findViewById(R.id.ratingBar);
-        bar.setNumStars(level.stars);
+        bar.setRating(level.stars);
         return convertView;
     }
 

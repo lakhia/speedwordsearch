@@ -78,12 +78,13 @@ public class ProgressTracker implements ScoreInterface {
 
     /**
      * User has finished current level
-     * @param timeLeft
+     * @param timeLeft Time left on clock
      */
     public void incrementLevel(int timeLeft) {
         // Store progress
         Level level = levels.get(currentLevel);
-        level.stars = 4 * level.score / 300;
+        // TODO: Scoring needs work
+        level.stars = 4 * level.score / 200.0f;
         level.timeUsed = config.timeLimit - timeLeft;
 
         // Create new level or post game won event
