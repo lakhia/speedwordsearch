@@ -3,6 +3,8 @@ package creationsahead.speedwordsearch.ui;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.transition.Fade;
+import android.support.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -59,7 +61,11 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
                 break;
             case SCORE_AWARDED:
                 textView = (TextView) answer.tag;
-                removeView(textView);
+                if (textView != null) {
+                    TransitionManager.beginDelayedTransition(this, new Fade());
+                    textView.setVisibility(INVISIBLE);
+                    answer.tag = null;
+                }
                 break;
             case BONUS_UPDATED:
                 textView = (TextView) answer.tag;

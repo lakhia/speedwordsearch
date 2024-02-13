@@ -12,9 +12,9 @@ import com.esotericsoftware.kryo.io.Output;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import creationsahead.speedwordsearch.BuildConfig;
-import creationsahead.speedwordsearch.mod.Level;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.StorageInterface;
+import creationsahead.speedwordsearch.mod.Level;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -30,7 +30,8 @@ import org.greenrobot.eventbus.EventBus;
  * singletons and classes
  */
 public class GameApplication extends Application implements StorageInterface {
-    private Kryo serializer = new Kryo();
+    public static int ANIMATION_DURATION = 1000;
+    @NonNull private Kryo serializer = new Kryo();
 
     @Override
     public void onCreate() {

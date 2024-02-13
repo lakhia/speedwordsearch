@@ -254,7 +254,7 @@ public class PuzzleGrid {
     /**
      * Visit selection using event
      */
-    public void visitSelection(Selection selection, Event event) {
+    public void visitSelection(@NonNull Selection selection, Event event) {
         for (int x = selection.position.x, y = selection.position.y, i=0; i < selection.length; i++) {
             Cell cell = mGrid[x][y];
             cell.event = event;

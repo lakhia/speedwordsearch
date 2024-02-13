@@ -2,7 +2,6 @@ package creationsahead.speedwordsearch
 
 import org.junit.Assert
 import org.junit.Test
-import kotlin.collections.HashMap
 
 /**
  * Example local unit test, which will execute on the development machine (host).

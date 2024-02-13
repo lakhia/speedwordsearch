@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.Game;
 import creationsahead.speedwordsearch.ProgressTracker;
-import creationsahead.speedwordsearch.R ;
+import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.TickerCallback;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -21,11 +21,11 @@ import org.greenrobot.eventbus.ThreadMode;
  * Primary activity for game play
  */
 public class GameActivity extends Activity implements TickerCallback {
-    public static final String LOSE = "lose";
-    public static final String WIN = "win";
-    private GridWidget gridWidget;
-    private WordListWidget wordListWidget;
-    private ScoreBar scoreBar;
+    @NonNull public static final String LOSE = "lose";
+    @NonNull public static final String WIN = "win";
+    @Nullable private GridWidget gridWidget;
+    @Nullable private WordListWidget wordListWidget;
+    @Nullable private ScoreBar scoreBar;
     private LinearLayout topLayout;
     private Ticker timer;
     private Game game;

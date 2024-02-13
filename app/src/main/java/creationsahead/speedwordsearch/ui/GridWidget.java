@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.transition.Explode;
+import android.support.transition.Transition;
+import android.support.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -21,6 +24,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import static android.util.TypedValue.COMPLEX_UNIT_PX;
+import static creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATION;
 
 /**
  * Widget that displays grid
@@ -29,9 +33,9 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     private int lastX = -1, lastY = -1;
     private int cellSize = -1;
     @Nullable private View lastSelection = null;
-    private Rect bounds = new Rect();
+    @NonNull private Rect bounds = new Rect();
     private float fontSize = -1;
-    private CellAnimator anim;
+    @Nullable private CellAnimator anim;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -117,6 +121,23 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
                 }
                 anim.add(textView);
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateScore(@NonNull Event event) {
+        if (event == Event.SCORE_AWARDED && event.lastWordGuessed) {
+            Transition explode = new Explode();
+            explode.setEpicenterCallback(new Transition.EpicenterCallback() {
+                    @NonNull
+                    @Override
+                    public Rect onGetEpicenter(@NonNull Transition transition) {
+                        return new Rect(0, 0, 0, 0);
+                    }
+                });
+            explode.setDuration(ANIMATION_DURATION);
+            TransitionManager.beginDelayedTransition(this, explode);
+            removeAllViews();
         }
     }
 

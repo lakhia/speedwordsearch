@@ -11,7 +11,7 @@ import creationsahead.speedwordsearch.TickerCallback;
 public class Ticker implements Runnable {
 
     @NonNull private final Handler handler;
-    @NonNull public final TickerCallback callback;
+    @NonNull private final TickerCallback callback;
     private boolean stop;
     protected int timeLeft = 0;
 

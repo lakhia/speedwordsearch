@@ -1,7 +1,6 @@
 package creationsahead.speedwordsearch;
 
 import android.support.annotation.NonNull;
-import java.util.Iterator;
 import java.util.Random;
 
 /**

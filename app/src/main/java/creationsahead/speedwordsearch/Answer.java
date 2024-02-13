@@ -37,6 +37,7 @@ public class Answer {
     /**
      * Get display string
      */
+    @NonNull
     public String getDisplay() {
         String ret = word;
         if (bonus != null) {

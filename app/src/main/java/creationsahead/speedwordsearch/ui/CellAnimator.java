@@ -3,21 +3,24 @@ package creationsahead.speedwordsearch.ui;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 import java.util.ArrayList;
+
+import static creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATION;
 
 /**
  * Animates one or more cells
  */
 public class CellAnimator implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
     private boolean correct;
-    private ArrayList<TextView> arrayList = new ArrayList<>();
+    @NonNull private ArrayList<TextView> arrayList = new ArrayList<>();
 
     public CellAnimator(boolean correct) {
         this.correct = correct;
         ValueAnimator anim = ValueAnimator.ofFloat(0, 1, 0);
-        anim.setDuration(1000);
+        anim.setDuration(ANIMATION_DURATION);
         anim.setInterpolator(new LinearInterpolator());
         anim.addUpdateListener(this);
         anim.addListener(this);
@@ -25,7 +28,7 @@ public class CellAnimator implements ValueAnimator.AnimatorUpdateListener, Anima
     }
 
     @Override
-    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+    public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
         int color;
         float v = (float) valueAnimator.getAnimatedValue();
         float s = 32 * v;

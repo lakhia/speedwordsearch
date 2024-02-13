@@ -19,6 +19,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import static creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATION;
+
 /**
  * Top bar showing time
  */
@@ -46,7 +48,7 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
         if (isInEditMode()) {
             timeWidget.setText("4:55");
         }
-        updateScore(null);
+        updateScoreWidget();
     }
 
     @Override
@@ -61,10 +63,8 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateScore(Event event) {
-        if (event == null) {
-            updateScoreWidget();
-        } else if (event == Event.SCORE_AWARDED) {
+    public void updateScore(@NonNull Event event) {
+        if (event == Event.SCORE_AWARDED) {
             if (anim != null) {
                 anim.cancel();
             }
@@ -72,7 +72,7 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
             deltaScore = ProgressTracker.getInstance().getCurrentScore() - prevScore;
 
             anim = ValueAnimator.ofFloat(1, 1.75f, 1);
-            anim.setDuration(1000);
+            anim.setDuration(ANIMATION_DURATION);
             anim.setInterpolator(new AccelerateDecelerateInterpolator());
             anim.addUpdateListener(this);
             if (event.lastWordGuessed) {
@@ -102,7 +102,7 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
     }
 
     @Override
-    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+    public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
         float fraction = (float) valueAnimator.getAnimatedValue();
         scoreWidget.setScaleX(fraction);
         scoreWidget.setScaleY(fraction);

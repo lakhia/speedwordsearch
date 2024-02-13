@@ -12,8 +12,8 @@ import org.greenrobot.eventbus.ThreadMode;
  * Tracks progress and manages instance of current game
  */
 public class ProgressTracker implements ScoreInterface {
-    public static final String LEVEL = "level";
-    public static final String LEVEL_VISIBLE = "levelVisible";
+    @NonNull public static final String LEVEL = "level";
+    @NonNull public static final String LEVEL_VISIBLE = "levelVisible";
     private static final int MAX_LEVEL = 10;
     private static final int MAX_DIFFICULTY = 100;
 
@@ -22,14 +22,14 @@ public class ProgressTracker implements ScoreInterface {
     /** Current game */
     public Game game;
     /** Levels */
-    public ArrayList<Level> levels = new ArrayList<>();
+    @NonNull public ArrayList<Level> levels = new ArrayList<>();
 
     private int currentLevel = 0;
     private int visibleLevel = 0;
     private static StorageInterface storageInterface;
 
     private static class SingletonHolder {
-        private final static ProgressTracker instance = new ProgressTracker();
+        @NonNull private final static ProgressTracker instance = new ProgressTracker();
     }
     private ProgressTracker() {}
 
@@ -119,7 +119,7 @@ public class ProgressTracker implements ScoreInterface {
      * Add score to current user score
      */
     @Subscribe(threadMode = ThreadMode.POSTING)
-    public void addScore(Answer answer) {
+    public void addScore(@NonNull Answer answer) {
         if (answer.event == Event.SCORE_AWARDED) {
             levels.get(currentLevel).score += answer.score;
         }
@@ -129,7 +129,7 @@ public class ProgressTracker implements ScoreInterface {
      * Start level
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void startLevel(Event event) {
+    public void startLevel(@NonNull Event event) {
         if (event == Event.LEVEL_STARTED) {
             currentLevel = event.levelNumber;
             reset();
