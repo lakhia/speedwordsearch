@@ -10,7 +10,7 @@ import org.junit.Test
  */
 class PuzzleGridTest {
 
-    private fun fill_grid(): PuzzleGrid {
+    private fun fillGrid(): PuzzleGrid {
         val config = Config(4, 4, Trie(), 1)
         val grid = PuzzleGrid(config, Scoring(), RandomSequencer(config, 1))
         grid.addWord(Selection(0, 0, Direction.EAST, 4), "test")
@@ -40,12 +40,20 @@ class PuzzleGridTest {
 
         // Add again
         assertTrue(grid.addWord(Selection(1, 0, Direction.EAST, 4), "test"))
+        assertFalse(grid.addWord(Selection(1, 0, Direction.EAST, 5), "tests"))
         assertTrue(grid.removeWord("test"))
+
+        // Substring tests
+        assertFalse(grid.addWord(Selection(1, 0, Direction.EAST, 6), "tester"))
+        assertTrue(grid.addWord(Selection(0, 0, Direction.EAST, 6), "tester"))
+        assertFalse(grid.addWord(Selection(0, 0, Direction.EAST, 4), "test"))
+        assertTrue(grid.removeWord("tester"))
+        assertTrue(grid.addWord(Selection(1, 0, Direction.EAST, 5), "tests"))
     }
 
     @Test
     fun test_02_contents_after_remove() {
-        val grid = fill_grid()
+        val grid = fillGrid()
         var string = grid.toString()
         assertEquals(
                 "t e s t \n" +
@@ -127,7 +135,7 @@ class PuzzleGridTest {
 
     @Test
     fun test_05_vacant_cell() {
-        val grid = fill_grid()
+        val grid = fillGrid()
 
         // No vacant cells
         var pos = grid.findUnusedCells(null)
@@ -179,7 +187,7 @@ class PuzzleGridTest {
 
     @Test
     fun test_06_contents() {
-        val grid = fill_grid()
+        val grid = fillGrid()
 
         var content: String
         content = grid.findContents(Selection(3, 3, Direction.WEST, 4), true)
@@ -198,7 +206,7 @@ class PuzzleGridTest {
 
     @Test
     fun test_07_get_cell() {
-        val grid = fill_grid()
+        val grid = fillGrid()
 
         // Get a cell and verify stats
         var cell = grid.getCell(0,0)

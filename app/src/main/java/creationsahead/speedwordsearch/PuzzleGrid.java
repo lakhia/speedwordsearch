@@ -65,6 +65,13 @@ public class PuzzleGrid {
             return false;
         }
 
+        // Reject substring words
+        for (String ans : answerMap.keySet()) {
+            if (ans.startsWith(word) || word.startsWith(ans)) {
+                return false;
+            }
+        }
+
         // Check bounds
         if (!selection.inBounds(mConfig.sizeX, mConfig.sizeY)) {
             return false;

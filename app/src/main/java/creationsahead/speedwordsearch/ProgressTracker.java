@@ -24,8 +24,8 @@ public class ProgressTracker implements ScoreInterface {
     /** Levels */
     @NonNull public ArrayList<Level> levels = new ArrayList<>();
 
-    private int currentLevel = 0;
-    private int visibleLevel = 0;
+    private int currentLevel;
+    private int visibleLevel;
     private static StorageInterface storageInterface;
 
     private static class SingletonHolder {
@@ -67,13 +67,16 @@ public class ProgressTracker implements ScoreInterface {
 
     public void destroy() {
         EventBus.getDefault().unregister(this);
+        game = null;
+        config = null;
+        levels.clear();
     }
 
     /**
-     * Get current level number
+     * Get current level
      */
-    public int getCurrentLevel() {
-        return currentLevel;
+    public Level getCurrentLevel() {
+        return levels.get(currentLevel);
     }
 
     /**

@@ -13,6 +13,7 @@ import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.TickerCallback;
+import creationsahead.speedwordsearch.mod.Level;
 import creationsahead.speedwordsearch.utils.Utils;
 import java.util.Locale;
 import org.greenrobot.eventbus.EventBus;
@@ -34,20 +35,23 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
 
     public ScoreBar(Context context, AttributeSet attrs) {
         super(context, attrs);
-        EventBus.getDefault().register(this);
-        currentScore = ProgressTracker.getInstance().getCurrentScore();
-        prevScore = currentScore;
-
         setOrientation(HORIZONTAL);
 
+        EventBus.getDefault().register(this);
+
+        Level level = ProgressTracker.getInstance().getCurrentLevel();
+        currentScore = level.score;
+        prevScore = currentScore;
+
         ContextThemeWrapper newContext = new ContextThemeWrapper(getContext(), R.style.WordList);
+        TextView levelName = new TextView(newContext, null);
+        addView(levelName);
+        levelName.setText(level.name);
         timeWidget = new TextView(newContext, null);
         addView(timeWidget);
         scoreWidget = new TextView(newContext, null);
         addView(scoreWidget);
-        if (isInEditMode()) {
-            timeWidget.setText("4:55");
-        }
+
         updateScoreWidget();
     }
 

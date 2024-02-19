@@ -44,11 +44,12 @@ class ProgressTrackerTest {
         }
     }
 
-    private val storage = Storage()
+    private lateinit var storage : Storage
     private val progress = ProgressTracker.getInstance()
 
     @Before
     fun init() {
+        storage = Storage()
         progress.init(storage)
     }
 
@@ -70,7 +71,7 @@ class ProgressTrackerTest {
     @Test
     fun test_02_progress() {
         val selection = Selection(0, 0, Direction.NORTH, 5)
-        var timeLimit = progress.config.timeLimit
+        val timeLimit = progress.config.timeLimit
 
         var answer = Answer(selection, "h", 50)
         answer.notifyScoreClaimed()
@@ -91,7 +92,7 @@ class ProgressTrackerTest {
         assertEquals(timeLimit - 5, storage.level!!.timeUsed)
 
         assertEquals(0, progress.currentScore)
-        assertEquals(1, progress.currentLevel)
+        assertEquals(1, progress.currentLevel.number)
         assertEquals(1, storage.map[ProgressTracker.LEVEL])
         assertEquals(1, storage.map[ProgressTracker.LEVEL_VISIBLE])
 
