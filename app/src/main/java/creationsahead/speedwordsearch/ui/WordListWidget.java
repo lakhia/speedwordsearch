@@ -1,10 +1,12 @@
 package creationsahead.speedwordsearch.ui;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.transition.Fade;
 import android.support.transition.TransitionManager;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -56,6 +58,9 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
                 ContextThemeWrapper newContext = new ContextThemeWrapper(getContext(), R.style.WordList);
                 textView = new IconTextView(newContext, null);
                 textView.setText(answer.getDisplay());
+                Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.artifika);
+                textView.setTypeface(typeface);
+
                 addView(textView);
                 answer.tag = textView;
                 break;

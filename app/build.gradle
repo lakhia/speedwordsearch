@@ -51,9 +51,10 @@ dependencies {
     implementation 'com.nex3z:flow-layout:0.1.4'
     implementation 'com.esotericsoftware:kryo:4.0.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:27.0.0'
-    implementation 'com.android.support:support-v4:27.0.0'
-    implementation 'com.android.support:transition:27.0.0'
+    implementation "com.android.support:appcompat-v7:$support_lib_version"
+    implementation "com.android.support:support-v4:$support_lib_version"
+    implementation "com.android.support:support-compat:$support_lib_version"
+    implementation "com.android.support:transition:$support_lib_version"
     implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
     implementation 'org.greenrobot:eventbus:3.0.0'
 }

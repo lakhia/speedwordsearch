@@ -2,11 +2,13 @@ package creationsahead.speedwordsearch.ui;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.transition.Explode;
 import android.support.transition.Transition;
 import android.support.transition.TransitionManager;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -40,6 +42,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setBackgroundResource(R.color.black_overlay);
+        Typeface typeface = ResourcesCompat.getFont(context, R.font.archivo_black);
 
         int numCells = ProgressTracker.getInstance().config.sizeX;
         for (int i = 0; i < numCells; i++) {
@@ -51,6 +54,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
                 TextView textView = new TextView(newContext, null);
                 Cell cell = ProgressTracker.getInstance().game.getCell(i, j);
                 textView.setText(cell.toString());
+                textView.setTypeface(typeface);
                 textView.setOnClickListener(this);
                 textView.setTag(R.string.row, i);
                 textView.setTag(R.string.column, j);
