@@ -16,6 +16,6 @@ public class Level {
         name = levelName;
         number = levelNumber;
         stars = -1;
-        timeUsed = -1;
+        timeUsed = 0;
     }
 }

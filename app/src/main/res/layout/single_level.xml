@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:padding="10dp"
-    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="5dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <Button
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:id="@+id/toggleButton"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/toggleButton"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="8dp"/>
     <TextView
         android:id="@+id/time"
         android:textColor="@color/colorPrimary"
@@ -17,19 +21,23 @@
         android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"/>
+        app:layout_constraintStart_toEndOf="@+id/toggleButton"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/toggleButton"/>
     <RatingBar
-        android:layout_margin="5dp"
-        android:theme="@style/RatingBar"
         android:isIndicator="true"
-        android:scaleX="0.5"
-        android:scaleY="0.5"
+        android:scaleX="0.33"
+        android:scaleY="0.33"
         android:numStars="4"
-        android:stepSize="0.33"
-        android:rating="0"
-        android:layout_width="match_parent"
+        android:stepSize="0.25"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:id="@+id/ratingBar"/>
+        android:id="@+id/ratingBar"
+        app:layout_constraintStart_toEndOf="@+id/time"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:progressTint="@color/pinkAccent"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

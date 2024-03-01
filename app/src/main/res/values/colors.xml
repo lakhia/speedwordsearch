@@ -2,8 +2,8 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorLetters">#AF1021</color>
+    <color name="colorLetters">#af1021</color>
     <color name="pinkAccent">#FF4081</color>
-    <color name="lightBlue">#3ef</color>
+    <color name="lightBlue">#33eeff</color>
     <color name="black_overlay">#000000</color>
 </resources>

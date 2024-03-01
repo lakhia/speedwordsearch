@@ -57,4 +57,5 @@ dependencies {
     implementation "com.android.support:transition:$support_lib_version"
     implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
     implementation 'org.greenrobot:eventbus:3.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 }
