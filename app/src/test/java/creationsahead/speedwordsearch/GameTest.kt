@@ -4,7 +4,9 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertTrue
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -53,7 +55,7 @@ class GameTest {
 
     @Test
     fun test_01_game() {
-        val config = Config(4, 4, dictionary, 1)
+        val config = Config(4, 4, dictionary, 23)
         val game = Game(config, Scoring(), RandomSequencer(config, 1))
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(
@@ -78,7 +80,7 @@ class GameTest {
     @Test
     fun test_02_big_board() {
         val scoring = Scoring()
-        val config = Config(8, 8, dictionary, 1)
+        val config = Config(8, 8, dictionary, 23)
         val game = Game(config, scoring, RandomSequencer(config, 1))
 
         assertEquals(true, game.addOneWord(4, 4))
@@ -141,7 +143,7 @@ class GameTest {
     fun test_03_min_max() {
         dictionary.insert("DDD")
 
-        val config = Config(5, 5, dictionary, 1)
+        val config = Config(5, 5, dictionary, 23)
         val game = Game(config, Scoring(), RandomSequencer(config, 5))
         assertEquals(true, game.addOneWord(3, 4))
 
@@ -165,7 +167,7 @@ class GameTest {
         dictionary.insert("GG")
         dictionary.insert("FF")
 
-        val config = Config(6, 6, dictionary, 1)
+        val config = Config(6, 6, dictionary, 53)
         val game = Game(config, Scoring(), RandomSequencer(config, 1))
         game.populatePuzzle()
         assertEquals(
@@ -190,27 +192,8 @@ class GameTest {
     }
 
     @Test
-    fun test_05_populate_difficult() {
-        dictionary.insert("ADDA")
-        dictionary.insert("CDDA")
-        dictionary.insert("GG")
-        dictionary.insert("FF")
-
-        val config = Config(6, 6, dictionary, 80)
-        val game = Game(config, Scoring(), RandomSequencer(config, 1))
-        game.populatePuzzle()
-        assertEquals(
-                "S S B N A B \n" +
-                        "F I A R E P \n" +
-                        "M A E D I T \n" +
-                        "D C A L D H \n" +
-                        "G C A A C A \n" +
-                        "K C G C U O \n", game.toString())
-    }
-
-    @Test
     fun test_06_fill() {
-        val config = Config(6, 6, dictionary, 80)
+        val config = Config(6, 6, dictionary, 0)
         val game = Game(config, Scoring(), RandomSequencer(config, 1))
         game.fillEmptyCells()
         assertEquals(

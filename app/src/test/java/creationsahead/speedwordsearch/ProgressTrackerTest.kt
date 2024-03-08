@@ -4,6 +4,7 @@ import creationsahead.speedwordsearch.mod.Level
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import java.io.Reader
@@ -18,17 +19,18 @@ class ProgressTrackerTest {
 
     class Storage : StorageInterface {
         var map: HashMap<String, Int> = HashMap()
-        var level : Level? = null
+        //var levels : Array<Level> = Array(10, { i -> Level("", i) })
+        var levels : Array<Level?> = arrayOfNulls(10)
 
         override fun getLevel(index: Int): Level? {
-            if (level != null && level!!.number == index) {
-                return level;
+            if (index < levels.size) {
+                return levels[index]
             }
             return null
         }
 
         override fun storeLevel(level: Level) {
-            this.level = level
+            levels[level.number] = level
         }
 
         override fun getPreference(key: String): Int {
@@ -44,13 +46,12 @@ class ProgressTrackerTest {
         }
     }
 
-    private lateinit var storage : Storage
+    private lateinit var storage: Storage
     private val progress = ProgressTracker.getInstance()
 
     @Before
     fun init() {
         storage = Storage()
-        progress.init(storage)
     }
 
     @After
@@ -60,16 +61,28 @@ class ProgressTrackerTest {
 
     @Test
     fun test_01_init() {
+        progress.init(storage)
+
         assertNotNull(progress.config)
         assertNotNull(progress.config.dictionary)
         assertEquals(4, progress.config.sizeX)
         assertEquals(4, progress.config.sizeY)
 
-        assertNotNull(progress.game)
+        // Make sure exactly one level is visible when game starts
+        assertNull(progress.game)
+        assertNotNull(progress.levels[0])
+        assertNull(progress.levels[1])
+        assertEquals(10, progress.levels.size)
     }
 
     @Test
     fun test_02_progress() {
+        // Initialize storage
+        val level = Level("", 0)
+        level.totalScore = 150
+        storage.storeLevel(level)
+        progress.init(storage)
+
         val selection = Selection(0, 0, Direction.NORTH, 5)
         val timeLimit = progress.config.timeLimit
 
@@ -86,21 +99,34 @@ class ProgressTrackerTest {
         assertEquals(150, progress.currentScore)
 
         progress.incrementLevel(5)
-        assertEquals(0, storage.level!!.number)
-        assertEquals(150, storage.level!!.score)
-        assertEquals(3.0f, storage.level!!.stars)
-        assertEquals(timeLimit - 5, storage.level!!.timeUsed)
+        assertEquals(0, storage.levels[0]!!.number)
+        assertEquals(150, storage.levels[0]!!.score)
+        assertEquals(4.0f, storage.levels[0]!!.stars)
+        assertEquals(timeLimit - 5, storage.levels[0]!!.timeUsed)
 
-        assertEquals(0, progress.currentScore)
-        assertEquals(1, progress.currentLevel.number)
-        assertEquals(1, storage.map[ProgressTracker.LEVEL])
+        // Make sure level 1 is now visible after winning level 0
         assertEquals(1, storage.map[ProgressTracker.LEVEL_VISIBLE])
+        assertEquals(10, progress.levels.size)
+        assertNotNull(progress.levels[0])
+        assertNotNull(progress.levels[1])
+        assertNull(progress.levels[2])
+    }
 
-        assertNotNull(progress.config)
-        assertNotNull(progress.config.dictionary)
-        assertEquals(5, progress.config.sizeX)
-        assertEquals(5, progress.config.sizeY)
+    @Test
+    fun test_03_progress() {
+        // Initialize storage
+        storage.storePreference(ProgressTracker.LEVEL_VISIBLE, 3)
+        storage.storeLevel(Level("", 0))
+        storage.storeLevel(Level("", 1))
+        storage.storeLevel(Level("", 2))
 
-        assertNotNull(progress.game)
+        progress.init(storage)
+
+        // Verify that level[3] gets created because it is visible
+        assertNotNull(progress.levels[0])
+        assertNotNull(progress.levels[1])
+        assertNotNull(progress.levels[2])
+        assertNotNull(progress.levels[3])
+        assertNull(progress.levels[4])
     }
 }

@@ -3,7 +3,6 @@ package creationsahead.speedwordsearch;
 import android.support.annotation.NonNull;
 import creationsahead.speedwordsearch.mod.Level;
 import java.io.IOException;
-import java.util.ArrayList;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -12,7 +11,6 @@ import org.greenrobot.eventbus.ThreadMode;
  * Tracks progress and manages instance of current game
  */
 public class ProgressTracker implements ScoreInterface {
-    @NonNull public static final String LEVEL = "level";
     @NonNull public static final String LEVEL_VISIBLE = "levelVisible";
     private static final int MAX_LEVEL = 10;
     private static final int MAX_DIFFICULTY = 100;
@@ -22,7 +20,7 @@ public class ProgressTracker implements ScoreInterface {
     /** Current game */
     public Game game;
     /** Levels */
-    @NonNull public ArrayList<Level> levels = new ArrayList<>();
+    @NonNull public Level[] levels = new Level[MAX_LEVEL];
 
     private int currentLevel;
     private int visibleLevel;
@@ -44,23 +42,21 @@ public class ProgressTracker implements ScoreInterface {
     /**
      * Initialize progress tracker and use storage interface to load words
      * @param storage InputStream of words to load
-     * TODO: Use background thread
      */
     public void init(@NonNull StorageInterface storage) {
         storageInterface = storage;
-        currentLevel = storageInterface.getPreference(LEVEL);
         visibleLevel = storageInterface.getPreference(LEVEL_VISIBLE);
 
         for (int i = 0; i <= visibleLevel; i++) {
-            levels.add(i, storageInterface.getLevel(i));
-            createLevelIfNeeded(i);
+            levels[i] = storageInterface.getLevel(i);
         }
 
         EventBus.getDefault().register(this);
 
         try {
             WordList.init(storageInterface.getAssetInputStream("words_9k.db"));
-            reset();
+            config = new Config(WordList.dictionary);
+            resetConfig();
         } catch (IOException ignored) {
         }
     }
@@ -68,15 +64,17 @@ public class ProgressTracker implements ScoreInterface {
     public void destroy() {
         EventBus.getDefault().unregister(this);
         game = null;
-        config = null;
-        levels.clear();
+        for (int i = 0; i <= visibleLevel; i++) {
+            levels[i] = null;
+        }
     }
 
     /**
      * Get current level
      */
+    @NonNull
     public Level getCurrentLevel() {
-        return levels.get(currentLevel);
+        return levels[currentLevel];
     }
 
     /**
@@ -85,29 +83,47 @@ public class ProgressTracker implements ScoreInterface {
      */
     public void incrementLevel(int timeLeft) {
         // Store progress
-        Level level = levels.get(currentLevel);
-        // TODO: Scoring needs work
-        level.stars = 4 * level.score / 200.0f;
+        Level level = getCurrentLevel();
+        int levelNum = level.number;
+
+        scoreLevel(level);
+
         level.timeUsed = config.timeLimit - timeLeft;
 
         // Create new level or post game won event
-        if (currentLevel > MAX_LEVEL) {
+        if (levelNum > MAX_LEVEL) {
             EventBus.getDefault().post(Event.GAME_WON);
         } else {
-            currentLevel++;
-            storageInterface.storeLevel(level);
-            reset();
+            levelNum++;
         }
 
-        storageInterface.storePreference(LEVEL, currentLevel);
-        storageInterface.storePreference(LEVEL_VISIBLE, visibleLevel);
+        if (visibleLevel < levelNum) {
+            visibleLevel = levelNum;
+            resetConfig();
+            storageInterface.storePreference(LEVEL_VISIBLE, visibleLevel);
+        }
+
+        storageInterface.storeLevel(level);
+    }
+
+    /**
+     * Score level based on total score and time used
+     */
+    private void scoreLevel(@NonNull Level level) {
+        float stars = 2.0f * level.score / level.totalScore;
+        stars += 4.0f * (config.timeLimit - level.timeUsed) / config.timeLimit;
+        if (stars > 4f) {
+            level.stars = 4f;
+        } else {
+            level.stars = stars;
+        }
     }
 
     /**
      * Get current score
      */
     public int getCurrentScore() {
-        return levels.get(currentLevel).score;
+        return getCurrentLevel().score;
     }
 
     /**
@@ -115,7 +131,9 @@ public class ProgressTracker implements ScoreInterface {
      */
     @Override
     public int computeScore(@NonNull String word) {
-        return 11 - word.length()/2;
+        int score = 11 - word.length()/2;
+        getCurrentLevel().totalScore += score;
+        return score;
     }
 
     /**
@@ -124,7 +142,7 @@ public class ProgressTracker implements ScoreInterface {
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void addScore(@NonNull Answer answer) {
         if (answer.event == Event.SCORE_AWARDED) {
-            levels.get(currentLevel).score += answer.score;
+            getCurrentLevel().score += answer.score;
         }
     }
 
@@ -135,33 +153,31 @@ public class ProgressTracker implements ScoreInterface {
     public void startLevel(@NonNull Event event) {
         if (event == Event.LEVEL_STARTED) {
             currentLevel = event.levelNumber;
-            reset();
-        }
-    }
-
-    private void reset() {
-        if (currentLevel <= MAX_LEVEL) {
-            createLevelIfNeeded(currentLevel);
-            config = new Config(currentLevel + 4,
-                                currentLevel + 4,
-                                WordList.dictionary,
-                                MAX_DIFFICULTY * currentLevel / MAX_LEVEL);
-            game = new Game(config,
-                            this,
+            resetConfig();
+            getCurrentLevel().score = 0;
+            getCurrentLevel().totalScore = 0;
+            game = new Game(config, this,
                             new RandomSequencer(config, (int) System.currentTimeMillis()));
         }
-        if (visibleLevel < currentLevel) {
-            visibleLevel = currentLevel;
-        }
     }
 
-    private void createLevelIfNeeded(int levelNum) {
-        if (levels.size() <= levelNum) {
-            levels.add(levelNum, null);
+    private void resetConfig() {
+        config.difficulty = MAX_DIFFICULTY * currentLevel / MAX_LEVEL;
+        config.sizeX = currentLevel + 4;
+        config.sizeY = currentLevel + 4;
+        config.timeLimit = 60 + (100 - config.difficulty) * 60 / 100;
+
+        float letterRatio = (100 - config.difficulty) * 1.5f;
+        letterRatio = config.sizeX * config.sizeY * letterRatio / 100;
+        if (letterRatio < 5) {
+            config.letterLimit = 5;
+        } else {
+            config.letterLimit = (int) letterRatio;
         }
-        if (levels.get(levelNum) == null) {
-            levels.set(levelNum, new Level("Easy level " + (levelNum + 1),
-                                           levelNum));
+
+        if (levels[visibleLevel] == null) {
+            levels[visibleLevel] = new Level("Basic Level " + (1 + visibleLevel),
+                                             visibleLevel);
         }
     }
 }

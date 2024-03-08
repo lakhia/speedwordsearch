@@ -9,13 +9,17 @@ public class Level {
     public float stars;
     public int score;
     public int timeUsed;
+    public int totalScore;
 
-    public Level() {}
+    public Level() {
+        this("", 0);
+    }
 
     public Level(String levelName, int levelNumber) {
         name = levelName;
         number = levelNumber;
         stars = -1;
         timeUsed = 0;
+        totalScore = 0;
     }
 }

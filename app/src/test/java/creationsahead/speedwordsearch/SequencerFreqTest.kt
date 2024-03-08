@@ -12,7 +12,9 @@ class SequencerFreqTest {
 
     private fun test_bonus(difficulty : Int): Double {
         val times = 1000.0
-        val sequencer = RandomSequencer(Config(5, 5, Trie(), difficulty), 1)
+        val config = Config(Trie())
+        config.difficulty = difficulty
+        val sequencer = RandomSequencer(config, 1)
         var j : Int = times.toInt()
         var sum = 0.0
         while (j>0) {
