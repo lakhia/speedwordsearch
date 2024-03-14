@@ -91,7 +91,7 @@ public class ProgressTracker implements ScoreInterface {
         level.timeUsed = config.timeLimit - timeLeft;
 
         // Create new level or post game won event
-        if (levelNum > MAX_LEVEL) {
+        if (levelNum >= MAX_LEVEL - 1) {
             EventBus.getDefault().post(Event.GAME_WON);
         } else {
             levelNum++;

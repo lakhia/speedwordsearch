@@ -5,7 +5,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.view.ContextThemeWrapper;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,14 +42,12 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
         currentScore = level.score;
         prevScore = currentScore;
 
-        ContextThemeWrapper newContext = new ContextThemeWrapper(getContext(), R.style.WordList);
-        TextView levelName = new TextView(newContext, null);
-        addView(levelName);
-        levelName.setText(level.name);
-        timeWidget = new TextView(newContext, null);
-        addView(timeWidget);
-        scoreWidget = new TextView(newContext, null);
-        addView(scoreWidget);
+        inflate(context, R.layout.score_bar, this);
+
+        TextView levelNameWidget = findViewById(R.id.levelName);
+        timeWidget = findViewById(R.id.time);
+        scoreWidget = findViewById(R.id.score);
+        levelNameWidget.setText(level.name);
 
         updateScoreWidget();
     }
