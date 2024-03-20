@@ -2,12 +2,9 @@ package creationsahead.speedwordsearch.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
 import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.Game;
 import creationsahead.speedwordsearch.ProgressTracker;
@@ -23,46 +20,24 @@ import org.greenrobot.eventbus.ThreadMode;
 public class GameActivity extends Activity implements TickerCallback {
     @NonNull public static final String LOSE = "lose";
     @NonNull public static final String WIN = "win";
-    @Nullable private GridWidget gridWidget;
-    @Nullable private WordListWidget wordListWidget;
-    @Nullable private ScoreBar scoreBar;
-    private LinearLayout topLayout;
+    private ScoreBar scoreBar;
     private Ticker timer;
     private Game game;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.game);
-
         game = ProgressTracker.getInstance().game;
         game.populatePuzzle();
 
-        topLayout = findViewById(R.id.topLayout);
-        if (gridWidget == null || wordListWidget == null || scoreBar == null) {
-            scoreBar = new ScoreBar(this, null);
-            wordListWidget = new WordListWidget(this, null);
-            gridWidget = new GridWidget(this, null);
-        }
-        topLayout.addView(scoreBar);
-        topLayout.addView(wordListWidget);
-        topLayout.addView(gridWidget);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.game);
 
+        scoreBar = findViewById(R.id.scoreBar);
         if (timer != null) {
             timer.pause();
         }
         timer = new Ticker(this, this, ProgressTracker.getInstance().config.timeLimit);
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            topLayout.setOrientation(LinearLayout.HORIZONTAL);
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            topLayout.setOrientation(LinearLayout.VERTICAL);
-        }
-        super.onConfigurationChanged(newConfig);
     }
 
     @Override
