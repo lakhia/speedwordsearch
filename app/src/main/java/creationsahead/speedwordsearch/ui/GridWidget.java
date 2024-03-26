@@ -35,7 +35,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     private int lastX = -1, lastY = -1;
     private int cellSize = -1;
     @Nullable private View lastSelection = null;
-    @NonNull private Rect bounds = new Rect();
+    @NonNull private final Rect bounds = new Rect();
     private float fontSize = -1;
     @Nullable private CellAnimator anim;
 

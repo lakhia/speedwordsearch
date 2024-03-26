@@ -42,6 +42,5 @@ public enum Bonus {
     }
 
     public final String name;
-    public final int benefit;
-
+    private final int benefit;
 }

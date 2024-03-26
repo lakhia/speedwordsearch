@@ -1,6 +1,10 @@
 package creationsahead.speedwordsearch;
 
 import android.support.annotation.NonNull;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -12,6 +16,7 @@ public class Game implements TickerCallback {
     @NonNull private final Sequencer sequencer;
     private boolean success;
     private int letterCount;
+    private final static Comparator<Answer> comparator = (a, b) -> a.word.compareTo(b.word);
 
     /**
      * Construct a game with a square puzzle grid
@@ -139,7 +144,12 @@ public class Game implements TickerCallback {
      * Visit all the answers
      */
     public void visitAnswers() {
-        for (Answer answer : grid.answerMap.values()) {
+        Collection<Answer> values = grid.answerMap.values();
+        ArrayList<Answer> list = new ArrayList<>(values);
+        if (config.isWordListSorted) {
+            Collections.sort(list, comparator);
+        }
+        for (Answer answer : list) {
             answer.event = Event.WORD_ADDED;
             EventBus.getDefault().post(answer);
         }

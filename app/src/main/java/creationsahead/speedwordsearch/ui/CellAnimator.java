@@ -14,8 +14,8 @@ import static creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATI
  * Animates one or more cells
  */
 public class CellAnimator implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
-    private boolean correct;
-    @NonNull private ArrayList<TextView> arrayList = new ArrayList<>();
+    private final boolean correct;
+    @NonNull private final ArrayList<TextView> arrayList = new ArrayList<>();
 
     public CellAnimator(boolean correct) {
         this.correct = correct;

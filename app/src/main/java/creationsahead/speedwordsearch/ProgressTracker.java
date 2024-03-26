@@ -20,11 +20,11 @@ public class ProgressTracker implements ScoreInterface {
     /** Current game */
     public Game game;
     /** Levels */
-    @NonNull public Level[] levels = new Level[MAX_LEVEL];
+    @NonNull public final Level[] levels = new Level[MAX_LEVEL];
 
     private int currentLevel;
     private int visibleLevel;
-    private static StorageInterface storageInterface;
+    private StorageInterface storageInterface;
 
     private static class SingletonHolder {
         @NonNull private final static ProgressTracker instance = new ProgressTracker();

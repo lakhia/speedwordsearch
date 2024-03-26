@@ -123,6 +123,13 @@ class GameTest {
         // Visit answers again
         displayBuffer.delete(0, displayBuffer.length)
         game.visitAnswers()
+        assertEquals("ABAC BAAC BABC BBAC ",
+                displayBuffer.toString())
+
+        // Visit answers again
+        displayBuffer.delete(0, displayBuffer.length)
+        config.isWordListSorted = false
+        game.visitAnswers()
         assertEquals("ABAC BBAC BABC BAAC ",
                 displayBuffer.toString())
 

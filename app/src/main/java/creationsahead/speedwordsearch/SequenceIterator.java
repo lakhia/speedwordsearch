@@ -10,7 +10,7 @@ import java.util.Random;
  */
 public class SequenceIterator<T> implements Iterator<T> {
     @NonNull private T[] array;
-    @NonNull private Random random;
+    @NonNull private final Random random;
     private int index;
 
     public SequenceIterator(@NonNull T[] array, @NonNull Random random) {

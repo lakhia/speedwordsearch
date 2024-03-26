@@ -30,8 +30,8 @@ import org.greenrobot.eventbus.EventBus;
  * singletons and classes
  */
 public class GameApplication extends Application implements StorageInterface {
-    public static int ANIMATION_DURATION = 1000;
-    @NonNull private Kryo serializer = new Kryo();
+    public final static int ANIMATION_DURATION = 1000;
+    @NonNull private final Kryo serializer = new Kryo();
 
     @Override
     public void onCreate() {

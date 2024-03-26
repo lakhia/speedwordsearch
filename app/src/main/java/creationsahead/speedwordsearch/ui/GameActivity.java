@@ -30,7 +30,6 @@ public class GameActivity extends Activity implements TickerCallback {
         game = ProgressTracker.getInstance().game;
         game.populatePuzzle();
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game);
 
         scoreBar = findViewById(R.id.scoreBar);

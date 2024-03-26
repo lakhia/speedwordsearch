@@ -12,6 +12,7 @@ public class Config {
     public int difficulty;
     public int timeLimit;
     public int letterLimit;
+    public boolean isWordListSorted;
 
     public Config(@NonNull Trie dict) {
         this(0, 0, dict, 0);
@@ -24,5 +25,6 @@ public class Config {
         dictionary = dict;
         timeLimit = 0;
         difficulty = 0;
+        isWordListSorted = true;
     }
 }
