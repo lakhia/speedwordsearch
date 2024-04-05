@@ -21,6 +21,7 @@ import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.Selection;
+import java.util.Random;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -38,6 +39,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     @NonNull private final Rect bounds = new Rect();
     private float fontSize = -1;
     @Nullable private CellAnimator anim;
+    private Center center = null;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -62,6 +64,10 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
                 cell.tag = textView;
             }
         }
+
+        final Rect rect = new Rect();
+        getWindowVisibleDisplayFrame(rect);
+        center = new Center(rect);
     }
 
     @Override
@@ -131,17 +137,34 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateScore(@NonNull Event event) {
         if (event == Event.SCORE_AWARDED && event.lastWordGuessed) {
-            Transition explode = new Explode();
-            explode.setEpicenterCallback(new Transition.EpicenterCallback() {
-                    @NonNull
-                    @Override
-                    public Rect onGetEpicenter(@NonNull Transition transition) {
-                        return new Rect(0, 0, 0, 0);
-                    }
-                });
-            explode.setDuration(ANIMATION_DURATION);
-            TransitionManager.beginDelayedTransition(this, explode);
-            removeAllViews();
+            {
+                Transition explode = new Explode();
+                explode.setEpicenterCallback(center);
+                explode.setDuration(ANIMATION_DURATION);
+                TransitionManager.beginDelayedTransition(this, explode);
+                removeSomeViews();
+            }
+            {
+                Transition explode = new Explode();
+                explode.setEpicenterCallback(center);
+                explode.setDuration(ANIMATION_DURATION);
+                TransitionManager.beginDelayedTransition(this, explode);
+                removeAllViews();
+            }
+        }
+    }
+
+    private void removeSomeViews() {
+        Random rand = new Random();
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            TableRow child = (TableRow) getChildAt(i);
+            int cellCount = child.getChildCount();
+            for (int j = cellCount - 1; j >= 0; j--) {
+                if (rand.nextBoolean()) {
+                    child.removeViewAt(j);
+                }
+            }
         }
     }
 
