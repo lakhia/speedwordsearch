@@ -31,6 +31,7 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
     private int currentScore;
     private int prevScore;
     private int deltaScore;
+    private int currentTick;
 
     public ScoreBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -59,8 +60,9 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
     }
 
     @Override
-    public void onTick(int tickCount) {
-        timeWidget.setText(Utils.formatTime(tickCount));
+    public void onTick(int timeLeft) {
+        currentTick = timeLeft;
+        timeWidget.setText(Utils.formatTime(timeLeft));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -84,6 +86,8 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
 
                     @Override
                     public void onAnimationEnd(Animator animator) {
+                        Event event = Event.LEVEL_WON;
+                        event.timeLeft = currentTick;
                         EventBus.getDefault().post(Event.LEVEL_WON);
                     }
 

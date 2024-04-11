@@ -4,11 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
     android:padding="5dp"
+    android:focusable="false"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <Button
         android:id="@+id/toggleButton"
+        android:focusable="false"
+        android:clickable="false"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -19,6 +22,7 @@
 
     <TextView
         android:id="@+id/time"
+        android:focusable="false"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         android:layout_width="wrap_content"
@@ -30,6 +34,7 @@
         app:layout_constraintEnd_toStartOf="@+id/ratingBar"/>
 
     <RatingBar
+        android:focusable="false"
         android:id="@+id/ratingBar"
         android:isIndicator="true"
         android:scaleX="0.33"

@@ -57,6 +57,9 @@ public class ProgressTracker implements ScoreInterface {
             WordList.init(storageInterface.getAssetInputStream("words_9k.db"));
             config = new Config(WordList.dictionary);
             resetConfig();
+            // TODO: TEMP workaround
+            game = new Game(config, this,
+                            new RandomSequencer(config, (int) System.currentTimeMillis()));
         } catch (IOException ignored) {
         }
     }
@@ -150,15 +153,13 @@ public class ProgressTracker implements ScoreInterface {
      * Start level
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void startLevel(@NonNull Event event) {
-        if (event == Event.LEVEL_STARTED) {
-            currentLevel = event.levelNumber;
-            resetConfig();
-            getCurrentLevel().score = 0;
-            getCurrentLevel().totalScore = 0;
-            game = new Game(config, this,
-                            new RandomSequencer(config, (int) System.currentTimeMillis()));
-        }
+    public void startLevel(@NonNull Level level) {
+        currentLevel = level.number;
+        resetConfig();
+        getCurrentLevel().score = 0;
+        getCurrentLevel().totalScore = 0;
+        game = new Game(config, this,
+                        new RandomSequencer(config, (int) System.currentTimeMillis()));
     }
 
     private void resetConfig() {
@@ -169,7 +170,9 @@ public class ProgressTracker implements ScoreInterface {
 
         float letterRatio = (100 - config.difficulty) * 1.5f;
         letterRatio = config.sizeX * config.sizeY * letterRatio / 100;
-        if (letterRatio < 5) {
+        if (BuildConfig.DEBUG) {
+            config.letterLimit = 3;
+        } else if (letterRatio < 5) {
             config.letterLimit = 5;
         } else {
             config.letterLimit = (int) letterRatio;
