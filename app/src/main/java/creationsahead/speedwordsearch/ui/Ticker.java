@@ -2,7 +2,7 @@ package creationsahead.speedwordsearch.ui;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.TickerCallback;
 import org.greenrobot.eventbus.EventBus;

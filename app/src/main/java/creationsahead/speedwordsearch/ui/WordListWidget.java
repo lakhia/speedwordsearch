@@ -2,11 +2,11 @@ package creationsahead.speedwordsearch.ui;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.transition.Fade;
-import android.support.transition.TransitionManager;
-import android.support.v4.content.res.ResourcesCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
+import android.transition.Fade;
+import android.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;

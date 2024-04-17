@@ -1,6 +1,6 @@
 package creationsahead.speedwordsearch;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Indicates a selection in a grid

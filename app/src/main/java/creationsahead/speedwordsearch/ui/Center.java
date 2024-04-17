@@ -1,8 +1,8 @@
 package creationsahead.speedwordsearch.ui;
 
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
-import android.support.transition.Transition;
+import android.transition.Transition;
+import androidx.annotation.NonNull;
 
 /**
  * Epicenter class

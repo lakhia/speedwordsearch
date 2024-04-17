@@ -1,6 +1,6 @@
 package creationsahead.speedwordsearch;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import creationsahead.speedwordsearch.mod.Level;
 import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;

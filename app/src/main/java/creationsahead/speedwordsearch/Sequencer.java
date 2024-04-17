@@ -1,6 +1,6 @@
 package creationsahead.speedwordsearch;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * A class that specifies permutations of letters, directions, and coordinates

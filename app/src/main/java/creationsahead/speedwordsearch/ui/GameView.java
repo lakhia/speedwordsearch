@@ -1,7 +1,7 @@
 package creationsahead.speedwordsearch.ui;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import android.util.AttributeSet;
 import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.Game;
