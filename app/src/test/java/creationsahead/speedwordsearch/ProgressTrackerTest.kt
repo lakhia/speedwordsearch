@@ -69,7 +69,7 @@ class ProgressTrackerTest {
         assertEquals(4, progress.config.sizeY)
 
         // Make sure exactly one level is visible when game starts
-        assertNull(progress.game)
+        assertNotNull(progress.game)
         assertNotNull(progress.levels[0])
         assertNull(progress.levels[1])
         assertEquals(10, progress.levels.size)

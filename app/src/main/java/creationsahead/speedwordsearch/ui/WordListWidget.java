@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.TextView;
-import com.joanzapata.iconify.widget.IconTextView;
 import creationsahead.speedwordsearch.Answer;
 import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.ProgressTracker;
@@ -56,7 +55,7 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
         switch (answer.event) {
             case WORD_ADDED:
                 ContextThemeWrapper newContext = new ContextThemeWrapper(getContext(), R.style.WordList);
-                textView = new IconTextView(newContext, null);
+                textView = new TextView(newContext, null);
                 textView.setText(answer.getDisplay());
                 Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.artifika);
                 textView.setTypeface(typeface);
@@ -70,12 +69,6 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
                     TransitionManager.beginDelayedTransition(this, new Fade());
                     textView.setVisibility(INVISIBLE);
                     answer.tag = null;
-                }
-                break;
-            case BONUS_UPDATED:
-                textView = (TextView) answer.tag;
-                if (textView != null) {
-                    textView.setText(answer.getDisplay());
                 }
                 break;
         }

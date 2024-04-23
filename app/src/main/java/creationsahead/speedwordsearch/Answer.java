@@ -10,7 +10,6 @@ import org.greenrobot.eventbus.EventBus;
 public class Answer {
     @NonNull public final String word;
     @NonNull public final Selection selection;
-    @Nullable public Bonus bonus;
     @Nullable public Object tag;
     public Event event;
     public final int score;
@@ -39,22 +38,12 @@ public class Answer {
      */
     @NonNull
     public String getDisplay() {
-        String ret = word;
-        if (bonus != null) {
-            ret += " {" + bonus.name + " @color/lightBlue}";
-        }
-        return ret;
+        return word;
     }
 
     @NonNull
     @Override
     public String toString() {
         return selection.toString() + ", word: " + word;
-    }
-
-    public void setBonus(@Nullable Bonus answerBonus) {
-        bonus = answerBonus;
-        event = Event.BONUS_UPDATED;
-        EventBus.getDefault().post(this);
     }
 }

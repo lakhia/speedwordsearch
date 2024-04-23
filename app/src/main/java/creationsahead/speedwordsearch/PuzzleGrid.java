@@ -2,9 +2,7 @@ package creationsahead.speedwordsearch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -16,7 +14,6 @@ public class PuzzleGrid {
     @NonNull private final Config mConfig;
     @NonNull private final ScoreInterface mScoreTracker;
     @NonNull private final Sequencer mSequencer;
-    @Nullable private Answer lastBonusAnswer;
 
     /**
      * Create a grid using specified x and y size
@@ -183,7 +180,7 @@ public class PuzzleGrid {
                 int y = cols.next();
                 Position position = new Position(x, y);
                 SequenceIterator<Direction> dirs = mSequencer.getDirectionSequence();
-                for (; dirs.hasNext(); ) {
+                while (dirs.hasNext()) {
                     Direction dir  = dirs.next();
                     // If position can accommodate length, process it
                     if (Selection.inBounds(position, dir, mConfig.sizeX, mConfig.sizeY, length)) {
@@ -233,29 +230,6 @@ public class PuzzleGrid {
             sb.append("\n");
         }
         return sb.toString();
-    }
-
-    /**
-     * Give a bonus to a random word in the grid
-     */
-    public void assignBonus(Bonus bonus) {
-        Collection<Answer> set = answerMap.values();
-        int index = mSequencer.getMisc(set.size());
-        Iterator<Answer> iterator = set.iterator();
-        for (int i = 0; i < index; i++) {
-            iterator.next();
-        }
-        lastBonusAnswer = iterator.next();
-        lastBonusAnswer.setBonus(bonus);
-    }
-
-    /**
-     * Remove last bonus that was assigned
-     */
-    public void removeLastBonus() {
-        if (lastBonusAnswer != null) {
-            lastBonusAnswer.setBonus(null);
-        }
     }
 
     /**

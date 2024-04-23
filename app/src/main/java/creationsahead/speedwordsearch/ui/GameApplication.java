@@ -9,8 +9,6 @@ import androidx.annotation.Nullable;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import creationsahead.speedwordsearch.BuildConfig;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.StorageInterface;
@@ -37,7 +35,6 @@ public class GameApplication extends Application implements StorageInterface {
     public void onCreate() {
         super.onCreate();
         serializer.register(Level.class, 15);
-        Iconify.with(new FontAwesomeModule());
         EventBus.builder().throwSubscriberException(BuildConfig.DEBUG).
             sendNoSubscriberEvent(false).installDefaultEventBus();
         ProgressTracker.getInstance().init(this);

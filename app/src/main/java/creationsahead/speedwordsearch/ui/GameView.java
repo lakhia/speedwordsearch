@@ -17,11 +17,10 @@ public class GameView extends ConstraintLayout implements TickerCallback {
 
     private Ticker timer;
     private ScoreBar scoreBar;
-    private Game game;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        game = ProgressTracker.getInstance().game;
+        Game game = ProgressTracker.getInstance().game;
         game.populatePuzzle();
         inflate(context, R.layout.game, this);
     }
@@ -45,7 +44,6 @@ public class GameView extends ConstraintLayout implements TickerCallback {
         if (tickCount <= 0) {
             EventBus.getDefault().post(Event.LEVEL_LOST);
         } else {
-            game.onTick(tickCount);
             scoreBar.onTick(tickCount);
         }
     }

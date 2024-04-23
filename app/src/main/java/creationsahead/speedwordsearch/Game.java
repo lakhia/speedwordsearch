@@ -10,7 +10,7 @@ import org.greenrobot.eventbus.EventBus;
 /**
  * A game manages the puzzle grid
  */
-public class Game implements TickerCallback {
+public class Game {
     @NonNull private final PuzzleGrid grid;
     @NonNull private final Config config;
     @NonNull private final Sequencer sequencer;
@@ -27,27 +27,6 @@ public class Game implements TickerCallback {
         grid = new PuzzleGrid(config, scoreInterface, sequencer);
         this.config = config;
         this.sequencer = sequencer;
-    }
-
-    /**
-     * Called when a second has elapsed
-     */
-    @Override
-    public void onTick(int tickCount) {
-        // TODO: convert tick to events, and unregister on win
-        if (grid.answerMap.isEmpty()) {
-            return;
-        }
-        if (tickCount % 20 == 5) {
-            tickCount /= 20;
-            int bonusVal = sequencer.getBonus(tickCount);
-            Bonus bonus = Bonus.find(bonusVal);
-            if (bonus != null) {
-                grid.assignBonus(bonus);
-            }
-        } else if (tickCount % 20 == 0) {
-            grid.removeLastBonus();
-        }
     }
 
     /**

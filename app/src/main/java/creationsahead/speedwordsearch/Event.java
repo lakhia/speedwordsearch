@@ -6,7 +6,6 @@ package creationsahead.speedwordsearch;
 public enum Event {
     // Answer related events
     SCORE_AWARDED,
-    BONUS_UPDATED,
     WORD_ADDED,
 
     // UI related events
