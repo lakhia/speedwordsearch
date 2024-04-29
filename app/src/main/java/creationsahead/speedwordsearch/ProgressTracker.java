@@ -115,11 +115,7 @@ public class ProgressTracker implements ScoreInterface {
     private void scoreLevel(@NonNull Level level) {
         float stars = 2.0f * level.score / level.totalScore;
         stars += 4.0f * (config.timeLimit - level.timeUsed) / config.timeLimit;
-        if (stars > 4f) {
-            level.stars = 4f;
-        } else {
-            level.stars = stars;
-        }
+        level.stars = Math.min(stars, 4f);
     }
 
     /**

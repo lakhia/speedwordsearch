@@ -34,7 +34,7 @@ public class LevelAdapter extends ArrayAdapter<Level>  {
         }
     }
 
-    /// Inflates a checkbox with text
+    /// Inflates a level with text, buttons and stars
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
