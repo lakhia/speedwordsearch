@@ -55,8 +55,8 @@ class GameTest {
 
     @Test
     fun test_01_game() {
-        val config = Config(4, 4, dictionary, 23)
-        val game = Game(config, Scoring(), RandomSequencer(config, 1))
+        val config = Config(4, 4, 23)
+        val game = Game(config, dictionary, Scoring(), RandomSequencer(config, 1))
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(
         ". . . C \n" +
@@ -79,9 +79,8 @@ class GameTest {
 
     @Test
     fun test_02_big_board() {
-        val scoring = Scoring()
-        val config = Config(8, 8, dictionary, 23)
-        val game = Game(config, scoring, RandomSequencer(config, 1))
+        val config = Config(8, 8, 23)
+        val game = Game(config, dictionary, Scoring(), RandomSequencer(config, 1))
 
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(true, game.addOneWord(4, 4))
@@ -150,8 +149,8 @@ class GameTest {
     fun test_03_min_max() {
         dictionary.insert("DDD")
 
-        val config = Config(5, 5, dictionary, 23)
-        val game = Game(config, Scoring(), RandomSequencer(config, 5))
+        val config = Config(5, 5, 23)
+        val game = Game(config, dictionary, Scoring(), RandomSequencer(config, 5))
         assertEquals(true, game.addOneWord(3, 4))
 
         assertEquals('C', game.getCell(4, 1).letter)
@@ -174,8 +173,8 @@ class GameTest {
         dictionary.insert("GG")
         dictionary.insert("FF")
 
-        val config = Config(6, 6, dictionary, 53)
-        val game = Game(config, Scoring(), RandomSequencer(config, 1))
+        val config = Config(6, 6, 53)
+        val game = Game(config, dictionary, Scoring(), RandomSequencer(config, 1))
         game.populatePuzzle()
         assertEquals(
                 "A B C C A C \n" +
@@ -200,8 +199,8 @@ class GameTest {
 
     @Test
     fun test_06_fill() {
-        val config = Config(6, 6, dictionary, 0)
-        val game = Game(config, Scoring(), RandomSequencer(config, 1))
+        val config = Config(6, 6, 0)
+        val game = Game(config, dictionary, Scoring(), RandomSequencer(config, 1))
         game.fillEmptyCells()
         assertEquals(
                 "K I P N M H \n" +

@@ -10,39 +10,6 @@ import org.junit.Test
  */
 class SequencerFreqTest {
 
-    private fun test_bonus(difficulty : Int): Double {
-        val times = 1000.0
-        val config = Config(Trie())
-        config.difficulty = difficulty
-        val sequencer = RandomSequencer(config, 1)
-        var j : Int = times.toInt()
-        var sum = 0.0
-        while (j>0) {
-            sum += sequencer.getBonus(j)
-            j--
-        }
-        println("bonus " + sum/times)
-        return sum / times
-    }
-
-    @Test
-    fun test_01_bonus_low_difficulty() {
-        var ave = test_bonus(0)
-        Assert.assertTrue(ave < 5 && ave > 0)
-
-        ave = test_bonus(25)
-        Assert.assertTrue(ave < 6 && ave > 4)
-
-        ave = test_bonus(50)
-        Assert.assertTrue(ave < 10 && ave > 8)
-
-        ave = test_bonus(75)
-        Assert.assertTrue(ave < 14 && ave > 12)
-
-        ave = test_bonus(100)
-        Assert.assertTrue(ave < 17 && ave > 15)
-    }
-
     /** Generic class to test array sequence */
     class GenericTester(config: Config, size: Int) : RandomSequencer(config, 1) {
         private val mSize : Int = size
@@ -75,20 +42,20 @@ class SequencerFreqTest {
 
     @Test
     fun test_02_coordinate_freq() {
-        val tester = GenericTester(Config(5, 5, Trie(), 5), 5)
+        val tester = GenericTester(Config(5, 5, 5), 5)
         tester.generic_tester { tester.xCoordinateSequence }
         tester.generic_tester { tester.yCoordinateSequence }
     }
 
     @Test
     fun test_03_direction_freq() {
-        val tester = GenericTester(Config(5, 5, Trie(), 5), 8)
+        val tester = GenericTester(Config(5, 5, 5), 8)
         tester.generic_tester { tester.directionSequence }
     }
 
     @Test
     fun test_04_letter_freq() {
-        val tester = GenericTester(Config(5, 5, Trie(), 5), 19)
+        val tester = GenericTester(Config(5, 5, 5), 19)
         tester.generic_tester { tester.letterSequence }
     }
 }

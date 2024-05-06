@@ -23,19 +23,14 @@ public class RandomSequencer implements Sequencer {
     @NonNull private final Random coordinateXRandomGen;
     @NonNull private final Random coordinateYRandomGen;
     @NonNull private final Random directionRandomGen;
-    @NonNull private final Random bonusRandomGen;
-    @NonNull private final Config config;
     @NonNull private final Random miscRandomGen;
 
     RandomSequencer(@NonNull Config config, int seed) {
-        this.config = config;
-
         // Initialize all the random vars
         letterRandomGen = new Random(seed / 3);
         directionRandomGen = new Random(seed / 5);
         coordinateXRandomGen = new Random(seed / 7);
         coordinateYRandomGen = new Random(seed / 11);
-        bonusRandomGen = new Random(seed/13);
         miscRandomGen = new Random(seed/17);
 
         // Initialize all the arrays
@@ -76,17 +71,5 @@ public class RandomSequencer implements Sequencer {
     @Override
     public int getMisc(int max) {
         return miscRandomGen.nextInt(max);
-    }
-
-    @Override
-    public int getBonus(int index) {
-        for (int i = 0; i < 5; i++) {
-            double val = bonusRandomGen.nextGaussian() * 5;
-            int bonus = (int) (val + (config.difficulty * 9.0 / 50.0));
-            if (bonus >= -2 && bonus <= 22) {
-                return bonus;
-            }
-        }
-        return -1;
     }
 }

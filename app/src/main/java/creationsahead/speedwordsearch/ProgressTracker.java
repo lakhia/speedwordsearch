@@ -55,13 +55,9 @@ public class ProgressTracker implements ScoreInterface {
 
         try {
             WordList.init(storageInterface.getAssetInputStream("words_9k.db"));
-            config = new Config(WordList.dictionary);
-            resetConfig();
-            // TODO: TEMP workaround
-            game = new Game(config, this,
-                            new RandomSequencer(config, (int) System.currentTimeMillis()));
         } catch (IOException ignored) {
         }
+        resetConfig();
     }
 
     public void destroy() {
@@ -150,33 +146,34 @@ public class ProgressTracker implements ScoreInterface {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void startLevel(@NonNull Level level) {
+        level.score = 0;
+        level.totalScore = 0;
         currentLevel = level.number;
         resetConfig();
-        getCurrentLevel().score = 0;
-        getCurrentLevel().totalScore = 0;
-        game = new Game(config, this,
-                        new RandomSequencer(config, (int) System.currentTimeMillis()));
     }
 
     private void resetConfig() {
-        config.difficulty = MAX_DIFFICULTY * currentLevel / MAX_LEVEL;
-        config.sizeX = currentLevel + 4;
-        config.sizeY = currentLevel + 4;
-        config.timeLimit = 60 + (100 - config.difficulty) * 60 / 100;
-
-        float letterRatio = (100 - config.difficulty) * 1.5f;
-        letterRatio = config.sizeX * config.sizeY * letterRatio / 100;
+        int letterLimit;
         if (BuildConfig.DEBUG) {
-            config.letterLimit = 3;
-        } else if (letterRatio < 5) {
-            config.letterLimit = 5;
+            letterLimit = 3;
         } else {
-            config.letterLimit = (int) letterRatio;
+            float letterRatio = (100 - config.difficulty) * 1.5f;
+            letterRatio = config.sizeX * config.sizeY * letterRatio / 100;
+            if (letterRatio < 5) {
+                letterLimit = 5;
+            } else {
+                letterLimit = (int) letterRatio;
+            }
         }
+        config = new Config(currentLevel + 4, currentLevel + 4, letterLimit);
+        config.difficulty = MAX_DIFFICULTY * currentLevel / MAX_LEVEL;
+        config.timeLimit = 60 + (100 - config.difficulty) * 60 / 100;
 
         if (levels[visibleLevel] == null) {
             levels[visibleLevel] = new Level("Basic Level " + (1 + visibleLevel),
                                              visibleLevel);
         }
+        game = new Game(config, WordList.dictionary, this,
+                new RandomSequencer(config, (int) System.currentTimeMillis()));
     }
 }

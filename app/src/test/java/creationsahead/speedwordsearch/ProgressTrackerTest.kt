@@ -64,7 +64,6 @@ class ProgressTrackerTest {
         progress.init(storage)
 
         assertNotNull(progress.config)
-        assertNotNull(progress.config.dictionary)
         assertEquals(4, progress.config.sizeX)
         assertEquals(4, progress.config.sizeY)
 

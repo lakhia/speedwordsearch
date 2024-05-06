@@ -17,7 +17,7 @@ class TrieTest {
         dictionary.insert("BAAC")
         dictionary.insert("AAAC")
 
-        val config = Config(1,1, dictionary, 0)
+        val config = Config(1, 1, 0)
         val seq = RandomSequencer(config, 1)
 
         // No wildcards
@@ -55,7 +55,7 @@ class TrieTest {
         dictionary.insert("ABACA")
         dictionary.insert("ABACAB")
 
-        val seq = RandomSequencer(Config(1,1, dictionary, 0), 1)
+        val seq = RandomSequencer(Config(1, 1, 0), 1)
 
         var word = dictionary.searchWithWildcards("C", seq, null)
         assertEquals(null, word)
@@ -84,7 +84,7 @@ class TrieTest {
         dictionary.insert("AGGA")
         dictionary.insert("BGGA")
         dictionary.insert("CGGA")
-        val seq = RandomSequencer(Config(1,1, dictionary, 0), 1)
+        val seq = RandomSequencer(Config(1, 1, 0), 1)
 
         var counter = 0
         var word = dictionary.searchWithWildcards("....", seq, { counter++; false; })
@@ -131,12 +131,12 @@ class TrieTest {
         dictionary.insert("ABCD")
         dictionary.insert("ABCDE")
         dictionary.insert("ABCDEF")
-        val seq = RandomSequencer(Config(1,1, dictionary, 0), 1)
+        val seq = RandomSequencer(Config(1, 1, 0), 1)
 
         var counter = 0
         val buffer = StringBuffer()
-        var word = dictionary.searchWithWildcards("......", seq,
-                { buffer.append(it); counter++; false; })
+        var word = dictionary.searchWithWildcards("......", seq)
+        { buffer.append(it); counter++; false; }
         assertEquals(null, word)
         assertEquals(6, counter)
         assertEquals("ABCDEFABCDEABCDABCABA", buffer.toString())
@@ -144,16 +144,16 @@ class TrieTest {
 
         counter = 0
         buffer.delete(0, buffer.length)
-        word = dictionary.searchWithWildcards("A.....", seq,
-                { buffer.append(it); counter++; false; })
+        word = dictionary.searchWithWildcards("A.....", seq)
+        { buffer.append(it); counter++; false; }
         assertEquals(null, word)
         assertEquals(6, counter)
         assertEquals("ABCDEFABCDEABCDABCABA", buffer.toString())
 
         counter = 0
         buffer.delete(0, buffer.length)
-        word = dictionary.searchWithWildcards(".B....", seq,
-                { buffer.append(it); counter++; false; })
+        word = dictionary.searchWithWildcards(".B....", seq)
+        { buffer.append(it); counter++; false; }
         assertEquals(null, word)
         assertEquals(6, counter)
         assertEquals("ABCDEFABCDEABCDABCABA", buffer.toString())

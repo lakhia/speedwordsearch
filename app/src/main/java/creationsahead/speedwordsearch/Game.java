@@ -14,6 +14,7 @@ public class Game {
     @NonNull private final PuzzleGrid grid;
     @NonNull private final Config config;
     @NonNull private final Sequencer sequencer;
+    @NonNull private final Trie dictionary;
     private boolean success;
     private int letterCount;
     private final static Comparator<Answer> comparator = (a, b) -> a.word.compareTo(b.word);
@@ -21,12 +22,14 @@ public class Game {
     /**
      * Construct a game with a square puzzle grid
      */
-    public Game(@NonNull Config config, @NonNull ScoreInterface scoreInterface,
+    public Game(@NonNull Config config, @NonNull Trie dictionary,
+                @NonNull ScoreInterface scoreInterface,
                 @NonNull Sequencer sequencer) {
         letterCount = 0;
         grid = new PuzzleGrid(config, scoreInterface, sequencer);
         this.config = config;
         this.sequencer = sequencer;
+        this.dictionary = dictionary;
     }
 
     /**
@@ -96,7 +99,7 @@ public class Game {
     public boolean addOneWord(final int minSize, final int maxSize) {
         success = false;
         grid.findUnusedSelection(maxSize, (selection, contents) -> {
-            config.dictionary.searchWithWildcards(contents, sequencer, result -> {
+            dictionary.searchWithWildcards(contents, sequencer, result -> {
                 int len = result.length();
                 if (len < minSize) {
                     return false;

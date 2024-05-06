@@ -17,6 +17,4 @@ public interface Sequencer {
     SequenceIterator<Direction> getDirectionSequence();
 
     int getMisc(int max);
-
-    int getBonus(int index);
 }
