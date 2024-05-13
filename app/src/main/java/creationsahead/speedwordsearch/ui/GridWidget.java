@@ -39,7 +39,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     @NonNull private final Rect bounds = new Rect();
     private float fontSize = -1;
     @Nullable private CellAnimator anim;
-    private Center center = null;
+    private final Center center;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);

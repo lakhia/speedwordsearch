@@ -78,28 +78,26 @@ public class ProgressTracker implements ScoreInterface {
 
     /**
      * User has finished current level
-     * @param timeLeft Time left on clock
+     * @param event Event that caused win / lose
      */
-    public void incrementLevel(int timeLeft) {
+    public void incrementLevel(Event event) {
         // Store progress
         Level level = getCurrentLevel();
         int levelNum = level.number;
-
+        level.timeUsed = config.timeLimit - event.timeLeft;
         scoreLevel(level);
 
-        level.timeUsed = config.timeLimit - timeLeft;
-
-        // Create new level or post game won event
-        if (levelNum >= MAX_LEVEL - 1) {
-            EventBus.getDefault().post(Event.GAME_WON);
-        } else {
-            levelNum++;
-        }
-
-        if (visibleLevel < levelNum) {
-            visibleLevel = levelNum;
-            resetConfig();
-            storageInterface.storePreference(LEVEL_VISIBLE, visibleLevel);
+        if (level.stars > 2.0) {
+            // Create new level or post game won event
+            if (levelNum >= MAX_LEVEL - 1) {
+                EventBus.getDefault().post(Event.GAME_WON);
+            } else {
+                levelNum++;
+            }
+            if (visibleLevel < levelNum) {
+                visibleLevel = levelNum;
+                storageInterface.storePreference(LEVEL_VISIBLE, visibleLevel);
+            }
         }
 
         storageInterface.storeLevel(level);
@@ -110,7 +108,7 @@ public class ProgressTracker implements ScoreInterface {
      */
     private void scoreLevel(@NonNull Level level) {
         float stars = 2.0f * level.score / level.totalScore;
-        stars += 4.0f * (config.timeLimit - level.timeUsed) / config.timeLimit;
+        stars += 2.0f * (config.timeLimit - level.timeUsed) / config.timeLimit;
         level.stars = Math.min(stars, 4f);
     }
 
@@ -155,7 +153,7 @@ public class ProgressTracker implements ScoreInterface {
     private void resetConfig() {
         int letterLimit;
         if (BuildConfig.DEBUG) {
-            letterLimit = 3;
+            letterLimit = 13;
         } else {
             float letterRatio = (100 - config.difficulty) * 1.5f;
             letterRatio = config.sizeX * config.sizeY * letterRatio / 100;

@@ -37,14 +37,8 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
         listView.setOnItemClickListener(this);
     }
 
-    //@Override
+    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Level level = (Level) adapterView.getItemAtPosition(position);
-        EventBus.getDefault().post(level);
-    }
-
-    // TODO: Figure out why this doesn't work
-    public void oonItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         clickedLevel = view;
         ValueAnimator anim = ValueAnimator.ofFloat(1, 0.05f);
         anim.setDuration(ANIMATION_DURATION/4);

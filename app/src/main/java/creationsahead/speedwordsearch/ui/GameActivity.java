@@ -41,10 +41,15 @@ public class GameActivity extends Activity {
         EventBus.getDefault().post(Event.PAUSE);
     }
 
+    @Override
+    public void onBackPressed() {
+        EventBus.getDefault().post(Event.LEVEL_LOST);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWin(@NonNull Event event) {
-        if (event == Event.LEVEL_WON) {
-            ProgressTracker.getInstance().incrementLevel(event.timeLeft);
+    public void onWinOrLose(@NonNull Event event) {
+        if (event == Event.LEVEL_WON || event == Event.LEVEL_LOST) {
+            ProgressTracker.getInstance().incrementLevel(event);
             finish();
             Intent intent = new Intent(this, LevelActivity.class);
             startActivity(intent);
