@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
+import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.esotericsoftware.kryo.Kryo;
@@ -37,7 +39,12 @@ public class GameApplication extends Application implements StorageInterface {
         serializer.register(Level.class, 15);
         EventBus.builder().throwSubscriberException(BuildConfig.DEBUG).
             sendNoSubscriberEvent(false).installDefaultEventBus();
-        ProgressTracker.getInstance().init(this);
+
+        Rect display = new Rect();
+        WindowManager manager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        manager.getDefaultDisplay().getRectSize(display);
+
+        ProgressTracker.getInstance().init(this, display);
     }
 
     @Override

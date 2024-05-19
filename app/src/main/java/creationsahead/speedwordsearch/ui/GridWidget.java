@@ -65,9 +65,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
             }
         }
 
-        final Rect rect = new Rect();
-        getWindowVisibleDisplayFrame(rect);
-        center = new Center(rect);
+        center = new Center(ProgressTracker.getInstance().displayRect);
     }
 
     @Override

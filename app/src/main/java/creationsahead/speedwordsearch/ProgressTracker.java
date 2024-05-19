@@ -1,5 +1,6 @@
 package creationsahead.speedwordsearch;
 
+import android.graphics.Rect;
 import androidx.annotation.NonNull;
 import creationsahead.speedwordsearch.mod.Level;
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class ProgressTracker implements ScoreInterface {
     private int currentLevel;
     private int visibleLevel;
     private StorageInterface storageInterface;
+    public Rect displayRect;
 
     private static class SingletonHolder {
         @NonNull private final static ProgressTracker instance = new ProgressTracker();
@@ -43,9 +45,10 @@ public class ProgressTracker implements ScoreInterface {
      * Initialize progress tracker and use storage interface to load words
      * @param storage InputStream of words to load
      */
-    public void init(@NonNull StorageInterface storage) {
+    public void init(@NonNull StorageInterface storage, @NonNull Rect display) {
         storageInterface = storage;
         visibleLevel = storageInterface.getPreference(LEVEL_VISIBLE);
+        displayRect = display;
 
         for (int i = 0; i <= visibleLevel; i++) {
             levels[i] = storageInterface.getLevel(i);

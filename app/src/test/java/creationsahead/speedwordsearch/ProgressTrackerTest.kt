@@ -1,5 +1,6 @@
 package creationsahead.speedwordsearch
 
+import android.graphics.Rect
 import creationsahead.speedwordsearch.mod.Level
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -61,7 +62,7 @@ class ProgressTrackerTest {
 
     @Test
     fun test_01_init() {
-        progress.init(storage)
+        progress.init(storage, Rect())
 
         assertNotNull(progress.config)
         assertEquals(4, progress.config.sizeX)
@@ -80,7 +81,7 @@ class ProgressTrackerTest {
         val level = Level("", 0)
         level.totalScore = 150
         storage.storeLevel(level)
-        progress.init(storage)
+        progress.init(storage, Rect())
 
         val selection = Selection(0, 0, Direction.NORTH, 5)
         val timeLimit = progress.config.timeLimit
@@ -121,7 +122,7 @@ class ProgressTrackerTest {
         storage.storeLevel(Level("", 1))
         storage.storeLevel(Level("", 2))
 
-        progress.init(storage)
+        progress.init(storage, Rect())
 
         // Verify that level[3] gets created because it is visible
         assertNotNull(progress.levels[0])
