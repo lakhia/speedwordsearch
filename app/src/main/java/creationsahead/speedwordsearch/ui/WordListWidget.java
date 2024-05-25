@@ -10,10 +10,8 @@ import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
-import android.view.View;
 import android.widget.TextView;
 import creationsahead.speedwordsearch.Answer;
-import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import org.greenrobot.eventbus.EventBus;
@@ -58,6 +56,9 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
             case WORD_ADDED:
                 ContextThemeWrapper newContext = new ContextThemeWrapper(getContext(), R.style.WordList);
                 textView = new TextView(newContext, null);
+                // TODO: Using fixed font-size for now
+                textView.setTextSize(COMPLEX_UNIT_PX, ProgressTracker.getInstance().normalizedFontSize/12.0f);
+
                 textView.setText(answer.getDisplay());
                 Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.artifika);
                 textView.setTypeface(typeface);
@@ -92,21 +93,6 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
                     answer.tag = null;
                 }
                 break;
-        }
-    }
-
-    // TODO: Implicit dependency that font size event comes after textviews have been created
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onFontUpdate(@NonNull Event event) {
-        if (event == Event.FONT_SIZE) {
-            float fontSize = event.fontSize * 0.5f;
-            for (int i = 0; i < getChildCount(); i++) {
-                View view = getChildAt(i);
-                if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
-                    textView.setTextSize(COMPLEX_UNIT_PX, fontSize);
-                }
-            }
         }
     }
 }

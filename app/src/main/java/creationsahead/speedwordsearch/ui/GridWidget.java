@@ -1,7 +1,6 @@
 package creationsahead.speedwordsearch.ui;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,8 +35,6 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     private int lastX = -1, lastY = -1;
     private int cellSize = -1;
     @Nullable private View lastSelection = null;
-    @NonNull private final Rect bounds = new Rect();
-    private float fontSize = -1;
     @Nullable private CellAnimator anim;
     private final Center center;
 
@@ -45,8 +42,9 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
         super(context, attrs);
         setBackgroundResource(R.color.black_overlay);
         Typeface typeface = ResourcesCompat.getFont(context, R.font.archivo_black);
+        ProgressTracker tracker = ProgressTracker.getInstance();
 
-        int numCells = ProgressTracker.getInstance().config.sizeX;
+        int numCells = tracker.config.sizeX;
         for (int i = 0; i < numCells; i++) {
             TableRow row = new TableRow(context);
             addView(row);
@@ -54,7 +52,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
             for (int j = 0; j < numCells; j++) {
                 ContextThemeWrapper newContext = new ContextThemeWrapper(context, R.style.PuzzleLetter);
                 TextView textView = new TextView(newContext, null);
-                Cell cell = ProgressTracker.getInstance().game.getCell(i, j);
+                Cell cell = tracker.game.getCell(i, j);
                 textView.setText(cell.toString());
                 textView.setTypeface(typeface);
                 textView.setOnClickListener(this);
@@ -65,7 +63,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
             }
         }
 
-        center = new Center(ProgressTracker.getInstance().displayRect);
+        center = new Center(tracker.displayRect);
     }
 
     @Override
@@ -89,6 +87,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
         setMeasuredDimension(widgetSize, widgetSize);
 
         int childCount = getChildCount();
+        float fontSize = ProgressTracker.getInstance().normalizedFontSize / childCount;
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
             TableRow row = (TableRow) child;
@@ -100,14 +99,6 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
             for (int j = 0; j < cellCount; j++) {
                 View cell = row.getChildAt(j);
                 TextView textView = (TextView) cell;
-                if (fontSize == -1) {
-                    textView.getPaint().getTextBounds("W", 0, 1, bounds);
-                    int max = Math.max(bounds.width(), bounds.height());
-                    fontSize = 0.6f * textView.getTextSize() * cellSize / max;
-                    Event event = Event.FONT_SIZE;
-                    event.fontSize = fontSize;
-                    EventBus.getDefault().post(event);
-                }
                 textView.setTextSize(COMPLEX_UNIT_PX, fontSize);
                 textView.measure(cellSize, cellSize);
                 textView.setMinimumHeight(cellSize);

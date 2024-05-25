@@ -17,7 +17,7 @@ public class Ticker implements Runnable {
     @NonNull private final Handler handler;
     @NonNull private final TickerCallback callback;
     private boolean stop;
-    private int timeLeft = 0;
+    private int timeLeft;
 
     /**
      * Create a ticker
@@ -34,7 +34,7 @@ public class Ticker implements Runnable {
     public void startLevel(@NonNull Event event) {
         if (event == Event.PAUSE) {
             pause();
-        } else {
+        } else if (event == Event.UN_PAUSE) {
             startOrResume();
         }
     }

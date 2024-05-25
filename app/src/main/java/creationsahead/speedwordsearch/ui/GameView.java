@@ -4,7 +4,6 @@ import android.content.Context;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import android.util.AttributeSet;
 import creationsahead.speedwordsearch.Event;
-import creationsahead.speedwordsearch.Game;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.TickerCallback;
@@ -15,22 +14,16 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class GameView extends ConstraintLayout implements TickerCallback {
 
-    private Ticker timer;
-    private ScoreBar scoreBar;
+    private final Ticker timer;
+    private final ScoreBar scoreBar;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Game game = ProgressTracker.getInstance().game;
-        game.populatePuzzle();
-        inflate(context, R.layout.game, this);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        scoreBar = findViewById(R.id.scoreBar);
+        ProgressTracker.getInstance().game.populatePuzzle();
         timer = new Ticker(getContext(), this,
-                           ProgressTracker.getInstance().config.timeLimit);
+                ProgressTracker.getInstance().config.timeLimit);
+        inflate(context, R.layout.game, this);
+        scoreBar = findViewById(R.id.scoreBar);
     }
 
     @Override

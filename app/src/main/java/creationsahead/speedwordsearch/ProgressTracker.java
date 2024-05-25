@@ -27,6 +27,7 @@ public class ProgressTracker implements ScoreInterface {
     private int visibleLevel;
     private StorageInterface storageInterface;
     public Rect displayRect;
+    public float normalizedFontSize;
 
     private static class SingletonHolder {
         @NonNull private final static ProgressTracker instance = new ProgressTracker();
@@ -44,11 +45,14 @@ public class ProgressTracker implements ScoreInterface {
     /**
      * Initialize progress tracker and use storage interface to load words
      * @param storage InputStream of words to load
+     * @param display Size of entire display screen
+     * @param fontSize Size of font to use for entire width of screen
      */
-    public void init(@NonNull StorageInterface storage, @NonNull Rect display) {
+    public void init(@NonNull StorageInterface storage, @NonNull Rect display, float fontSize) {
         storageInterface = storage;
         visibleLevel = storageInterface.getPreference(LEVEL_VISIBLE);
         displayRect = display;
+        normalizedFontSize = fontSize;
 
         for (int i = 0; i <= visibleLevel; i++) {
             levels[i] = storageInterface.getLevel(i);

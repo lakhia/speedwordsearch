@@ -62,7 +62,7 @@ class ProgressTrackerTest {
 
     @Test
     fun test_01_init() {
-        progress.init(storage, Rect())
+        progress.init(storage, Rect(), 0.0f)
 
         assertNotNull(progress.config)
         assertEquals(4, progress.config.sizeX)
@@ -81,7 +81,7 @@ class ProgressTrackerTest {
         val level = Level("", 0)
         level.totalScore = 150
         storage.storeLevel(level)
-        progress.init(storage, Rect())
+        progress.init(storage, Rect(), 0.0f)
 
         val selection = Selection(0, 0, Direction.NORTH, 5)
         val timeLimit = progress.config.timeLimit
@@ -122,7 +122,7 @@ class ProgressTrackerTest {
         storage.storeLevel(Level("", 1))
         storage.storeLevel(Level("", 2))
 
-        progress.init(storage, Rect())
+        progress.init(storage, Rect(), 0.0f)
 
         // Verify that level[3] gets created because it is visible
         assertNotNull(progress.levels[0])

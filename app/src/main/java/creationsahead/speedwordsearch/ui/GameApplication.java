@@ -1,11 +1,13 @@
 package creationsahead.speedwordsearch.ui;
 
+import static java.lang.Float.max;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.view.WindowManager;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.esotericsoftware.kryo.Kryo;
@@ -44,7 +46,12 @@ public class GameApplication extends Application implements StorageInterface {
         WindowManager manager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         manager.getDefaultDisplay().getRectSize(display);
 
-        ProgressTracker.getInstance().init(this, display);
+        Rect bounds = new Rect();
+        TextView textView = new TextView(this);
+        textView.getPaint().getTextBounds("W", 0, 1, bounds);
+        int max = Math.max(bounds.width(), bounds.height());
+        float fontSize = 0.3f * textView.getTextSize() * max(display.width(), display.height()) / max;
+        ProgressTracker.getInstance().init(this, display, fontSize);
     }
 
     @Override

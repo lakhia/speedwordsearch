@@ -9,7 +9,6 @@ public enum Event {
     WORD_ADDED,
 
     // UI related events
-    FONT_SIZE,
     PAUSE,
     UN_PAUSE,
 
@@ -26,7 +25,6 @@ public enum Event {
     GAME_WON;
 
     // Event specific payload
-    public float fontSize;
     public boolean lastWordGuessed;
     public int timeLeft;
 }
