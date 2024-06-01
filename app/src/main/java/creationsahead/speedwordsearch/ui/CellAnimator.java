@@ -2,10 +2,10 @@ package creationsahead.speedwordsearch.ui;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
-import android.graphics.Color;
-import androidx.annotation.NonNull;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.core.graphics.ColorUtils;
 import java.util.ArrayList;
 
 import static creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATION;
@@ -14,12 +14,18 @@ import static creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATI
  * Animates one or more cells
  */
 public class CellAnimator implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
-    private final boolean correct;
     @NonNull private final ArrayList<TextView> arrayList = new ArrayList<>();
+    private final int transitionColor;
 
     public CellAnimator(boolean correct) {
-        this.correct = correct;
-        ValueAnimator anim = ValueAnimator.ofFloat(0, 1, 0);
+        if (correct) {
+            // Bright green in AARRGGBB format
+            transitionColor = 0xff38C838;
+        } else {
+            // Bright red in AARRGGBB format
+            transitionColor = 0xfff82828;
+        }
+        ValueAnimator anim = ValueAnimator.ofFloat(0, 1, 1, 1, 0);
         anim.setDuration(ANIMATION_DURATION);
         anim.setInterpolator(new LinearInterpolator());
         anim.addUpdateListener(this);
@@ -29,17 +35,12 @@ public class CellAnimator implements ValueAnimator.AnimatorUpdateListener, Anima
 
     @Override
     public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-        int color;
+        // Dark grey in AARRGGBB format, text color copied from colors.xml
+        int initColor = 0xff404040;
         float v = (float) valueAnimator.getAnimatedValue();
-        float s = 32 * v;
-        int a = (int) (255 * v);
-        if (correct) {
-            color = Color.argb(a, 50, 200, 50);
-        } else {
-            color = Color.argb(a, 250, 112, 112);
-        }
+        int s = ColorUtils.blendARGB(initColor, transitionColor, v);
         for (TextView textView : arrayList) {
-            textView.setShadowLayer(s, 4, 4, color);
+            textView.setTextColor(s);
         }
     }
 
