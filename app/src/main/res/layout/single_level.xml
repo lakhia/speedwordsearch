@@ -31,7 +31,7 @@
         tool:text="01:55"
         app:layout_constraintBaseline_toBaselineOf="@+id/toggleButton"
         app:layout_constraintStart_toEndOf="@+id/toggleButton"
-        app:layout_constraintEnd_toStartOf="@+id/ratingBar"/>
+        app:layout_constraintEnd_toStartOf="@+id/ratingBar" />
 
     <RatingBar
         android:focusable="false"
