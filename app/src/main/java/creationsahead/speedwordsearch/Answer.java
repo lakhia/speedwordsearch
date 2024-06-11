@@ -21,7 +21,7 @@ public class Answer {
         this.selection = selection;
         this.word = word;
         this.score = score;
-        event = Event.WORD_ADDED;
+        event = Event.ANSWER_ADDED;
         EventBus.getDefault().post(this);
     }
 
@@ -29,7 +29,7 @@ public class Answer {
      * Called when word is removed and score claimed
      */
     public void notifyScoreClaimed() {
-        event = Event.SCORE_AWARDED;
+        event = Event.ANSWER_CORRECT;
         EventBus.getDefault().post(this);
     }
 

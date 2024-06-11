@@ -40,9 +40,9 @@ class GameTest {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdate(answer: Answer) {
-        if (answer.event == Event.WORD_ADDED) {
+        if (answer.event == Event.ANSWER_ADDED) {
             displayBuffer.append(answer.display + " ")
-        } else if (answer.event == Event.SCORE_AWARDED) {
+        } else if (answer.event == Event.ANSWER_CORRECT) {
             totalScore += answer.score
         }
         answerBuffer.append(answer.toString() + "\n")

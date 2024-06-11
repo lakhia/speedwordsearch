@@ -53,7 +53,7 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
     public void onUpdate(@NonNull Answer answer) {
         TextView textView;
         switch (answer.event) {
-            case WORD_ADDED:
+            case ANSWER_ADDED:
                 ContextThemeWrapper newContext = new ContextThemeWrapper(getContext(), R.style.WordList);
                 textView = new TextView(newContext, null);
                 // TODO: Using fixed font-size for now
@@ -66,7 +66,7 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
                 addView(textView);
                 answer.tag = textView;
                 break;
-            case SCORE_AWARDED:
+            case ANSWER_CORRECT:
                 textView = (TextView) answer.tag;
                 if (textView != null) {
                     Transition transition = new Fade();

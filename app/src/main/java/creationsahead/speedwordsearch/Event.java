@@ -5,8 +5,9 @@ package creationsahead.speedwordsearch;
  */
 public enum Event {
     // Answer related events
-    SCORE_AWARDED,
-    WORD_ADDED,
+    ANSWER_CORRECT,
+    ANSWER_INCORRECT,
+    ANSWER_ADDED,
 
     // UI related events
     PAUSE,

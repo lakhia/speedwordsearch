@@ -132,7 +132,7 @@ public class Game {
             Collections.sort(list, comparator);
         }
         for (Answer answer : list) {
-            answer.event = Event.WORD_ADDED;
+            answer.event = Event.ANSWER_ADDED;
             EventBus.getDefault().post(answer);
         }
     }
@@ -148,11 +148,14 @@ public class Game {
         boolean success = grid.removeWord(answer);
 
         // Create score awarded event
+        Event event;
         if (success) {
-            Event event = Event.SCORE_AWARDED;
+            event = Event.ANSWER_CORRECT;
             event.lastWordGuessed = grid.answerMap.isEmpty();
-            EventBus.getDefault().post(event);
+        } else {
+            event = Event.ANSWER_INCORRECT;
         }
+        EventBus.getDefault().post(event);
 
         // Create selection event
         grid.visitSelection(selection,

@@ -67,7 +67,7 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateScore(@NonNull Event event) {
-        if (event == Event.SCORE_AWARDED) {
+        if (event == Event.ANSWER_CORRECT) {
             if (anim != null) {
                 anim.cancel();
             }

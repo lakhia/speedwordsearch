@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.ProgressTracker;
+import creationsahead.speedwordsearch.utils.SoundManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -18,10 +19,13 @@ import org.greenrobot.eventbus.ThreadMode;
  */
 public class GameActivity extends Activity {
 
+    private SoundManager sound_manager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        sound_manager = new SoundManager(this);
         View view = new GameView(this, null);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         addContentView(view, params);
@@ -30,6 +34,7 @@ public class GameActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        sound_manager.resume();
         EventBus.getDefault().register(this);
         EventBus.getDefault().post(Event.UN_PAUSE);
     }
@@ -37,6 +42,7 @@ public class GameActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        sound_manager.pause();
         EventBus.getDefault().unregister(this);
         EventBus.getDefault().post(Event.PAUSE);
     }

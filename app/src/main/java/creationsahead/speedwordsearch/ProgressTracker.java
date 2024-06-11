@@ -141,7 +141,7 @@ public class ProgressTracker implements ScoreInterface {
      */
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void addScore(@NonNull Answer answer) {
-        if (answer.event == Event.SCORE_AWARDED) {
+        if (answer.event == Event.ANSWER_CORRECT) {
             getCurrentLevel().score += answer.score;
         }
     }

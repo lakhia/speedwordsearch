@@ -125,7 +125,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateScore(@NonNull Event event) {
-        if (event == Event.SCORE_AWARDED && event.lastWordGuessed) {
+        if (event == Event.ANSWER_CORRECT && event.lastWordGuessed) {
             {
                 Transition explode = new Explode();
                 explode.setEpicenterCallback(center);
