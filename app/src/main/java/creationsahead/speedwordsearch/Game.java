@@ -56,21 +56,17 @@ public class Game {
      */
     public void fillEmptyCells() {
         final SequenceIterator<Character> iterator = sequencer.getLetterSequence();
-
-        grid.findUnusedCells((position) -> {
-            // Ignore placeholder cells
-            if (!grid.getCell(position.x, position.y).isEmpty()) {
-                return false;
-            }
-            char letter = iterator.next();
-            if (!grid.addLetter(position, letter)) {
-                throw new RuntimeException("Could not add letter");
-            }
-            if (!iterator.hasNext()) {
-                iterator.shuffle();
-            }
-            return false;
-        });
+        grid.findCells(Cell::isEmpty,
+                (position) -> {
+                    char letter = iterator.next();
+                    if (!grid.addLetter(position, letter)) {
+                        throw new RuntimeException("Could not add letter");
+                    }
+                    if (!iterator.hasNext()) {
+                        iterator.shuffle();
+                    }
+                    return false;
+                });
     }
 
     /**
@@ -79,16 +75,13 @@ public class Game {
      */
     public void clearPlaceholders(int count) {
         final int[] letterCount = { count };
-        grid.findUnusedCells((position) -> {
-            // Ignore empty cells
-            if (grid.getCell(position.x, position.y).isEmpty()) {
-                return false;
-            }
-            if (grid.clearLetter(position)) {
-                --letterCount[0];
-            }
-            return letterCount[0] == 0;
-        });
+        grid.findCells(Cell::isNotEmpty,
+                (position) -> {
+                    if (grid.clearLetter(position)) {
+                        --letterCount[0];
+                    }
+                    return letterCount[0] == 0;
+                });
     }
 
     /**

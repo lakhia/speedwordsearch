@@ -138,20 +138,20 @@ class PuzzleGridTest {
         val grid = fillGrid()
 
         // No vacant cells
-        var pos = grid.findUnusedCells(null)
+        var pos = grid.findCells(CellCallback { obj: Cell -> obj.isUnused }, null)
         assertEquals(null, pos)
 
         // Remove two words that do not free any cells
         grid.removeWord("tart")
-        pos = grid.findUnusedCells(null)
+        pos = grid.findCells(CellCallback { obj: Cell -> obj.isUnused }, null)
         assertEquals(null, pos)
         grid.removeWord("east")
-        pos = grid.findUnusedCells(null)
+        pos = grid.findCells(CellCallback { obj: Cell -> obj.isUnused }, null)
         assertEquals(null, pos)
 
         // Remove one word that makes a few cells unused
         grid.removeWord("saga")
-        pos = grid.findUnusedCells(null)
+        pos = grid.findCells(CellCallback { obj: Cell -> obj.isUnused }, null)
         assertNotNull(pos)
         assertEquals(3, pos?.x)
         assertEquals(1, pos?.y)

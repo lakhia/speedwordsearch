@@ -111,9 +111,8 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     public void onChanged(@NonNull Cell cell) {
         if (cell.tag != null) {
             TextView textView = (TextView) cell.tag;
-            if (cell.event == Event.CELL_STORED) {
-                textView.setText(cell.toString());
-            } else if (cell.event == Event.CELL_SELECTION_CORRECT ||
+            textView.setText(cell.toString());
+            if (cell.event == Event.CELL_SELECTION_CORRECT ||
                 cell.event == Event.CELL_SELECTION_INCORRECT) {
                 if (anim == null) {
                     anim = new CellAnimator(cell.event == Event.CELL_SELECTION_CORRECT);

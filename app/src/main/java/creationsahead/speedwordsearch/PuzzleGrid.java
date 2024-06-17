@@ -120,18 +120,20 @@ public class PuzzleGrid {
 
     /**
      * Find an empty cell or placeholder cells based on randomness
-     * @param callback called for each valid empty position
-     * @return Position that indicates vacant cell coordinates
+     * @param cellCallback called for each cell to identify if it meets criteria
+     * @param callback called for each valid position
+     * @return Position that indicates cell coordinates
      */
     @Nullable
-    public Position findUnusedCells(@Nullable PositionCallback callback) {
+    public Position findCells(@NonNull CellCallback cellCallback,
+                              @Nullable PositionCallback callback) {
         SequenceIterator<Integer> rows = mSequencer.getXCoordinateSequence();
         while (rows.hasNext()) {
             int x = rows.next();
             SequenceIterator<Integer> cols = mSequencer.getYCoordinateSequence();
             while (cols.hasNext()) {
                 int y = cols.next();
-                if (mGrid[x][y].isUnused()) {
+                if (cellCallback.callback(mGrid[x][y])) {
                     Position newPos = new Position(x, y);
                     if (callback != null) {
                         if (callback.onUpdate(newPos)) {
@@ -147,23 +149,24 @@ public class PuzzleGrid {
     }
 
     /**
-     * Find a selection that includes an empty cell and is of size length
+     * Find a selection that starts with an unused cell and is of size length
      * @param length length of potential word
      * @param callback called for each assignment that is possible
      */
     public void findUnusedSelection(final int length, @NonNull final SelectionCallback callback) {
-        findUnusedCells(position -> {
-            SequenceIterator<Direction> dirs = mSequencer.getDirectionSequence();
-            while (dirs.hasNext()) {
-                Direction dir = dirs.next();
-                // If position can accommodate length, process it
-                if (Selection.inBounds(position, dir, mConfig.sizeX, mConfig.sizeY, length)) {
-                    Selection selection = new Selection(position, dir, length);
-                    return callback.onUpdate(selection, findContents(selection, true));
-                }
-            }
-            return false;
-        });
+        findCells(Cell::isUnused,
+                (position) -> {
+                    SequenceIterator<Direction> dirs = mSequencer.getDirectionSequence();
+                    while (dirs.hasNext()) {
+                        Direction dir = dirs.next();
+                        // If position can accommodate length, process it
+                        if (Selection.inBounds(position, dir, mConfig.sizeX, mConfig.sizeY, length)) {
+                            Selection selection = new Selection(position, dir, length);
+                            return callback.onUpdate(selection, findContents(selection, true));
+                        }
+                    }
+                    return false;
+                });
     }
 
     /**

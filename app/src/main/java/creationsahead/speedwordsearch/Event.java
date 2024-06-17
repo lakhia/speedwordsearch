@@ -13,9 +13,7 @@ public enum Event {
     PAUSE,
     UN_PAUSE,
 
-    // Cell related events
-    /** CELL_UPDATE event sent with Cell object */
-    CELL_STORED,
+    // Cell selection events
     CELL_SELECTION_CORRECT,
     CELL_SELECTION_INCORRECT,
 

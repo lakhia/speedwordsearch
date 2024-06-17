@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.greenrobot.eventbus.EventBus;
 
-import static creationsahead.speedwordsearch.Event.CELL_STORED;
-
 /**
  * A cell in a puzzle grid contains a letter and reference count
  */
@@ -41,12 +39,15 @@ public class Cell {
     }
 
     /**
-     * Clear letter content
+     * Clear letter content unless it is being referenced
+     * @return True if clear was successful
      */
     public boolean clear() {
         if (refCount == 0) {
-            letter = EMPTY;
-            EventBus.getDefault().post(this);
+            if (letter != EMPTY) {
+                letter = EMPTY;
+                EventBus.getDefault().post(this);
+            }
             return true;
         }
         return false;
@@ -76,7 +77,6 @@ public class Cell {
             return false;
         }
         this.letter = letter;
-        this.event = CELL_STORED;
         EventBus.getDefault().post(this);
         return true;
     }
@@ -85,7 +85,7 @@ public class Cell {
      * Returns true if cell content is unused and can be overwritten
      */
     public boolean isUnused() {
-        return letter == EMPTY || refCount == 0;
+        return refCount == 0;
     }
 
     /**
@@ -93,6 +93,13 @@ public class Cell {
      */
     public boolean isEmpty() {
         return letter == EMPTY;
+    }
+
+    /**
+     * Returns true if cell content can become a blank
+     */
+    public boolean isNotEmpty() {
+        return refCount == 0 && letter != EMPTY;
     }
 
     /**
