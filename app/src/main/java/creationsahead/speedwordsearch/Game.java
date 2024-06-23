@@ -11,7 +11,7 @@ import org.greenrobot.eventbus.EventBus;
  * A game manages the puzzle grid
  */
 public class Game {
-    @NonNull private final PuzzleGrid grid;
+    @NonNull private final Grid grid;
     @NonNull private final Config config;
     @NonNull private final Sequencer sequencer;
     @NonNull private final Trie dictionary;
@@ -26,7 +26,7 @@ public class Game {
                 @NonNull ScoreInterface scoreInterface,
                 @NonNull Sequencer sequencer) {
         letterCount = 0;
-        grid = new PuzzleGrid(config, scoreInterface, sequencer);
+        grid = new Grid(config, scoreInterface, sequencer);
         this.config = config;
         this.sequencer = sequencer;
         this.dictionary = dictionary;
@@ -133,29 +133,10 @@ public class Game {
     /**
      * Validate a guess and mark word from grid as un-used
      * @param selection selection made by user
-     * @return true if word was removed
+     * @return Guess object that indicates status of guess
      */
-    public boolean guess(@NonNull Selection selection) {
-        // Use placeholder letters to find word so that accidental words are found
-        String answer = grid.findContents(selection, false);
-        boolean success = grid.removeWord(answer);
-
-        // Create score awarded event
-        Event event;
-        if (success) {
-            event = Event.ANSWER_CORRECT;
-            event.lastWordGuessed = grid.answerMap.isEmpty();
-        } else {
-            event = Event.ANSWER_INCORRECT;
-        }
-        EventBus.getDefault().post(event);
-
-        // Create selection event
-        grid.visitSelection(selection,
-                            success ? Event.CELL_SELECTION_CORRECT :
-                            Event.CELL_SELECTION_INCORRECT);
-
-        return success;
+    public Guess guess(@NonNull Selection selection) {
+        return grid.guess(selection);
     }
 
     @NonNull

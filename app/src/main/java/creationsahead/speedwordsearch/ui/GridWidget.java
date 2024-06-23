@@ -16,7 +16,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import creationsahead.speedwordsearch.Cell;
-import creationsahead.speedwordsearch.Event;
+import creationsahead.speedwordsearch.Guess;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.Selection;
@@ -35,7 +35,6 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     private int lastX = -1, lastY = -1;
     private int cellSize = -1;
     @Nullable private View lastSelection = null;
-    @Nullable private CellAnimator anim;
     private final Center center;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -109,22 +108,15 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChanged(@NonNull Cell cell) {
-        if (cell.tag != null) {
-            TextView textView = (TextView) cell.tag;
-            textView.setText(cell.toString());
-            if (cell.event == Event.CELL_SELECTION_CORRECT ||
-                cell.event == Event.CELL_SELECTION_INCORRECT) {
-                if (anim == null) {
-                    anim = new CellAnimator(cell.event == Event.CELL_SELECTION_CORRECT);
-                }
-                anim.add(textView);
-            }
+        TextView textView = (TextView) cell.tag;
+        if (textView != null) {
+            new CellAnimator(textView, cell.toString());
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateScore(@NonNull Event event) {
-        if (event == Event.ANSWER_CORRECT && event.lastWordGuessed) {
+    public void updateScore(@NonNull Guess guess) {
+        new GuessAnimator(guess);
+        if (guess.last) {
             {
                 Transition explode = new Explode();
                 explode.setEpicenterCallback(center);
@@ -165,14 +157,14 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
             lastX = currentX;
             lastY = currentY;
             lastSelection = view;
-            anim = null;
             view.setBackgroundResource(R.drawable.cell_selected);
         } else {
             lastSelection.setBackgroundResource(R.drawable.cell);
             lastSelection = null;
             Selection selection = Selection.isValid(lastX, lastY, currentX, currentY);
             if (selection != null) {
-                ProgressTracker.getInstance().game.guess(selection);
+                Guess guess = ProgressTracker.getInstance().game.guess(selection);
+                updateScore(guess);
             } else {
                 if (currentX != lastX && currentY != lastY) {
                     Toast.makeText(getContext(), "Invalid Selection", Toast.LENGTH_SHORT).show();

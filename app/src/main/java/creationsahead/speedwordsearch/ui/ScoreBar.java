@@ -3,12 +3,13 @@ package creationsahead.speedwordsearch.ui;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import creationsahead.speedwordsearch.Event;
+import creationsahead.speedwordsearch.Guess;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.TickerCallback;
@@ -66,40 +67,41 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateScore(@NonNull Event event) {
-        if (event == Event.ANSWER_CORRECT) {
-            if (anim != null) {
-                anim.cancel();
-            }
-            prevScore = currentScore;
-            deltaScore = ProgressTracker.getInstance().getCurrentScore() - prevScore;
-
-            anim = ValueAnimator.ofFloat(1, 1.75f, 1);
-            anim.setDuration(ANIMATION_DURATION);
-            anim.setInterpolator(new AccelerateDecelerateInterpolator());
-            anim.addUpdateListener(this);
-            if (event.lastWordGuessed) {
-                // Last word guessed, trigger event after animation is finished
-                anim.addListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animator) {}
-
-                    @Override
-                    public void onAnimationEnd(Animator animator) {
-                        Event event = Event.LEVEL_WON;
-                        event.timeLeft = currentTick;
-                        EventBus.getDefault().post(Event.LEVEL_WON);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animator) {}
-
-                    @Override
-                    public void onAnimationRepeat(Animator animator) {}
-                });
-            }
-            anim.start();
+    public void updateScore(@NonNull Guess guess) {
+        if (anim != null) {
+            anim.cancel();
         }
+        if (!guess.success) {
+            return;
+        }
+        prevScore = currentScore;
+        deltaScore = ProgressTracker.getInstance().getCurrentScore() - prevScore;
+
+        anim = ValueAnimator.ofFloat(1, 4.5f, 1);
+        anim.setDuration(ANIMATION_DURATION);
+        anim.setInterpolator(new AccelerateDecelerateInterpolator());
+        anim.addUpdateListener(this);
+        if (guess.last) {
+            // Last word guessed, trigger event after animation is finished
+            anim.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {}
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    Event event = Event.LEVEL_WON;
+                    event.timeLeft = currentTick;
+                    EventBus.getDefault().post(event);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {}
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {}
+            });
+        }
+        anim.start();
     }
 
     private void updateScoreWidget() {

@@ -2,13 +2,14 @@ package creationsahead.speedwordsearch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.greenrobot.eventbus.EventBus;
 
 /**
- * A puzzle grid
+ * Grid to manage the puzzle
  */
-public class PuzzleGrid {
+public class Grid {
     @NonNull private final Cell[][] mGrid;
     @NonNull final HashMap<String, Answer> answerMap;
     @NonNull private final Config mConfig;
@@ -18,8 +19,8 @@ public class PuzzleGrid {
     /**
      * Create a grid using specified x and y size
      */
-    public PuzzleGrid(@NonNull Config config, @NonNull ScoreInterface scoreInterface,
-                      @NonNull Sequencer sequencer) {
+    public Grid(@NonNull Config config, @NonNull ScoreInterface scoreInterface,
+                @NonNull Sequencer sequencer) {
         mConfig = config;
         mSequencer = sequencer;
         mGrid = new Cell[config.sizeX][config.sizeY];
@@ -236,16 +237,16 @@ public class PuzzleGrid {
     }
 
     /**
-     * Visit selection using event
+     * Visit selection and return an array of tags for each cell
      */
-    public void visitSelection(@NonNull Selection selection, Event event) {
+    private ArrayList<Object> createTagsFromSelection(@NonNull Selection selection) {
+        ArrayList<Object> arrayList = new ArrayList<>();
         for (int x = selection.position.x, y = selection.position.y, i=0; i < selection.length; i++) {
-            Cell cell = mGrid[x][y];
-            cell.event = event;
-            EventBus.getDefault().post(cell);
+            arrayList.add(mGrid[x][y].tag);
             x += selection.direction.x;
             y += selection.direction.y;
         }
+        return arrayList;
     }
 
     /**
@@ -253,5 +254,15 @@ public class PuzzleGrid {
      */
     public Cell getCell(int x, int y) {
         return mGrid[x][y];
+    }
+
+    public Guess guess(@NonNull Selection selection) {
+        String answer = findContents(selection, false);
+        boolean success = removeWord(answer);
+
+        // Create guess event
+        Guess guess = new Guess(createTagsFromSelection(selection), success, answerMap.isEmpty());
+        EventBus.getDefault().post(guess);
+        return guess;
     }
 }

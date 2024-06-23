@@ -11,7 +11,6 @@ public class Cell {
     public static final char EMPTY = '.';
     public char letter;
     @Nullable public Object tag;
-    @Nullable public Event event;
     private int refCount;
 
     /**

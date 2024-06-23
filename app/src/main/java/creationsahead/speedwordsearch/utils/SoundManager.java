@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.IOException;
 import java.util.HashMap;
 import creationsahead.speedwordsearch.Event;
+import creationsahead.speedwordsearch.Guess;
 
 public class SoundManager {
     public enum SOUND_TYPE {
@@ -38,14 +39,14 @@ public class SoundManager {
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onSoundEvents(@NonNull Event event) {
-        if (event == Event.ANSWER_CORRECT) {
-            if (event.lastWordGuessed) {
+    public void onSoundEvents(@NonNull Guess guess) {
+        if (guess.success) {
+            if (guess.last) {
                 play(SOUND_TYPE.LEVEL);
             } else {
                 play(SOUND_TYPE.BONUS);
             }
-        } else if (event == Event.ANSWER_INCORRECT) {
+        } else {
             play(SOUND_TYPE.FAIL);
         }
     }

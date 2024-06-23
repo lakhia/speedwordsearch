@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import android.util.AttributeSet;
 import creationsahead.speedwordsearch.Event;
+import creationsahead.speedwordsearch.Game;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.TickerCallback;
@@ -16,10 +17,12 @@ public class GameView extends ConstraintLayout implements TickerCallback {
 
     private final Ticker timer;
     private final ScoreBar scoreBar;
+    protected final Game game;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        ProgressTracker.getInstance().game.populatePuzzle();
+        game = ProgressTracker.getInstance().game;
+        game.populatePuzzle();
         timer = new Ticker(getContext(), this,
                 ProgressTracker.getInstance().config.timeLimit);
         inflate(context, R.layout.game, this);

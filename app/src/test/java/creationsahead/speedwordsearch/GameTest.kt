@@ -105,18 +105,30 @@ class GameTest {
                 displayBuffer.toString())
 
         // Correct direction guessing
-        assertFalse(game.guess(Selection(1, 2, Direction.EAST, 4)))
-        assertFalse(game.guess(Selection(7, 2, Direction.WEST, 4)))
-        assertTrue(game.guess(Selection(7, 2, Direction.SOUTH, 4)))
-        assertTrue(game.guess(Selection(2, 5, Direction.EAST, 4)))
+        var guess = game.guess(Selection(1, 2, Direction.EAST, 4))
+        assertFalse(guess.success)
+        assertFalse(guess.last)
+        guess = game.guess(Selection(7, 2, Direction.WEST, 4))
+        assertFalse(guess.success)
+        assertFalse(guess.last)
+        guess = game.guess(Selection(7, 2, Direction.SOUTH, 4))
+        assertTrue(guess.success)
+        assertFalse(guess.last)
+        guess = game.guess(Selection(2, 5, Direction.EAST, 4))
+        assertTrue(guess.success)
+        assertFalse(guess.last)
         assertEquals(10, totalScore)
 
         // Opposite direction guessing
-        assertTrue(game.guess(Selection(4, 3, Direction.WEST, 4)))
+        guess = game.guess(Selection(4, 3, Direction.WEST, 4))
+        assertTrue(guess.success)
+        assertFalse(guess.last)
         assertEquals(15, totalScore)
 
         // Palindrome
-        assertTrue(game.guess(Selection(0, 0, Direction.SOUTH_EAST, 4)))
+        guess = game.guess(Selection(0, 0, Direction.SOUTH_EAST, 4))
+        assertTrue(guess.success)
+        assertFalse(guess.last)
         assertEquals(20, totalScore)
 
         // Visit answers again
