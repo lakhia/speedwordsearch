@@ -27,7 +27,7 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
 
     private View clickedLevel;
 
-    public LevelListView(Context context, @Nullable AttributeSet attrs) {
+    public LevelListView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         ListView listView = new ListView(context);
         addView(listView);
@@ -38,7 +38,7 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+    public void onItemClick(@NonNull AdapterView<?> adapterView, View view, int position, long id) {
         clickedLevel = view;
         ValueAnimator anim = ValueAnimator.ofFloat(1, 0.05f);
         anim.setDuration(ANIMATION_DURATION/4);

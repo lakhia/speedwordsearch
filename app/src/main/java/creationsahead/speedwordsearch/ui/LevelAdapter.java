@@ -26,7 +26,7 @@ public class LevelAdapter extends ArrayAdapter<Level>  {
     }
 
     @Override
-    public void addAll(Level... items) {
+    public void addAll(@NonNull Level... items) {
         for (Level level: items) {
             if (level != null) {
                 super.add(level);

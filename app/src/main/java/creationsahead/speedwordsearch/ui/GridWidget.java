@@ -35,6 +35,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     private int lastX = -1, lastY = -1;
     private int cellSize = -1;
     @Nullable private View lastSelection = null;
+    @NonNull
     private final Center center;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {

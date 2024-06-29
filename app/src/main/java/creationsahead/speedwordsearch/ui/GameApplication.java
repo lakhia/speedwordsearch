@@ -14,6 +14,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import creationsahead.speedwordsearch.BuildConfig;
+import creationsahead.speedwordsearch.EventBusIndex;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.StorageInterface;
 import creationsahead.speedwordsearch.mod.Level;
@@ -39,8 +40,10 @@ public class GameApplication extends Application implements StorageInterface {
     public void onCreate() {
         super.onCreate();
         serializer.register(Level.class, 15);
-        EventBus.builder().throwSubscriberException(BuildConfig.DEBUG).
-            sendNoSubscriberEvent(false).installDefaultEventBus();
+        EventBus.builder().addIndex(new EventBusIndex())
+                .throwSubscriberException(BuildConfig.DEBUG)
+                .eventInheritance(false)
+                .sendNoSubscriberEvent(false).installDefaultEventBus();
 
         Rect display = new Rect();
         WindowManager manager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);

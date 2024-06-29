@@ -239,6 +239,7 @@ public class Grid {
     /**
      * Visit selection and return an array of tags for each cell
      */
+    @NonNull
     private ArrayList<Object> createTagsFromSelection(@NonNull Selection selection) {
         ArrayList<Object> arrayList = new ArrayList<>();
         for (int x = selection.position.x, y = selection.position.y, i=0; i < selection.length; i++) {
@@ -256,6 +257,7 @@ public class Grid {
         return mGrid[x][y];
     }
 
+    @NonNull
     public Guess guess(@NonNull Selection selection) {
         String answer = findContents(selection, false);
         boolean success = removeWord(answer);

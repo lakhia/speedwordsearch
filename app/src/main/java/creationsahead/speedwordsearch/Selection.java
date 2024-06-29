@@ -1,6 +1,7 @@
 package creationsahead.speedwordsearch;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Indicates a selection in a grid
@@ -49,6 +50,7 @@ public class Selection {
      * Returns a Selection if valid start and end Pos.
      * Note that start and end points are inclusive
      */
+    @Nullable
     public static Selection isValid(int startX, int startY, int endX, int endY) {
         int diffX = endX - startX;
         int diffY = endY - startY;

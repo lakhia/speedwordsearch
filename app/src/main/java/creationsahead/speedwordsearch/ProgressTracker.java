@@ -2,6 +2,7 @@ package creationsahead.speedwordsearch;
 
 import android.graphics.Rect;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import creationsahead.speedwordsearch.mod.Level;
 import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;
@@ -19,7 +20,7 @@ public class ProgressTracker implements ScoreInterface {
     /** Current game's configuration */
     public Config config;
     /** Current game */
-    public Game game;
+    @Nullable public Game game;
     /** Levels */
     @NonNull public final Level[] levels = new Level[MAX_LEVEL];
 
@@ -87,7 +88,7 @@ public class ProgressTracker implements ScoreInterface {
      * User has finished current level
      * @param event Event that caused win / lose
      */
-    public void incrementLevel(Event event) {
+    public void incrementLevel(@NonNull Event event) {
         // Store progress
         Level level = getCurrentLevel();
         int levelNum = level.number;

@@ -154,20 +154,20 @@ class GridTest {
         val grid = fillGrid()
 
         // No vacant cells
-        var pos = grid.findCells(CellCallback { obj: Cell -> obj.isUnused }, null)
+        var pos = grid.findCells({ obj: Cell -> obj.isUnused }, null)
         assertEquals(null, pos)
 
         // Remove two words that do not free any cells
         grid.removeWord("tart")
-        pos = grid.findCells(CellCallback { obj: Cell -> obj.isUnused }, null)
+        pos = grid.findCells({ obj: Cell -> obj.isUnused }, null)
         assertEquals(null, pos)
         grid.removeWord("east")
-        pos = grid.findCells(CellCallback { obj: Cell -> obj.isUnused }, null)
+        pos = grid.findCells({ obj: Cell -> obj.isUnused }, null)
         assertEquals(null, pos)
 
         // Remove one word that makes a few cells unused
         grid.removeWord("saga")
-        pos = grid.findCells(CellCallback { obj: Cell -> obj.isUnused }, null)
+        pos = grid.findCells({ obj: Cell -> obj.isUnused }, null)
         assertNotNull(pos)
         assertEquals(3, pos?.x)
         assertEquals(1, pos?.y)
@@ -205,8 +205,7 @@ class GridTest {
     fun test_06_contents() {
         val grid = fillGrid()
 
-        var content: String
-        content = grid.findContents(Selection(3, 3, Direction.WEST, 4), true)
+        var content = grid.findContents(Selection(3, 3, Direction.WEST, 4), true)
         assertEquals("take", content)
         content = grid.findContents(Selection(3, 2, Direction.NORTH_WEST, 3), true)
         assertEquals("rge", content)

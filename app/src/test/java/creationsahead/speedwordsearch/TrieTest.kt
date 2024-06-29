@@ -87,37 +87,37 @@ class TrieTest {
         val seq = RandomSequencer(Config(1, 1, 0), 1)
 
         var counter = 0
-        var word = dictionary.searchWithWildcards("....", seq, { counter++; false; })
+        var word = dictionary.searchWithWildcards("....", seq) { counter++; false; }
         assertEquals(null, word)
         assertEquals(8, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards(".G..", seq, { counter++; false; })
+        word = dictionary.searchWithWildcards(".G..", seq) { counter++; false; }
         assertEquals(null, word)
         assertEquals(3, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("A...", seq, { counter++; false; })
+        word = dictionary.searchWithWildcards("A...", seq) { counter++; false; }
         assertEquals(null, word)
         assertEquals(6, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("A...", seq, { counter++; counter==3; })
+        word = dictionary.searchWithWildcards("A...", seq) { counter++; counter == 3; }
         assertEquals("ADDA", word)
         assertEquals(3, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("...A", seq, { counter++; counter==4; })
+        word = dictionary.searchWithWildcards("...A", seq) { counter++; counter == 4; }
         assertEquals("AFFA", word)
         assertEquals(4, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards(".BB.", seq, { counter++; true; })
+        word = dictionary.searchWithWildcards(".BB.", seq) { counter++; true; }
         assertEquals("ABBA", word)
         assertEquals(1, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("C...", seq, { counter++; true; })
+        word = dictionary.searchWithWildcards("C...", seq) { counter++; true; }
         assertEquals("CGGA", word)
         assertEquals(1, counter)
     }

@@ -1,8 +1,9 @@
 package creationsahead.speedwordsearch.ui;
 
 import android.content.Context;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import android.util.AttributeSet;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.Game;
 import creationsahead.speedwordsearch.ProgressTracker;
@@ -15,11 +16,12 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class GameView extends ConstraintLayout implements TickerCallback {
 
+    @NonNull
     private final Ticker timer;
     private final ScoreBar scoreBar;
     protected final Game game;
 
-    public GameView(Context context, AttributeSet attrs) {
+    public GameView(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
         game = ProgressTracker.getInstance().game;
         game.populatePuzzle();

@@ -22,8 +22,8 @@ class SequencerFreqTest {
                 var i = 0
                 while (array.hasNext()) {
                     val item = array.next()
-                    val freq = map.getOrDefault(item, kotlin.IntArray(mSize))
-                    map.put(item, freq)
+                    val freq = map.getOrDefault(item, IntArray(mSize))
+                    map[item] = freq
                     freq[i]++
                     i++
                 }
@@ -32,8 +32,8 @@ class SequencerFreqTest {
             val array = map.values
             for (a in array) {
                 val ave = a.average()
-                val min = a.min()!! / ave
-                val max = a.max()!! / ave
+                val min = a.min() / ave
+                val max = a.max() / ave
                 Assert.assertTrue(min > .82)
                 Assert.assertTrue(max < 1.13)
             }

@@ -8,7 +8,7 @@ public class Config {
     /** Difficulty of game, 0 means very easy and 100 is very hard */
     public int difficulty;
     public int timeLimit;
-    public int letterLimit;
+    public final int letterLimit;
     public boolean isWordListSorted;
 
     public Config(int sizeX, int sizeY, int letterLimit) {

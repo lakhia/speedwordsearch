@@ -44,6 +44,6 @@ public class Answer {
     @NonNull
     @Override
     public String toString() {
-        return selection.toString() + ", word: " + word;
+        return selection + ", word: " + word;
     }
 }

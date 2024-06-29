@@ -9,7 +9,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import java.io.IOException;
 import java.util.HashMap;
-import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.Guess;
 
 public class SoundManager {
@@ -20,13 +19,14 @@ public class SoundManager {
     }
     private final HashMap<SOUND_TYPE, MediaPlayer> dict = new HashMap<>();
 
-    public SoundManager(Context context) {
+    public SoundManager(@NonNull Context context) {
         dict.put(SOUND_TYPE.FAIL, load(context, "error-2-126514.mp3"));
         dict.put(SOUND_TYPE.BONUS, load(context, "mixkit-bonus-earned-in-video-game-2058.wav"));
         dict.put(SOUND_TYPE.LEVEL, load(context, "mixkit-completion-of-a-level-2063.wav"));
     }
 
-    private MediaPlayer load(Context context, String asset) {
+    @NonNull
+    private MediaPlayer load(@NonNull Context context, String asset) {
         MediaPlayer mp = new MediaPlayer();
         try {
             AssetFileDescriptor afd = context.getAssets().openFd(asset);

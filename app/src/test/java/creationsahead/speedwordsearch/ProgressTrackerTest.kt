@@ -39,7 +39,7 @@ class ProgressTrackerTest {
         }
 
         override fun storePreference(key: String, score: Int) {
-            map.put(key, score)
+            map[key] = score
         }
 
         override fun getAssetInputStream(name: String): Reader {
@@ -111,7 +111,7 @@ class ProgressTrackerTest {
         assertEquals(10, progress.levels.size)
         assertNotNull(progress.levels[0])
         assertNull(progress.levels[1])
-        assertEquals(1, storage.map.get(ProgressTracker.LEVEL_VISIBLE))
+        assertEquals(1, storage.map[ProgressTracker.LEVEL_VISIBLE])
     }
 
     @Test

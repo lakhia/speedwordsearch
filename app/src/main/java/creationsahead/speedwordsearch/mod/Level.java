@@ -5,7 +5,7 @@ package creationsahead.speedwordsearch.mod;
  */
 public class Level {
     public final String name;
-    public int number;
+    public final int number;
     public float stars;
     public int score;
     public int timeUsed;

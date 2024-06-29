@@ -15,14 +15,13 @@ public class Trie {
     /**
      * A single node in the trie
      */
-    public class TrieNode {
+    public static class TrieNode {
         @NonNull final TrieNode[] arr;
         boolean isEnd;
         // Initialize your data structure here.
         TrieNode() {
             this.arr = new TrieNode[26];
         }
-
     }
 
     public Trie() {
@@ -57,6 +56,7 @@ public class Trie {
         }
     }
 
+    @Nullable
     private String searchWithWildcards(@NonNull TrieNode p, @NonNull String query,
                                        String result, @NonNull Sequencer sequencer,
                                        @Nullable ValidateCallback callback) {
