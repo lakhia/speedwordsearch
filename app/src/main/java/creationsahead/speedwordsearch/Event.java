@@ -8,10 +8,6 @@ public enum Event {
     ANSWER_CORRECT,
     ANSWER_ADDED,
 
-    // UI related events
-    PAUSE,
-    UN_PAUSE,
-
     // Game related events
     /** LEVEL_STARTED event sent with Level object */
     LEVEL_WON,

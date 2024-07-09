@@ -3,11 +3,7 @@ package creationsahead.speedwordsearch.ui;
 import android.content.Context;
 import android.os.Handler;
 import androidx.annotation.NonNull;
-import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.TickerCallback;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Manages ticker for scoring
@@ -27,22 +23,12 @@ public class Ticker implements Runnable {
         timeLeft = timeLimit;
         callback = cb;
         stop = true;
-        EventBus.getDefault().register(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void startLevel(@NonNull Event event) {
-        if (event == Event.PAUSE) {
-            pause();
-        } else if (event == Event.UN_PAUSE) {
-            startOrResume();
-        }
     }
 
     /**
      * Start or resume a timer
      */
-    private void startOrResume() {
+    public void resume() {
         if (stop) {
             stop = false;
             handler.post(this);
@@ -52,7 +38,7 @@ public class Ticker implements Runnable {
     /**
      * Pause timer
      */
-    private void pause() {
+    public void pause() {
         if (!stop) {
             stop = true;
             handler.removeCallbacks(this);
@@ -67,13 +53,5 @@ public class Ticker implements Runnable {
 
         callback.onTick(timeLeft);
         timeLeft--;
-    }
-
-    /**
-     * Stop listening for events
-     */
-    public void destroy() {
-        pause();
-        EventBus.getDefault().unregister(this);
     }
 }

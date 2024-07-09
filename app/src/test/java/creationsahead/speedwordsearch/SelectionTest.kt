@@ -71,27 +71,27 @@ class SelectionTest {
     fun test_05_is_valid_full() {
         var selection = Selection.isValid(0, 0, 5, 5)
         assertNotNull(selection)
-        assertEquals(6, selection.length)
+        assertEquals(6, selection!!.length)
         assertEquals(Direction.SOUTH_EAST, selection.direction)
 
         selection = Selection.isValid(4, 4, 0, 0)
         assertNotNull(selection)
-        assertEquals(5, selection.length)
+        assertEquals(5, selection!!.length)
         assertEquals(Direction.NORTH_WEST, selection.direction)
 
         selection = Selection.isValid(0, 4, 3, 4)
         assertNotNull(selection)
-        assertEquals(4, selection.length)
+        assertEquals(4, selection!!.length)
         assertEquals(Direction.EAST, selection.direction)
 
         selection = Selection.isValid(0, 5, 0, 0)
         assertNotNull(selection)
-        assertEquals(6, selection.length)
+        assertEquals(6, selection!!.length)
         assertEquals(Direction.NORTH, selection.direction)
 
         selection = Selection.isValid(5, 0, 5, 5)
         assertNotNull(selection)
-        assertEquals(6, selection.length)
+        assertEquals(6, selection!!.length)
         assertEquals(Direction.SOUTH, selection.direction)
     }
 
