@@ -47,7 +47,7 @@ public class Trie {
 
     // Returns string that searches for string with wildcards
     @Nullable
-    public String searchWithWildcards(@NonNull String s, @NonNull Sequencer sequencer,
+    public String searchWithWildcards(@NonNull String s, @NonNull RandomSequencer sequencer,
                                       ValidateCallback callback) {
         try {
             return searchWithWildcards(root, s, "", sequencer, callback);
@@ -58,7 +58,7 @@ public class Trie {
 
     @Nullable
     private String searchWithWildcards(@NonNull TrieNode p, @NonNull String query,
-                                       String result, @NonNull Sequencer sequencer,
+                                       String result, @NonNull RandomSequencer sequencer,
                                        @Nullable ValidateCallback callback) {
         // Base case
         if (query.isEmpty()) {

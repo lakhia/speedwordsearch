@@ -13,7 +13,7 @@ import org.greenrobot.eventbus.EventBus;
 public class Game {
     @NonNull private final Grid grid;
     @NonNull private final Config config;
-    @NonNull private final Sequencer sequencer;
+    @NonNull private final RandomSequencer sequencer;
     @NonNull private final Trie dictionary;
     private boolean success;
     private int letterCount;
@@ -24,7 +24,7 @@ public class Game {
      */
     public Game(@NonNull Config config, @NonNull Trie dictionary,
                 @NonNull ScoreInterface scoreInterface,
-                @NonNull Sequencer sequencer) {
+                @NonNull RandomSequencer sequencer) {
         letterCount = 0;
         grid = new Grid(config, scoreInterface, sequencer);
         this.config = config;

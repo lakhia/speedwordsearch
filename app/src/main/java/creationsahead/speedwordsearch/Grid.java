@@ -14,13 +14,13 @@ public class Grid {
     @NonNull final HashMap<String, Answer> answerMap;
     @NonNull private final Config mConfig;
     @NonNull private final ScoreInterface mScoreTracker;
-    @NonNull private final Sequencer mSequencer;
+    @NonNull private final RandomSequencer mSequencer;
 
     /**
      * Create a grid using specified x and y size
      */
     public Grid(@NonNull Config config, @NonNull ScoreInterface scoreInterface,
-                @NonNull Sequencer sequencer) {
+                @NonNull RandomSequencer sequencer) {
         mConfig = config;
         mSequencer = sequencer;
         mGrid = new Cell[config.sizeX][config.sizeY];
