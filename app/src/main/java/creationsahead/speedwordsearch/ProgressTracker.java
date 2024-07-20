@@ -150,12 +150,13 @@ public class ProgressTracker implements ScoreInterface {
     /**
      * Start level
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void startLevel(@NonNull Level level) {
         level.score = 0;
         level.totalScore = 0;
         currentLevel = level.number;
         resetConfig();
+        game.populatePuzzle();
     }
 
     private void resetConfig() {

@@ -35,7 +35,6 @@ public class GameActivity extends Activity implements TickerCallback {
         ticker = new Ticker(this, this,
                 ProgressTracker.getInstance().config.timeLimit);
         game = ProgressTracker.getInstance().game;
-        game.populatePuzzle();
         sound_manager = new SoundManager(this);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
