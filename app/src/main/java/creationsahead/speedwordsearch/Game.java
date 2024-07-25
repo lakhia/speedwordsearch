@@ -26,7 +26,7 @@ public class Game {
                 @NonNull ScoreInterface scoreInterface,
                 @NonNull RandomSequencer sequencer) {
         letterCount = 0;
-        grid = new Grid(config, scoreInterface, sequencer);
+        grid = new Grid(config.sizeX, config.sizeY, scoreInterface, sequencer);
         this.config = config;
         this.sequencer = sequencer;
         this.dictionary = dictionary;

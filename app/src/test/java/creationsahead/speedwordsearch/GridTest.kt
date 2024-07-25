@@ -13,7 +13,7 @@ class GridTest {
     private fun fillGrid(): Grid {
         val config = Config(4, 4, 1)
         val grid = Grid(
-            config,
+            4, 4,
             Scoring(),
             RandomSequencer(config, 1)
         )
@@ -31,7 +31,7 @@ class GridTest {
         val config = Config(6, 3, 1)
         val scoring = Scoring()
         val grid = Grid(
-            config,
+            6, 3,
             scoring,
             RandomSequencer(config, 1)
         )
@@ -87,7 +87,7 @@ class GridTest {
         val config = Config(4, 4, 1)
         val scoring = Scoring()
         val grid = Grid(
-            config,
+            4, 4,
             scoring,
             RandomSequencer(config, 1)
         )
@@ -131,7 +131,7 @@ class GridTest {
     fun test_04_no_successful_inserts() {
         val config = Config(4, 4, 1)
         val grid = Grid(
-            config,
+            4, 4,
             Scoring(),
             RandomSequencer(config, 1)
         )

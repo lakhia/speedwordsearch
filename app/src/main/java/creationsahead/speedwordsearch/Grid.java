@@ -12,22 +12,23 @@ import org.greenrobot.eventbus.EventBus;
 public class Grid {
     @NonNull private final Cell[][] mGrid;
     @NonNull final HashMap<String, Answer> answerMap;
-    @NonNull private final Config mConfig;
+    private final int sizeX, sizeY;
     @NonNull private final ScoreInterface mScoreTracker;
     @NonNull private final RandomSequencer mSequencer;
 
     /**
      * Create a grid using specified x and y size
      */
-    public Grid(@NonNull Config config, @NonNull ScoreInterface scoreInterface,
+    public Grid(int sizeX, int sizeY, @NonNull ScoreInterface scoreInterface,
                 @NonNull RandomSequencer sequencer) {
-        mConfig = config;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
         mSequencer = sequencer;
-        mGrid = new Cell[config.sizeX][config.sizeY];
+        mGrid = new Cell[sizeX][sizeY];
         answerMap = new HashMap<>();
         mScoreTracker = scoreInterface;
-        for (int x=0; x < config.sizeX; x++) {
-            for (int y=0; y < config.sizeY; y++) {
+        for (int x=0; x < sizeX; x++) {
+            for (int y=0; y < sizeY; y++) {
                 mGrid[x][y] = new Cell();
             }
         }
@@ -71,7 +72,7 @@ public class Grid {
         }
 
         // Check bounds
-        if (!selection.inBounds(mConfig.sizeX, mConfig.sizeY)) {
+        if (!selection.inBounds(sizeX, sizeY)) {
             return false;
         }
 
@@ -161,7 +162,7 @@ public class Grid {
                     while (dirs.hasNext()) {
                         Direction dir = dirs.next();
                         // If position can accommodate length, process it
-                        if (Selection.inBounds(position, dir, mConfig.sizeX, mConfig.sizeY, length)) {
+                        if (Selection.inBounds(position, dir, sizeX, sizeY, length)) {
                             Selection selection = new Selection(position, dir, length);
                             return callback.onUpdate(selection, findContents(selection, true));
                         }
@@ -187,7 +188,7 @@ public class Grid {
                 while (dirs.hasNext()) {
                     Direction dir  = dirs.next();
                     // If position can accommodate length, process it
-                    if (Selection.inBounds(position, dir, mConfig.sizeX, mConfig.sizeY, length)) {
+                    if (Selection.inBounds(position, dir, sizeX, sizeY, length)) {
                         Selection selection = new Selection(position, dir, length);
                         if (callback.onUpdate(selection, findContents(selection, true))) {
                             return;
@@ -227,7 +228,7 @@ public class Grid {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int y=0; y < mConfig.sizeY; y++) {
+        for (int y=0; y < sizeY; y++) {
             for (Cell[] cells: mGrid) {
                 sb.append(cells[y]);
             }
