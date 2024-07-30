@@ -11,25 +11,15 @@ public class Answer {
     @NonNull public final String word;
     @NonNull public final Selection selection;
     @Nullable public Object tag;
-    public Event event;
     public final int score;
 
     /**
      * When word is added and assigned a score
      */
-    public Answer(@NonNull Selection selection, @NonNull String word, int score) {
+    public Answer(@NonNull Selection selection, @NonNull String word) {
         this.selection = selection;
         this.word = word;
-        this.score = score;
-        event = Event.ANSWER_ADDED;
-        EventBus.getDefault().post(this);
-    }
-
-    /**
-     * Called when word is removed and score claimed
-     */
-    public void notifyScoreClaimed() {
-        event = Event.ANSWER_CORRECT;
+        this.score = 11 - word.length() / 2;
         EventBus.getDefault().post(this);
     }
 

@@ -14,7 +14,6 @@ class GridTest {
         val config = Config(4, 4, 1)
         val grid = Grid(
             4, 4,
-            Scoring(),
             RandomSequencer(config, 1)
         )
         grid.addWord(Selection(0, 0, Direction.EAST, 4), "test")
@@ -29,10 +28,8 @@ class GridTest {
     @Test
     fun test_01_duplicates() {
         val config = Config(6, 3, 1)
-        val scoring = Scoring()
         val grid = Grid(
             6, 3,
-            scoring,
             RandomSequencer(config, 1)
         )
         val empty =
@@ -44,18 +41,18 @@ class GridTest {
         // Add word, add again, remove
         grid.addWord(Selection(1, 0, Direction.EAST, 4), "test")
         assertFalse(grid.addWord(Selection(2, 0, Direction.EAST, 4), "test"))
-        assertTrue(grid.removeWord("test"))
+        assertNotNull(grid.removeWord("test"))
 
         // Add again
         assertTrue(grid.addWord(Selection(1, 0, Direction.EAST, 4), "test"))
         assertFalse(grid.addWord(Selection(1, 0, Direction.EAST, 5), "tests"))
-        assertTrue(grid.removeWord("test"))
+        assertNotNull(grid.removeWord("test"))
 
         // Substring tests
         assertFalse(grid.addWord(Selection(1, 0, Direction.EAST, 6), "tester"))
         assertTrue(grid.addWord(Selection(0, 0, Direction.EAST, 6), "tester"))
         assertFalse(grid.addWord(Selection(0, 0, Direction.EAST, 4), "test"))
-        assertTrue(grid.removeWord("tester"))
+        assertNotNull(grid.removeWord("tester"))
         assertTrue(grid.addWord(Selection(1, 0, Direction.EAST, 5), "tests"))
     }
 
@@ -85,10 +82,8 @@ class GridTest {
     @Test
     fun test_03_insert_diagonal() {
         val config = Config(4, 4, 1)
-        val scoring = Scoring()
         val grid = Grid(
             4, 4,
-            scoring,
             RandomSequencer(config, 1)
         )
         grid.addWord(Selection(0, 0, Direction.SOUTH_EAST, 4), "test")
@@ -106,11 +101,11 @@ class GridTest {
                 "k a k t \n", grid.toString())
 
         // Remove non-existent words
-        assertFalse(grid.removeWord("you"))
-        assertFalse(grid.removeWord("yot"))
-        assertFalse(grid.removeWord("kot"))
-        assertFalse(grid.removeWord("tok"))
-        assertFalse(grid.removeWord("kakt"))
+        assertNull(grid.removeWord("you"))
+        assertNull(grid.removeWord("yot"))
+        assertNull(grid.removeWord("kot"))
+        assertNull(grid.removeWord("tok"))
+        assertNull(grid.removeWord("kakt"))
         assertEquals(string, grid.toString())
 
         // Remove word
@@ -132,7 +127,6 @@ class GridTest {
         val config = Config(4, 4, 1)
         val grid = Grid(
             4, 4,
-            Scoring(),
             RandomSequencer(config, 1)
         )
         grid.addWord(Selection(1, 0, Direction.EAST, 4), "test")

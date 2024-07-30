@@ -40,7 +40,7 @@ public class SoundManager {
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onSoundEvents(@NonNull Guess guess) {
-        if (guess.success) {
+        if (guess.answer != null) {
             if (guess.last) {
                 play(SOUND_TYPE.LEVEL);
             } else {

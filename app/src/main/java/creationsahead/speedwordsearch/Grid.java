@@ -13,20 +13,17 @@ public class Grid {
     @NonNull private final Cell[][] mGrid;
     @NonNull final HashMap<String, Answer> answerMap;
     private final int sizeX, sizeY;
-    @NonNull private final ScoreInterface mScoreTracker;
     @NonNull private final RandomSequencer mSequencer;
 
     /**
      * Create a grid using specified x and y size
      */
-    public Grid(int sizeX, int sizeY, @NonNull ScoreInterface scoreInterface,
-                @NonNull RandomSequencer sequencer) {
+    public Grid(int sizeX, int sizeY, @NonNull RandomSequencer sequencer) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         mSequencer = sequencer;
         mGrid = new Cell[sizeX][sizeY];
         answerMap = new HashMap<>();
-        mScoreTracker = scoreInterface;
         for (int x=0; x < sizeX; x++) {
             for (int y=0; y < sizeY; y++) {
                 mGrid[x][y] = new Cell();
@@ -90,8 +87,7 @@ public class Grid {
             y += dir.y;
         }
 
-        int score = mScoreTracker.computeScore(word);
-        answerMap.put(word, new Answer(selection, word, score));
+        answerMap.put(word, new Answer(selection, word));
         return true;
     }
 
@@ -100,10 +96,10 @@ public class Grid {
      * @return True if successfully removed
      * @throws RuntimeException if word is partially removed
      */
-    public boolean removeWord(@NonNull String word) {
+    public Answer removeWord(@NonNull String word) {
         Answer answer = answerMap.get(word);
         if (answer == null) {
-            return false;
+            return null;
         }
         int len = word.length() - 1;
         Selection selection = answer.selection;
@@ -116,8 +112,7 @@ public class Grid {
             y += selection.direction.y;
         }
         answerMap.remove(word);
-        answer.notifyScoreClaimed();
-        return true;
+        return answer;
     }
 
     /**
@@ -260,11 +255,11 @@ public class Grid {
 
     @NonNull
     public Guess guess(@NonNull Selection selection) {
-        String answer = findContents(selection, false);
-        boolean success = removeWord(answer);
+        String contents = findContents(selection, false);
+        Answer answer = removeWord(contents);
 
         // Create guess event
-        Guess guess = new Guess(createTagsFromSelection(selection), success, answerMap.isEmpty());
+        Guess guess = new Guess(createTagsFromSelection(selection), answer, answerMap.isEmpty());
         EventBus.getDefault().post(guess);
         return guess;
     }

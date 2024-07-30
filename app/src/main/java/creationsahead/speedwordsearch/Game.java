@@ -23,10 +23,9 @@ public class Game {
      * Construct a game with a square puzzle grid
      */
     public Game(@NonNull Config config, @NonNull Trie dictionary,
-                @NonNull ScoreInterface scoreInterface,
                 @NonNull RandomSequencer sequencer) {
         letterCount = 0;
-        grid = new Grid(config.sizeX, config.sizeY, scoreInterface, sequencer);
+        grid = new Grid(config.sizeX, config.sizeY, sequencer);
         this.config = config;
         this.sequencer = sequencer;
         this.dictionary = dictionary;
@@ -125,7 +124,6 @@ public class Game {
             Collections.sort(list, comparator);
         }
         for (Answer answer : list) {
-            answer.event = Event.ANSWER_ADDED;
             EventBus.getDefault().post(answer);
         }
     }

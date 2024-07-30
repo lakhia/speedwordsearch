@@ -12,7 +12,7 @@ import org.greenrobot.eventbus.ThreadMode;
 /**
  * Tracks progress and manages instance of current game
  */
-public class ProgressTracker implements ScoreInterface {
+public class ProgressTracker {
     @NonNull public static final String LEVEL_VISIBLE = "levelVisible";
     private static final int MAX_LEVEL = 10;
     private static final int MAX_DIFFICULTY = 100;
@@ -121,33 +121,6 @@ public class ProgressTracker implements ScoreInterface {
     }
 
     /**
-     * Get current score
-     */
-    public int getCurrentScore() {
-        return getCurrentLevel().score;
-    }
-
-    /**
-     * Score ranges from 5 to 10 points, and bigger words score less
-     */
-    @Override
-    public int computeScore(@NonNull String word) {
-        int score = 11 - word.length()/2;
-        getCurrentLevel().totalScore += score;
-        return score;
-    }
-
-    /**
-     * Add score to current user score
-     */
-    @Subscribe(threadMode = ThreadMode.POSTING)
-    public void addScore(@NonNull Answer answer) {
-        if (answer.event == Event.ANSWER_CORRECT) {
-            getCurrentLevel().score += answer.score;
-        }
-    }
-
-    /**
      * Start level
      */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -157,6 +130,10 @@ public class ProgressTracker implements ScoreInterface {
         currentLevel = level.number;
         resetConfig();
         game.populatePuzzle();
+    }
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void addAnswer(@NonNull Answer answer) {
+        getCurrentLevel().totalScore += answer.score;
     }
 
     private void resetConfig() {
@@ -180,7 +157,7 @@ public class ProgressTracker implements ScoreInterface {
             levels[visibleLevel] = new Level("Basic Level " + (1 + visibleLevel),
                                              visibleLevel);
         }
-        game = new Game(config, WordList.dictionary, this,
+        game = new Game(config, WordList.dictionary,
                 new RandomSequencer(config, (int) System.currentTimeMillis()));
     }
 }

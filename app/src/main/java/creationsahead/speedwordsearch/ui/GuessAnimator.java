@@ -17,7 +17,7 @@ public class GuessAnimator implements ValueAnimator.AnimatorUpdateListener {
     private final int transitionColor;
 
     public GuessAnimator(@NonNull Guess guess) {
-        if (guess.success) {
+        if (guess.answer != null) {
             // Bright green in AARRGGBB format
             transitionColor = 0xff38C838;
         } else {

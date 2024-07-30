@@ -4,9 +4,10 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.junit.After
-import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 
@@ -40,12 +41,13 @@ class GameTest {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdate(answer: Answer) {
-        if (answer.event == Event.ANSWER_ADDED) {
-            displayBuffer.append(answer.display + " ")
-        } else if (answer.event == Event.ANSWER_CORRECT) {
-            totalScore += answer.score
-        }
+        displayBuffer.append(answer.display + " ")
         answerBuffer.append(answer.toString() + "\n")
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdate(guess: Guess) {
+        totalScore += guess.answer?.score ?: 0
     }
 
     @After
@@ -56,7 +58,7 @@ class GameTest {
     @Test
     fun test_01_game() {
         val config = Config(4, 4, 23)
-        val game = Game(config, dictionary, Scoring(), RandomSequencer(config, 1))
+        val game = Game(config, dictionary, RandomSequencer(config, 1))
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(
         ". . . C \n" +
@@ -80,7 +82,7 @@ class GameTest {
     @Test
     fun test_02_big_board() {
         val config = Config(8, 8, 23)
-        val game = Game(config, dictionary, Scoring(), RandomSequencer(config, 1))
+        val game = Game(config, dictionary, RandomSequencer(config, 1))
 
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(true, game.addOneWord(4, 4))
@@ -106,30 +108,30 @@ class GameTest {
 
         // Correct direction guessing
         var guess = game.guess(Selection(1, 2, Direction.EAST, 4))
-        assertFalse(guess.success)
+        assertNull(guess.answer)
         assertFalse(guess.last)
         guess = game.guess(Selection(7, 2, Direction.WEST, 4))
-        assertFalse(guess.success)
+        assertNull(guess.answer)
         assertFalse(guess.last)
         guess = game.guess(Selection(7, 2, Direction.SOUTH, 4))
-        assertTrue(guess.success)
+        assertNotNull(guess.answer)
         assertFalse(guess.last)
         guess = game.guess(Selection(2, 5, Direction.EAST, 4))
-        assertTrue(guess.success)
+        assertNotNull(guess.answer)
         assertFalse(guess.last)
-        assertEquals(10, totalScore)
+        assertEquals(18, totalScore)
 
         // Opposite direction guessing
         guess = game.guess(Selection(4, 3, Direction.WEST, 4))
-        assertTrue(guess.success)
+        assertNotNull(guess.answer)
         assertFalse(guess.last)
-        assertEquals(15, totalScore)
+        assertEquals(27, totalScore)
 
         // Palindrome
         guess = game.guess(Selection(0, 0, Direction.SOUTH_EAST, 4))
-        assertTrue(guess.success)
+        assertNotNull(guess.answer)
         assertFalse(guess.last)
-        assertEquals(20, totalScore)
+        assertEquals(36, totalScore)
 
         // Visit answers again
         displayBuffer.delete(0, displayBuffer.length)
@@ -162,7 +164,7 @@ class GameTest {
         dictionary.insert("DDD")
 
         val config = Config(5, 5, 23)
-        val game = Game(config, dictionary, Scoring(), RandomSequencer(config, 5))
+        val game = Game(config, dictionary, RandomSequencer(config, 5))
         assertEquals(true, game.addOneWord(3, 4))
 
         assertEquals('C', game.getCell(4, 1).letter)
@@ -186,7 +188,7 @@ class GameTest {
         dictionary.insert("FF")
 
         val config = Config(6, 6, 53)
-        val game = Game(config, dictionary, Scoring(), RandomSequencer(config, 1))
+        val game = Game(config, dictionary, RandomSequencer(config, 1))
         game.populatePuzzle()
         assertEquals(
                 "A B C C A C \n" +
@@ -212,7 +214,7 @@ class GameTest {
     @Test
     fun test_06_fill() {
         val config = Config(6, 6, 0)
-        val game = Game(config, dictionary, Scoring(), RandomSequencer(config, 1))
+        val game = Game(config, dictionary, RandomSequencer(config, 1))
         game.fillEmptyCells()
         assertEquals(
                 "K I P N M H \n" +

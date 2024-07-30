@@ -30,7 +30,6 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
     @NonNull private final TextView scoreWidget;
     private ValueAnimator anim;
     private int currentScore;
-    private int prevScore;
     private int deltaScore;
     private int currentTick;
 
@@ -42,7 +41,6 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
 
         Level level = ProgressTracker.getInstance().getCurrentLevel();
         currentScore = level.score;
-        prevScore = currentScore;
 
         inflate(context, R.layout.score_bar, this);
 
@@ -51,7 +49,7 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
         scoreWidget = findViewById(R.id.score);
         levelNameWidget.setText(level.name);
 
-        updateScoreWidget();
+        updateScoreWidget(level.score);
     }
 
     @Override
@@ -71,11 +69,12 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
         if (anim != null) {
             anim.cancel();
         }
-        if (!guess.success) {
+        if (guess.answer == null) {
             return;
         }
-        prevScore = currentScore;
-        deltaScore = ProgressTracker.getInstance().getCurrentScore() - prevScore;
+        Level level = ProgressTracker.getInstance().getCurrentLevel();
+        currentScore = level.score;
+        deltaScore = guess.answer.score;
 
         anim = ValueAnimator.ofFloat(1, 4.5f, 1);
         anim.setDuration(ANIMATION_DURATION);
@@ -104,8 +103,8 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
         anim.start();
     }
 
-    private void updateScoreWidget() {
-        scoreWidget.setText(String.format(Locale.ENGLISH, "%03d", currentScore));
+    private void updateScoreWidget(int score) {
+        scoreWidget.setText(String.format(Locale.ENGLISH, "%03d", score));
     }
 
     @Override
@@ -113,7 +112,10 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
         float fraction = (float) valueAnimator.getAnimatedValue();
         scoreWidget.setScaleX(fraction);
         scoreWidget.setScaleY(fraction);
-        currentScore = (int) (prevScore + valueAnimator.getAnimatedFraction() * deltaScore);
-        updateScoreWidget();
+        int score = (int) (currentScore + valueAnimator.getAnimatedFraction() * deltaScore);
+        updateScoreWidget(score);
+        if (valueAnimator.getAnimatedFraction() >= 1.0) {
+            ProgressTracker.getInstance().getCurrentLevel().score = score;
+        }
     }
 }

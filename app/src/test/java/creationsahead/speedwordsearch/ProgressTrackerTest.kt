@@ -83,28 +83,14 @@ class ProgressTrackerTest {
         storage.storeLevel(level)
         progress.init(storage, Rect(), 0.0f)
 
-        val selection = Selection(0, 0, Direction.NORTH, 5)
-        val timeLimit = progress.config.timeLimit
-
-        var answer = Answer(selection, "h", 50)
-        answer.notifyScoreClaimed()
-        answer = Answer(selection, "h", 40)
-        answer.notifyScoreClaimed()
-        answer = Answer(selection, "h", 30)
-        answer.notifyScoreClaimed()
-        answer = Answer(selection, "h", 20)
-        answer.notifyScoreClaimed()
-        answer = Answer(selection, "h", 10)
-        answer.notifyScoreClaimed()
-        assertEquals(150, progress.currentScore)
-
+        progress.currentLevel.score = 15
+        progress.currentLevel.totalScore = 15
         val event = Event.LEVEL_LOST
         event.timeLeft = 5
         progress.incrementLevel(event)
         assertEquals(0, storage.levels[0]!!.number)
-        assertEquals(150, storage.levels[0]!!.score)
         assertEquals(2.083f, storage.levels[0]!!.stars, 0.005f)
-        assertEquals(timeLimit - 5, storage.levels[0]!!.timeUsed)
+        assertEquals( 115, storage.levels[0]!!.timeUsed)
 
         // Make sure level 1 is now visible after winning level 0
         assertEquals(1, storage.map[ProgressTracker.LEVEL_VISIBLE])

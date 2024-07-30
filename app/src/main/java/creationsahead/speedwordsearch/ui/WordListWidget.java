@@ -5,13 +5,13 @@ import android.graphics.Typeface;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
-import android.transition.Fade;
-import android.transition.Transition;
-import android.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.TextView;
 import creationsahead.speedwordsearch.Answer;
+import creationsahead.speedwordsearch.Guess;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import org.greenrobot.eventbus.EventBus;
@@ -50,49 +50,45 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUpdate(@NonNull Answer answer) {
+    public void onNewAnswer(@NonNull Answer answer) {
         TextView textView;
-        switch (answer.event) {
-            case ANSWER_ADDED:
-                ContextThemeWrapper newContext = new ContextThemeWrapper(getContext(), R.style.WordList);
-                textView = new TextView(newContext, null);
-                // TODO: Using fixed font-size for now
-                textView.setTextSize(COMPLEX_UNIT_PX, ProgressTracker.getInstance().normalizedFontSize/12.0f);
+        ContextThemeWrapper newContext = new ContextThemeWrapper(getContext(), R.style.WordList);
+        textView = new TextView(newContext, null);
+        // TODO: Using fixed font-size for now
+        textView.setTextSize(COMPLEX_UNIT_PX, ProgressTracker.getInstance().normalizedFontSize / 12.0f);
 
-                textView.setText(answer.getDisplay());
-                Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.artifika);
-                textView.setTypeface(typeface);
+        textView.setText(answer.getDisplay());
+        Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.artifika);
+        textView.setTypeface(typeface);
 
-                addView(textView);
-                answer.tag = textView;
-                break;
-            case ANSWER_CORRECT:
-                textView = (TextView) answer.tag;
-                if (textView != null) {
-                    Transition transition = new Fade();
-                    transition.setDuration(ANIMATION_DURATION);
-                    transition.addListener(new Transition.TransitionListener() {
-                        @Override
-                        public void onTransitionStart(Transition transition) {}
+        addView(textView);
+        answer.tag = textView;
+    }
 
-                        @Override
-                        public void onTransitionEnd(Transition transition) {
-                            textView.setVisibility(GONE);
-                        }
-
-                        @Override
-                        public void onTransitionCancel(Transition transition) {}
-
-                        @Override
-                        public void onTransitionPause(Transition transition) {}
-
-                        @Override
-                        public void onTransitionResume(Transition transition) {}
-                    });
-                    TransitionManager.beginDelayedTransition(this, transition);
-                    answer.tag = null;
-                }
-                break;
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGuess(@NonNull Guess guess) {
+        if (guess.answer == null) {
+            return;
         }
+        TextView textView = (TextView) guess.answer.tag;
+        if (textView == null) {
+            return;
+        }
+        AlphaAnimation fadeOut = new AlphaAnimation( 1.0f , 0.0f ) ;
+        textView.startAnimation(fadeOut);
+        fadeOut.setDuration(ANIMATION_DURATION);
+        fadeOut.setFillAfter(true);
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                textView.setVisibility(GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
     }
 }
