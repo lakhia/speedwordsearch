@@ -18,6 +18,7 @@ import creationsahead.speedwordsearch.utils.SoundManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import static creationsahead.speedwordsearch.mod.Level.TIME_LEFT;
 
 /**
  * Primary activity for game play
@@ -32,8 +33,7 @@ public class GameActivity extends Activity implements TickerCallback {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ticker = new Ticker(this, this,
-                ProgressTracker.getInstance().config.timeLimit);
+        ticker = new Ticker(this, this, TIME_LEFT);
         game = ProgressTracker.getInstance().game;
         sound_manager = new SoundManager(this);
 

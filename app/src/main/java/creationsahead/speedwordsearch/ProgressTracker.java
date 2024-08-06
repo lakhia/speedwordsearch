@@ -92,8 +92,7 @@ public class ProgressTracker {
         // Store progress
         Level level = getCurrentLevel();
         int levelNum = level.number;
-        level.timeUsed = config.timeLimit - event.timeLeft;
-        scoreLevel(level);
+        level.score(event.timeLeft);
 
         if (level.stars > 2.0) {
             // Create new level or post game won event
@@ -105,19 +104,11 @@ public class ProgressTracker {
             if (visibleLevel < levelNum) {
                 visibleLevel = levelNum;
                 storageInterface.storePreference(LEVEL_VISIBLE, visibleLevel);
+                resetConfig();
             }
         }
 
         storageInterface.storeLevel(level);
-    }
-
-    /**
-     * Score level based on total score and time used
-     */
-    private void scoreLevel(@NonNull Level level) {
-        float stars = 2.0f * level.score / level.totalScore;
-        stars += 2.0f * (config.timeLimit - level.timeUsed) / config.timeLimit;
-        level.stars = Math.min(stars, 4f);
     }
 
     /**
@@ -151,7 +142,6 @@ public class ProgressTracker {
         }
         config = new Config(currentLevel + 4, currentLevel + 4, letterLimit);
         config.difficulty = MAX_DIFFICULTY * currentLevel / MAX_LEVEL;
-        config.timeLimit = 60 + (100 - config.difficulty) * 60 / 100;
 
         if (levels[visibleLevel] == null) {
             levels[visibleLevel] = new Level("Basic Level " + (1 + visibleLevel),

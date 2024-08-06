@@ -35,10 +35,9 @@ public class Game {
      * Populate entire puzzle based on configuration
      */
     public void populatePuzzle() {
-        int letterLimit = config.letterLimit;
         int maxSize = config.sizeX;
         int minSize = config.sizeX;
-        while (letterCount < letterLimit) {
+        while (letterCount < config.letterLimit) {
             if (!addOneWord(minSize, maxSize)) {
                 maxSize--;
                 minSize--;
