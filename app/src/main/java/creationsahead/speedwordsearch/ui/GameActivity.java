@@ -9,11 +9,11 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.Game;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.TickerCallback;
+import creationsahead.speedwordsearch.mod.Level;
 import creationsahead.speedwordsearch.utils.SoundManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -62,23 +62,20 @@ public class GameActivity extends Activity implements TickerCallback {
 
     @Override
     public void onBackPressed() {
-        EventBus.getDefault().post(Event.LEVEL_LOST);
+        EventBus.getDefault().post(ProgressTracker.getInstance().getCurrentLevel());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWinOrLose(@NonNull Event event) {
-        if (event == Event.LEVEL_WON || event == Event.LEVEL_LOST) {
-            ProgressTracker.getInstance().incrementLevel(event);
-            finish();
-            Intent intent = new Intent(this, LevelActivity.class);
-            startActivity(intent);
-        }
+    public void onWinOrLose(@NonNull Level level) {
+        finish();
+        Intent intent = new Intent(this, LevelActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public void onTick(int tickCount) {
         if (tickCount <= 0) {
-            EventBus.getDefault().post(Event.LEVEL_LOST);
+            EventBus.getDefault().post(ProgressTracker.getInstance().getCurrentLevel());
         } else {
             scoreBar.onTick(tickCount);
         }

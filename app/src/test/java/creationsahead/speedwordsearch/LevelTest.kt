@@ -15,7 +15,8 @@ class LevelTest {
         val level = Level("Name", 1)
         level.score = 2
         level.totalScore = 2
-        level.score(60)
+        level.timeUsed = 60
+        level.score()
         assertEquals(3f, level.stars)
     }
 }

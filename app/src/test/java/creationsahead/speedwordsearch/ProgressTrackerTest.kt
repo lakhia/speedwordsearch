@@ -80,23 +80,22 @@ class ProgressTrackerTest {
         // Initialize storage
         val level = Level("", 0)
         level.totalScore = 150
+        level.timeUsed = 90
         storage.storeLevel(level)
         progress.init(storage, Rect(), 0.0f)
 
         progress.currentLevel.score = 15
         progress.currentLevel.totalScore = 15
-        val event = Event.LEVEL_LOST
-        event.timeLeft = 5
-        progress.incrementLevel(event)
+        progress.stopLevel(level)
         assertEquals(0, storage.levels[0]!!.number)
-        assertEquals(2.083f, storage.levels[0]!!.stars, 0.005f)
-        assertEquals( 115, storage.levels[0]!!.timeUsed)
+        assertEquals(2.5f, storage.levels[0]!!.stars, 0.005f)
 
         // Make sure level 1 is now visible after winning level 0
         assertEquals(1, storage.map[ProgressTracker.LEVEL_VISIBLE])
         assertEquals(10, progress.levels.size)
         assertNotNull(progress.levels[0])
-        assertNull(progress.levels[1])
+        assertNotNull(progress.levels[1])
+        assertNull(progress.levels[2])
         assertEquals(1, storage.map[ProgressTracker.LEVEL_VISIBLE])
     }
 

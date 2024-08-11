@@ -1,38 +1,33 @@
 package creationsahead.speedwordsearch.ui;
 
 import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.mod.Level;
-import org.greenrobot.eventbus.EventBus;
-
-import static creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATION;
 
 /**
  * Shows list of levels
  */
-public class LevelListView extends FrameLayout implements AdapterView.OnItemClickListener,
-    ValueAnimator.AnimatorUpdateListener {
+public class LevelListView extends FrameLayout implements AdapterView.OnItemClickListener {
 
+    private final LevelAdapter mAdapter;
     private View clickedLevel;
 
     public LevelListView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         ListView listView = new ListView(context);
         addView(listView);
-        LevelAdapter mAdapter = new LevelAdapter(context, R.layout.single_level);
-        mAdapter.addAll(ProgressTracker.getInstance().levels);
+        mAdapter = new LevelAdapter(context, R.layout.single_level, ProgressTracker.getInstance().levels);
         listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(this);
     }
@@ -40,43 +35,34 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
     @Override
     public void onItemClick(@NonNull AdapterView<?> adapterView, View view, int position, long id) {
         clickedLevel = view;
-        ValueAnimator anim = ValueAnimator.ofFloat(1, 0.05f);
-        anim.setDuration(ANIMATION_DURATION/4);
-        anim.setInterpolator(new LinearInterpolator());
-        anim.addUpdateListener(this);
-        anim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {}
+        new ListAnimator((ViewGroup) view.getParent(), view, true,
+            new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+                    Level level = (Level) adapterView.getItemAtPosition(position);
+                    ProgressTracker.getInstance().createGame(level);
+                }
 
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                Level level = (Level) adapterView.getItemAtPosition(position);
-                EventBus.getDefault().post(level);
-            }
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    Intent intent = new Intent(view.getContext(), GameActivity.class);
+                    view.getContext().startActivity(intent);
+                }
 
-            @Override
-            public void onAnimationCancel(Animator animator) {}
+                @Override
+                public void onAnimationCancel(Animator animator) {}
 
-            @Override
-            public void onAnimationRepeat(Animator animator) {}
+                @Override
+                public void onAnimationRepeat(Animator animator) {}
         });
-        anim.start();
     }
 
-    @Override
-    public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-        float fraction = (float) valueAnimator.getAnimatedValue();
-        ViewGroup row = (ViewGroup) clickedLevel.getParent();
-        for (int itemPos = row.getChildCount() - 1; itemPos >= 0; itemPos--) {
-            View view = row.getChildAt(itemPos);
-            if (view != clickedLevel) {
-                if (fraction < 0.1) {
-                    view.setVisibility(View.INVISIBLE);
-                } else {
-                    view.setAlpha(fraction);
-                }
-            }
+    public void unHideList() {
+        if (clickedLevel != null) {
+            new ListAnimator((ViewGroup) clickedLevel.getParent(), clickedLevel,
+                    false, null);
+            clickedLevel = null;
+            mAdapter.notifyDataSetChanged();
         }
     }
-
 }

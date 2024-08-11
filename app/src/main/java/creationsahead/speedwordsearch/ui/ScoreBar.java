@@ -8,7 +8,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import creationsahead.speedwordsearch.Event;
 import creationsahead.speedwordsearch.Guess;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
@@ -20,6 +19,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import static creationsahead.speedwordsearch.mod.Level.TIME_LEFT;
 import static creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATION;
 
 /**
@@ -88,9 +88,9 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    Event event = Event.LEVEL_WON;
-                    event.timeLeft = currentTick;
-                    EventBus.getDefault().post(event);
+                    level.won = true;
+                    level.timeUsed = TIME_LEFT - currentTick;
+                    EventBus.getDefault().post(level);
                 }
 
                 @Override

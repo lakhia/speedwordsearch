@@ -21,17 +21,27 @@ import creationsahead.speedwordsearch.utils.Utils;
  */
 public class LevelAdapter extends ArrayAdapter<Level>  {
 
-    public LevelAdapter(@NonNull Context context, int resource) {
-        super(context, resource);
+    private final Level[] levels;
+
+    public LevelAdapter(@NonNull Context context, int resource, Level[] levels) {
+        super(context, resource, levels);
+        this.levels = levels;
     }
 
     @Override
-    public void addAll(@NonNull Level... items) {
-        for (Level level: items) {
-            if (level != null) {
-                super.add(level);
+    public int getCount() {
+        for (int i = 0; i < levels.length; i++) {
+            if (levels[i] == null) {
+                return i;
             }
         }
+        return levels.length;
+    }
+
+    @Nullable
+    @Override
+    public Level getItem(int position) {
+        return levels[position];
     }
 
     /// Inflates a level with text, buttons and stars

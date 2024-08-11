@@ -15,7 +15,6 @@ import org.greenrobot.eventbus.ThreadMode;
 public class ProgressTracker {
     @NonNull public static final String LEVEL_VISIBLE = "levelVisible";
     private static final int MAX_LEVEL = 10;
-    private static final int MAX_DIFFICULTY = 100;
 
     /** Current game's configuration */
     public Config config;
@@ -24,7 +23,7 @@ public class ProgressTracker {
     /** Levels */
     @NonNull public final Level[] levels = new Level[MAX_LEVEL];
 
-    private int currentLevel;
+    private Level currentLevel;
     private int visibleLevel;
     private StorageInterface storageInterface;
     public Rect displayRect;
@@ -58,6 +57,10 @@ public class ProgressTracker {
         for (int i = 0; i <= visibleLevel; i++) {
             levels[i] = storageInterface.getLevel(i);
         }
+        if (levels[visibleLevel] == null) {
+            levels[visibleLevel] = new Level("Basic Level " + (1 + visibleLevel),
+                    visibleLevel);
+        }
 
         EventBus.getDefault().register(this);
 
@@ -65,7 +68,6 @@ public class ProgressTracker {
             WordList.init(storageInterface.getAssetInputStream("words_9k.db"));
         } catch (IOException ignored) {
         }
-        resetConfig();
     }
 
     public void destroy() {
@@ -81,30 +83,35 @@ public class ProgressTracker {
      */
     @NonNull
     public Level getCurrentLevel() {
-        return levels[currentLevel];
+        return currentLevel;
     }
 
     /**
      * User has finished current level
-     * @param event Event that caused win / lose
      */
-    public void incrementLevel(@NonNull Event event) {
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void stopLevel(@NonNull Level level) {
         // Store progress
-        Level level = getCurrentLevel();
+        level.score();
+        if (level.stars < 0) {
+            return;
+        }
         int levelNum = level.number;
-        level.score(event.timeLeft);
 
-        if (level.stars > 2.0) {
+        if (level.won) {
             // Create new level or post game won event
             if (levelNum >= MAX_LEVEL - 1) {
-                EventBus.getDefault().post(Event.GAME_WON);
+                // TODO: Game won!
             } else {
                 levelNum++;
             }
             if (visibleLevel < levelNum) {
                 visibleLevel = levelNum;
+                if (levels[visibleLevel] == null) {
+                    levels[visibleLevel] = new Level("Basic Level " + (1 + visibleLevel),
+                            visibleLevel);
+                }
                 storageInterface.storePreference(LEVEL_VISIBLE, visibleLevel);
-                resetConfig();
             }
         }
 
@@ -112,42 +119,24 @@ public class ProgressTracker {
     }
 
     /**
-     * Start level
+     * Start Game
      */
+    public void createGame(@NonNull Level level) {
+        currentLevel = level;
+        currentLevel.totalScore = 0;
+        currentLevel.score = 0;
+        config = new Config(currentLevel.number);
+        game = new Game(config, WordList.dictionary,
+                new RandomSequencer(config, (int) System.currentTimeMillis()));
+    }
+
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void startLevel(@NonNull Level level) {
-        level.score = 0;
-        level.totalScore = 0;
-        currentLevel = level.number;
-        resetConfig();
+    public void startGame(@NonNull Game game) {
         game.populatePuzzle();
     }
+
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void addAnswer(@NonNull Answer answer) {
         getCurrentLevel().totalScore += answer.score;
-    }
-
-    private void resetConfig() {
-        int letterLimit;
-        if (BuildConfig.DEBUG) {
-            letterLimit = 13;
-        } else {
-            float letterRatio = (100 - config.difficulty) * 1.5f;
-            letterRatio = config.sizeX * config.sizeY * letterRatio / 100;
-            if (letterRatio < 5) {
-                letterLimit = 5;
-            } else {
-                letterLimit = (int) letterRatio;
-            }
-        }
-        config = new Config(currentLevel + 4, currentLevel + 4, letterLimit);
-        config.difficulty = MAX_DIFFICULTY * currentLevel / MAX_LEVEL;
-
-        if (levels[visibleLevel] == null) {
-            levels[visibleLevel] = new Level("Basic Level " + (1 + visibleLevel),
-                                             visibleLevel);
-        }
-        game = new Game(config, WordList.dictionary,
-                new RandomSequencer(config, (int) System.currentTimeMillis()));
     }
 }

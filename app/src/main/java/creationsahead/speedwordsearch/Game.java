@@ -29,6 +29,7 @@ public class Game {
         this.config = config;
         this.sequencer = sequencer;
         this.dictionary = dictionary;
+        EventBus.getDefault().post(this);
     }
 
     /**
