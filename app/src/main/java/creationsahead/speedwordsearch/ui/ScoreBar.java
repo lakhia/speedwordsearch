@@ -29,26 +29,21 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
     @NonNull private final TextView timeWidget;
     @NonNull private final TextView scoreWidget;
     private ValueAnimator anim;
-    private int currentScore;
-    private int deltaScore;
-    private int currentTick;
+    private int deltaScore, prevScore;
+    private final Level level;
 
     public ScoreBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOrientation(HORIZONTAL);
+        inflate(context, R.layout.score_bar, this);
 
         EventBus.getDefault().register(this);
-
-        Level level = ProgressTracker.getInstance().getCurrentLevel();
-        currentScore = level.score;
-
-        inflate(context, R.layout.score_bar, this);
 
         TextView levelNameWidget = findViewById(R.id.levelName);
         timeWidget = findViewById(R.id.time);
         scoreWidget = findViewById(R.id.score);
+        level = ProgressTracker.getInstance().getCurrentLevel();
         levelNameWidget.setText(level.name);
-
         updateScoreWidget(level.score);
     }
 
@@ -60,7 +55,7 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
 
     @Override
     public void onTick(int timeLeft) {
-        currentTick = timeLeft;
+        level.timeUsed = TIME_LEFT - timeLeft;
         timeWidget.setText(Utils.formatTime(timeLeft));
     }
 
@@ -72,9 +67,9 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
         if (guess.answer == null) {
             return;
         }
-        Level level = ProgressTracker.getInstance().getCurrentLevel();
-        currentScore = level.score;
         deltaScore = guess.answer.score;
+        prevScore = level.score;
+        level.score += deltaScore;
 
         anim = ValueAnimator.ofFloat(1, 4.5f, 1);
         anim.setDuration(ANIMATION_DURATION);
@@ -89,7 +84,6 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
                 @Override
                 public void onAnimationEnd(Animator animator) {
                     level.won = true;
-                    level.timeUsed = TIME_LEFT - currentTick;
                     EventBus.getDefault().post(level);
                 }
 
@@ -112,10 +106,7 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
         float fraction = (float) valueAnimator.getAnimatedValue();
         scoreWidget.setScaleX(fraction);
         scoreWidget.setScaleY(fraction);
-        int score = (int) (currentScore + valueAnimator.getAnimatedFraction() * deltaScore);
+        int score = (int) (prevScore + valueAnimator.getAnimatedFraction() * deltaScore);
         updateScoreWidget(score);
-        if (valueAnimator.getAnimatedFraction() >= 1.0) {
-            ProgressTracker.getInstance().getCurrentLevel().score = score;
-        }
     }
 }

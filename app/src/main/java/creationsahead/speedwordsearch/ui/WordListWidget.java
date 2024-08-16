@@ -17,6 +17,7 @@ import creationsahead.speedwordsearch.R;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import java.util.ArrayList;
 
 import static android.util.TypedValue.COMPLEX_UNIT_PX;
 import static creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATION;
@@ -40,7 +41,10 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         EventBus.getDefault().register(this);
-        ProgressTracker.getInstance().game.visitAnswers();
+        ArrayList<Answer> answers = ProgressTracker.getInstance().game.getAnswers();
+        for (Answer answer : answers) {
+            onNewAnswer(answer);
+        }
     }
 
     @Override
@@ -74,7 +78,7 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
         if (textView == null) {
             return;
         }
-        AlphaAnimation fadeOut = new AlphaAnimation( 1.0f , 0.0f ) ;
+        AlphaAnimation fadeOut = new AlphaAnimation(1.0f, 0.0f);
         textView.startAnimation(fadeOut);
         fadeOut.setDuration(ANIMATION_DURATION);
         fadeOut.setFillAfter(true);
@@ -84,7 +88,7 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                textView.setVisibility(GONE);
+                removeView(textView);
             }
 
             @Override

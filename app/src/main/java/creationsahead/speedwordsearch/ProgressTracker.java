@@ -137,6 +137,6 @@ public class ProgressTracker {
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void addAnswer(@NonNull Answer answer) {
-        getCurrentLevel().totalScore += answer.score;
+        currentLevel.totalScore += answer.score;
     }
 }

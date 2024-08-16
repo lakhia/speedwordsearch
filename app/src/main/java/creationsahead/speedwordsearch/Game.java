@@ -115,17 +115,15 @@ public class Game {
     }
 
     /**
-     * Visit all the answers
+     * Retrieve all the answers
      */
-    public void visitAnswers() {
+    public ArrayList<Answer> getAnswers() {
         Collection<Answer> values = grid.answerMap.values();
         ArrayList<Answer> list = new ArrayList<>(values);
         if (config.isWordListSorted) {
             Collections.sort(list, comparator);
         }
-        for (Answer answer : list) {
-            EventBus.getDefault().post(answer);
-        }
+        return list;
     }
 
     /**
