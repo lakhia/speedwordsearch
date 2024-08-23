@@ -33,23 +33,23 @@ import static creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATI
  */
 public class GridWidget extends TableLayout implements View.OnClickListener {
     private int lastX = -1, lastY = -1;
-    private int cellSize = -1;
     @Nullable private View lastSelection = null;
     @NonNull
     private final Center center;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        EventBus.getDefault().register(this);
+
         setBackgroundResource(R.color.black_overlay);
         Typeface typeface = ResourcesCompat.getFont(context, R.font.archivo_black);
         ProgressTracker tracker = ProgressTracker.getInstance();
 
-        int numCells = tracker.config.sizeX;
-        for (int i = 0; i < numCells; i++) {
+        for (int j = 0; j < tracker.config.sizeY; j++) {
             TableRow row = new TableRow(context);
             addView(row);
 
-            for (int j = 0; j < numCells; j++) {
+            for (int i = 0; i < tracker.config.sizeX; i++) {
                 ContextThemeWrapper newContext = new ContextThemeWrapper(context, R.style.PuzzleLetter);
                 TextView textView = new TextView(newContext, null);
                 Cell cell = tracker.game.getCell(i, j);
@@ -67,12 +67,6 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         EventBus.getDefault().unregister(this);
@@ -83,26 +77,27 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
         int measuredHeight = MeasureSpec.getSize(heightMeasureSpec);
         int measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
         int widgetSize = Math.min(measuredHeight, measuredWidth);
-        cellSize = Math.max(widgetSize / ProgressTracker.getInstance().config.sizeX, cellSize);
-        setMeasuredDimension(widgetSize, widgetSize);
+        int cellSizeX = widgetSize / ProgressTracker.getInstance().config.sizeX;
+        int cellSizeY = widgetSize / ProgressTracker.getInstance().config.sizeY;
+        setMeasuredDimension(measuredWidth, widgetSize);
 
         int childCount = getChildCount();
         float fontSize = ProgressTracker.getInstance().normalizedFontSize / childCount;
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
             TableRow row = (TableRow) child;
-            row.measure(widgetSize, cellSize);
-            row.setMinimumWidth(widgetSize);
-            row.setMinimumHeight(cellSize);
+            row.measure(measuredWidth, cellSizeY);
+            row.setMinimumWidth(measuredWidth);
+            row.setMinimumHeight(cellSizeY);
 
             int cellCount = row.getChildCount();
             for (int j = 0; j < cellCount; j++) {
                 View cell = row.getChildAt(j);
                 TextView textView = (TextView) cell;
                 textView.setTextSize(COMPLEX_UNIT_PX, fontSize);
-                textView.measure(cellSize, cellSize);
-                textView.setMinimumHeight(cellSize);
-                textView.setMinimumWidth(cellSize);
+                textView.measure(cellSizeX, cellSizeY);
+                textView.setMinimumHeight(cellSizeY);
+                textView.setMinimumWidth(cellSizeX);
             }
         }
     }

@@ -31,7 +31,7 @@ public class Ticker implements Runnable {
     public void resume() {
         if (stop) {
             stop = false;
-            handler.post(this);
+            handler.postDelayed(this, 1000);
         }
     }
 
