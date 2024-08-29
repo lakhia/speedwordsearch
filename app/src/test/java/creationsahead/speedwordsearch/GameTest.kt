@@ -133,18 +133,23 @@ class GameTest {
         assertFalse(guess.last)
         assertEquals(36, totalScore)
 
-        // Visit answers again
-        displayBuffer.delete(0, displayBuffer.length)
-        game.visitAnswers()
-        assertEquals("ABAC BAAC BABC BBAC ",
-                displayBuffer.toString())
+        // Get answers
+        var ans = game.answers
+        assertEquals("[" +
+                "pos: (5, 4), dir: WEST, len: 4, word: ABAC, " +
+                "pos: (6, 6), dir: WEST, len: 4, word: BAAC, " +
+                "pos: (3, 0), dir: SOUTH_WEST, len: 4, word: BABC, " +
+                "pos: (2, 0), dir: SOUTH_EAST, len: 4, word: BBAC]",
+                ans.toString())
 
-        // Visit answers again
-        displayBuffer.delete(0, displayBuffer.length)
         config.isWordListSorted = false
-        game.visitAnswers()
-        assertEquals("ABAC BBAC BABC BAAC ",
-                displayBuffer.toString())
+        ans = game.answers
+        assertEquals("[" +
+                "pos: (5, 4), dir: WEST, len: 4, word: ABAC, " +
+                "pos: (2, 0), dir: SOUTH_EAST, len: 4, word: BBAC, " +
+                "pos: (3, 0), dir: SOUTH_WEST, len: 4, word: BABC, " +
+                "pos: (6, 6), dir: WEST, len: 4, word: BAAC]",
+                ans.toString())
 
         // Clear placeholders
         game.clearPlaceholders(30)

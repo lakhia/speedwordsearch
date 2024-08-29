@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicReference;
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -15,7 +16,6 @@ public class Game {
     @NonNull private final Config config;
     @NonNull private final RandomSequencer sequencer;
     @NonNull private final Trie dictionary;
-    private boolean success;
     private int letterCount;
     private final static Comparator<Answer> comparator = (a, b) -> a.word.compareTo(b.word);
 
@@ -48,6 +48,15 @@ public class Game {
             }
         }
         fillEmptyCells();
+    }
+
+    /**
+     * Periodic ticker for game to handle events
+     */
+    public void onTick(int tickCount) {
+        if (tickCount % (config.difficulty + 5) == 4) {
+            clearPlaceholders(1);
+        }
     }
 
     /**
@@ -89,22 +98,38 @@ public class Game {
      * @return true if last iteration added at least 1 letter
      */
     public boolean addOneWord(final int minSize, final int maxSize) {
-        success = false;
+        AtomicReference<Boolean> success = new AtomicReference<>(false);
         grid.findUnusedSelection(maxSize, (selection, contents) -> {
             dictionary.searchWithWildcards(contents, sequencer, result -> {
                 int len = result.length();
                 if (len < minSize) {
                     return false;
                 }
-                success = grid.addWord(selection, result);
-                if (success) {
+                success.set(grid.addWord(selection, result));
+                if (success.get()) {
                     letterCount += len;
                 }
-                return success;
+                return success.get();
             });
-            return success;
+            return success.get();
         });
-        return success;
+        return success.get();
+    }
+
+    public Answer findWordToAdd() {
+        AtomicReference<Answer> ans = new AtomicReference<>();
+        grid.findUnusedSelection(config.sizeX - 1, (selection, contents) -> {
+            dictionary.searchWithWildcards(contents, sequencer, result -> {
+                int len = result.length();
+                if (len >= config.sizeX - 1) {
+                    ans.set(new Answer(selection, result));
+                    return true;
+                }
+                return false;
+            });
+            return ans.get() != null;
+        });
+        return ans.get();
     }
 
     /**

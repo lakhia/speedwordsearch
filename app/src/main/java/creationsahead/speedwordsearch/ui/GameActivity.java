@@ -78,6 +78,7 @@ public class GameActivity extends Activity implements TickerCallback {
             EventBus.getDefault().post(ProgressTracker.getInstance().getCurrentLevel());
         } else {
             scoreBar.onTick(tickCount);
+            game.onTick(tickCount);
         }
     }
 }
