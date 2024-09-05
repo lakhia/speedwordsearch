@@ -3,7 +3,6 @@ package creationsahead.speedwordsearch;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -11,7 +10,7 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class Grid {
     @NonNull private final Cell[][] mGrid;
-    @NonNull final HashMap<String, Answer> answerMap;
+    @NonNull final AnswerMap answerMap;
     private final int sizeX, sizeY;
     @NonNull private final RandomSequencer mSequencer;
 
@@ -23,7 +22,7 @@ public class Grid {
         this.sizeY = sizeY;
         mSequencer = sequencer;
         mGrid = new Cell[sizeX][sizeY];
-        answerMap = new HashMap<>();
+        answerMap = new AnswerMap();
         for (int x=0; x < sizeX; x++) {
             for (int y=0; y < sizeY; y++) {
                 mGrid[x][y] = new Cell();
@@ -56,17 +55,9 @@ public class Grid {
      * @throws RuntimeException if word is partially added
      */
     public boolean addWord(@NonNull Selection selection, @NonNull String word) {
-        // Cannot add same word twice
-        if (answerMap.containsKey(word)) {
+        if (!answerMap.validate(word)) {
             return false;
-        }
-
-        // Reject substring words
-        for (String ans : answerMap.keySet()) {
-            if (ans.startsWith(word) || word.startsWith(ans)) {
-                return false;
-            }
-        }
+        };
 
         // Check bounds
         if (!selection.inBounds(sizeX, sizeY)) {
@@ -87,7 +78,7 @@ public class Grid {
             y += dir.y;
         }
 
-        answerMap.put(word, new Answer(selection, word));
+        answerMap.add(new Answer(selection, word));
         return true;
     }
 
@@ -97,7 +88,7 @@ public class Grid {
      * @throws RuntimeException if word is partially removed
      */
     public Answer removeWord(@NonNull String word) {
-        Answer answer = answerMap.get(word);
+        Answer answer = answerMap.pop(word);
         if (answer == null) {
             return null;
         }
@@ -111,7 +102,6 @@ public class Grid {
             x += selection.direction.x;
             y += selection.direction.y;
         }
-        answerMap.remove(word);
         return answer;
     }
 
@@ -259,7 +249,7 @@ public class Grid {
         Answer answer = removeWord(contents);
 
         // Create guess event
-        Guess guess = new Guess(createTagsFromSelection(selection), answer, answerMap.isEmpty());
+        Guess guess = new Guess(createTagsFromSelection(selection), answer, answerMap.isSolved());
         EventBus.getDefault().post(guess);
         return guess;
     }

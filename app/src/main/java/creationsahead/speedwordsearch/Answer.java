@@ -2,7 +2,6 @@ package creationsahead.speedwordsearch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * A word that is stored in puzzle grid
@@ -20,7 +19,6 @@ public class Answer {
         this.selection = selection;
         this.word = word;
         this.score = 11 - word.length() / 2;
-        EventBus.getDefault().post(this);
     }
 
     /**

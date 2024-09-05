@@ -17,7 +17,6 @@ public class Game {
     @NonNull private final RandomSequencer sequencer;
     @NonNull private final Trie dictionary;
     private int letterCount;
-    private final static Comparator<Answer> comparator = (a, b) -> a.word.compareTo(b.word);
 
     /**
      * Construct a game with a square puzzle grid
@@ -143,12 +142,7 @@ public class Game {
      * Retrieve all the answers
      */
     public ArrayList<Answer> getAnswers() {
-        Collection<Answer> values = grid.answerMap.values();
-        ArrayList<Answer> list = new ArrayList<>(values);
-        if (config.isWordListSorted) {
-            Collections.sort(list, comparator);
-        }
-        return list;
+        return grid.answerMap.getAnswers(config.isWordListSorted);
     }
 
     /**
