@@ -2,9 +2,6 @@ package creationsahead.speedwordsearch;
 
 import androidx.annotation.NonNull;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicReference;
 import org.greenrobot.eventbus.EventBus;
 
@@ -14,6 +11,7 @@ import org.greenrobot.eventbus.EventBus;
 public class Game {
     @NonNull private final Grid grid;
     @NonNull private final Config config;
+    @NonNull final AnswerMap answerMap;
     @NonNull private final RandomSequencer sequencer;
     @NonNull private final Trie dictionary;
     private int letterCount;
@@ -25,6 +23,7 @@ public class Game {
                 @NonNull RandomSequencer sequencer) {
         letterCount = 0;
         grid = new Grid(config.sizeX, config.sizeY, sequencer);
+        answerMap = new AnswerMap();
         this.config = config;
         this.sequencer = sequencer;
         this.dictionary = dictionary;
@@ -104,8 +103,12 @@ public class Game {
                 if (len < minSize) {
                     return false;
                 }
+                if (!answerMap.validate(result)) {
+                    return false;
+                }
                 success.set(grid.addWord(selection, result));
                 if (success.get()) {
+                    answerMap.add(new Answer(selection, result));
                     letterCount += len;
                 }
                 return success.get();
@@ -141,8 +144,9 @@ public class Game {
     /**
      * Retrieve all the answers
      */
+    @NonNull
     public ArrayList<Answer> getAnswers() {
-        return grid.answerMap.getAnswers(config.isWordListSorted);
+        return answerMap.getAnswers(config.isWordListSorted);
     }
 
     /**
@@ -151,7 +155,9 @@ public class Game {
      * @return Guess object that indicates status of guess
      */
     public Guess guess(@NonNull Selection selection) {
-        return grid.guess(selection);
+        String contents = grid.findContents(selection, false);
+        Answer answer = answerMap.pop(contents);
+        return grid.guess(answer, selection, answerMap.isSolved());
     }
 
     @NonNull

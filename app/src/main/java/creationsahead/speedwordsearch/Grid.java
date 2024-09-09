@@ -10,7 +10,6 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class Grid {
     @NonNull private final Cell[][] mGrid;
-    @NonNull final AnswerMap answerMap;
     private final int sizeX, sizeY;
     @NonNull private final RandomSequencer mSequencer;
 
@@ -22,7 +21,6 @@ public class Grid {
         this.sizeY = sizeY;
         mSequencer = sequencer;
         mGrid = new Cell[sizeX][sizeY];
-        answerMap = new AnswerMap();
         for (int x=0; x < sizeX; x++) {
             for (int y=0; y < sizeY; y++) {
                 mGrid[x][y] = new Cell();
@@ -55,10 +53,6 @@ public class Grid {
      * @throws RuntimeException if word is partially added
      */
     public boolean addWord(@NonNull Selection selection, @NonNull String word) {
-        if (!answerMap.validate(word)) {
-            return false;
-        };
-
         // Check bounds
         if (!selection.inBounds(sizeX, sizeY)) {
             return false;
@@ -77,32 +71,24 @@ public class Grid {
             x += dir.x;
             y += dir.y;
         }
-
-        answerMap.add(new Answer(selection, word));
         return true;
     }
 
     /**
-     * Remove word previously added
-     * @return True if successfully removed
+     * Remove answer from grid
      * @throws RuntimeException if word is partially removed
      */
-    public Answer removeWord(@NonNull String word) {
-        Answer answer = answerMap.pop(word);
-        if (answer == null) {
-            return null;
-        }
-        int len = word.length() - 1;
+    public void removeWord(@NonNull Answer answer) {
+        int len = answer.word.length() - 1;
         Selection selection = answer.selection;
         Position pos = selection.position;
         for (int x = pos.x, y = pos.y, i=0; i <= len; i++) {
-            if (!mGrid[x][y].erase(word.charAt(i))) {
+            if (!mGrid[x][y].erase(answer.word.charAt(i))) {
                 throw new RuntimeException("Board in inconsistent state, word not stored in previous step");
             }
             x += selection.direction.x;
             y += selection.direction.y;
         }
-        return answer;
     }
 
     /**
@@ -244,12 +230,12 @@ public class Grid {
     }
 
     @NonNull
-    public Guess guess(@NonNull Selection selection) {
-        String contents = findContents(selection, false);
-        Answer answer = removeWord(contents);
-
+    public Guess guess(Answer answer, @NonNull Selection selection, boolean solved) {
+        if (answer != null) {
+            removeWord(answer);
+        }
         // Create guess event
-        Guess guess = new Guess(createTagsFromSelection(selection), answer, answerMap.isSolved());
+        Guess guess = new Guess(createTagsFromSelection(selection), answer, solved);
         EventBus.getDefault().post(guess);
         return guess;
     }

@@ -26,37 +26,6 @@ class GridTest {
     }
 
     @Test
-    fun test_01_duplicates() {
-        val config = Config(6, 3, 1)
-        val grid = Grid(
-            6, 3,
-            RandomSequencer(config, 1)
-        )
-        val empty =
-                ". . . . . . \n" +
-                ". . . . . . \n" +
-                ". . . . . . \n"
-        assertEquals(empty, grid.toString())
-
-        // Add word, add again, remove
-        grid.addWord(Selection(1, 0, Direction.EAST, 4), "test")
-        assertFalse(grid.addWord(Selection(2, 0, Direction.EAST, 4), "test"))
-        assertNotNull(grid.removeWord("test"))
-
-        // Add again
-        assertTrue(grid.addWord(Selection(1, 0, Direction.EAST, 4), "test"))
-        assertFalse(grid.addWord(Selection(1, 0, Direction.EAST, 5), "tests"))
-        assertNotNull(grid.removeWord("test"))
-
-        // Substring tests
-        assertFalse(grid.addWord(Selection(1, 0, Direction.EAST, 6), "tester"))
-        assertTrue(grid.addWord(Selection(0, 0, Direction.EAST, 6), "tester"))
-        assertFalse(grid.addWord(Selection(0, 0, Direction.EAST, 4), "test"))
-        assertNotNull(grid.removeWord("tester"))
-        assertTrue(grid.addWord(Selection(1, 0, Direction.EAST, 5), "tests"))
-    }
-
-    @Test
     fun test_02_contents_after_remove() {
         val grid = fillGrid()
         var string = grid.toString()
@@ -66,16 +35,17 @@ class GridTest {
                 "a f a r \n" +
                 "e k a t \n", string)
 
-        grid.removeWord("saga")
-        grid.removeWord("east")
-        grid.removeWord("afar")
-        string = grid.findContents(Selection(0, 1, Direction.EAST, 4), true)
-        assertEquals("...a", string)
-        string = grid.findContents(Selection(0, 1, Direction.EAST, 4), false)
+        val selection1st = Selection(0, 1, Direction.EAST, 4)
+        val selection2nd = Selection(0, 2, Direction.EAST, 4)
+        grid.removeWord(Answer(selection1st, "saga"))
+        grid.removeWord(Answer(selection2nd, "afar"))
+        string = grid.findContents(selection1st, true)
+        assertEquals("s..a", string)
+        string = grid.findContents(selection1st, false)
         assertEquals("saga", string)
-        string = grid.findContents(Selection(0, 2, Direction.EAST, 4), true)
-        assertEquals("...r", string)
-        string = grid.findContents(Selection(0, 2, Direction.EAST, 4), false)
+        string = grid.findContents(selection2nd, true)
+        assertEquals("a..r", string)
+        string = grid.findContents(selection2nd, false)
         assertEquals("afar", string)
     }
 
@@ -86,7 +56,8 @@ class GridTest {
             4, 4,
             RandomSequencer(config, 1)
         )
-        grid.addWord(Selection(0, 0, Direction.SOUTH_EAST, 4), "test")
+        val selectionOrigin = Selection(0, 0, Direction.SOUTH_EAST, 4)
+        grid.addWord(selectionOrigin, "test")
         grid.addWord(Selection(2, 0, Direction.SOUTH_WEST, 3), "yes")
         grid.addWord(Selection(1, 3, Direction.NORTH_EAST, 3), "ask")
         grid.addWord(Selection(2, 2, Direction.NORTH_WEST, 3), "set")
@@ -100,16 +71,8 @@ class GridTest {
                 "s . s o \n" +
                 "k a k t \n", grid.toString())
 
-        // Remove non-existent words
-        assertNull(grid.removeWord("you"))
-        assertNull(grid.removeWord("yot"))
-        assertNull(grid.removeWord("kot"))
-        assertNull(grid.removeWord("tok"))
-        assertNull(grid.removeWord("kakt"))
-        assertEquals(string, grid.toString())
-
         // Remove word
-        grid.removeWord("test")
+        grid.removeWord(Answer(selectionOrigin, "test"))
         string = grid.toString()
         assertEquals(string, grid.toString())
 
@@ -152,22 +115,19 @@ class GridTest {
         assertEquals(null, pos)
 
         // Remove two words that do not free any cells
-        grid.removeWord("tart")
-        pos = grid.findCells({ obj: Cell -> obj.isUnused }, null)
-        assertEquals(null, pos)
-        grid.removeWord("east")
+        grid.removeWord(Answer(Selection(3, 0, Direction.SOUTH, 4), "tart"))
         pos = grid.findCells({ obj: Cell -> obj.isUnused }, null)
         assertEquals(null, pos)
 
         // Remove one word that makes a few cells unused
-        grid.removeWord("saga")
+        grid.removeWord(Answer(Selection(0, 1, Direction.EAST, 4), "saga"))
         pos = grid.findCells({ obj: Cell -> obj.isUnused }, null)
         assertNotNull(pos)
-        assertEquals(3, pos?.x)
+        assertEquals(1, pos?.x)
         assertEquals(1, pos?.y)
 
         // Test cell
-        var cell = grid.getCell(3, 1)
+        var cell = grid.getCell(1, 1)
         assertFalse(cell.isEmpty)
         assertTrue(cell.isUnused)
         assertEquals(Cell.EMPTY, cell.searchValue)
@@ -207,10 +167,8 @@ class GridTest {
         assertEquals("taat", content)
         content = grid.findContents(Selection(0, 3, Direction.NORTH, 4), true)
         assertEquals("east", content)
-
-        grid.removeWord("afar")
         content = grid.findContents(Selection(1, 0, Direction.SOUTH, 4), true)
-        assertEquals("ea.k", content)
+        assertEquals("eafk", content)
     }
 
     @Test
