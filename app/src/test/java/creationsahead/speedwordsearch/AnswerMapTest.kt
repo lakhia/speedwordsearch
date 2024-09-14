@@ -1,7 +1,6 @@
 package creationsahead.speedwordsearch
 
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 
 class AnswerMapTest {
@@ -25,5 +24,21 @@ class AnswerMapTest {
         assertTrue(answerMap.isSolved)
         answerMap.add(Answer(selection, "test"))
         assertFalse(answerMap.isSolved)
+        answerMap.pop("test")
+        assertTrue(answerMap.isSolved)
+    }
+
+    @Test
+    fun test_get_answers() {
+        val selection = Selection(0, 0, Direction.EAST, 4)
+        val answerMap = AnswerMap()
+        val testAns = Answer(selection, "test")
+        val otherAns = Answer(selection, "other")
+        answerMap.add(testAns)
+        answerMap.add(otherAns)
+        val answers = answerMap.getAnswers(true)
+        assertEquals(2, answers.size)
+        assertEquals(otherAns, answers[0])
+        assertEquals(testAns, answers[1])
     }
 }

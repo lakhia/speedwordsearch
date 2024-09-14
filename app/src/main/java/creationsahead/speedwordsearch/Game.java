@@ -65,7 +65,7 @@ public class Game {
         grid.findCells(Cell::isEmpty,
                 (position) -> {
                     char letter = iterator.next();
-                    if (!grid.addLetter(position, letter)) {
+                    if (!grid.addPlaceholderLetter(position, letter)) {
                         throw new RuntimeException("Could not add letter");
                     }
                     if (!iterator.hasNext()) {
@@ -118,12 +118,12 @@ public class Game {
         return success.get();
     }
 
-    public Answer findWordToAdd() {
+    public Answer findWordToAdd(int lenOffset) {
         AtomicReference<Answer> ans = new AtomicReference<>();
-        grid.findUnusedSelection(config.sizeX - 1, (selection, contents) -> {
+        grid.findUnusedSelection(config.sizeX - lenOffset, (selection, contents) -> {
             dictionary.searchWithWildcards(contents, sequencer, result -> {
                 int len = result.length();
-                if (len >= config.sizeX - 1) {
+                if (len >= config.sizeX - lenOffset) {
                     ans.set(new Answer(selection, result));
                     return true;
                 }
@@ -132,6 +132,25 @@ public class Game {
             return ans.get() != null;
         });
         return ans.get();
+    }
+
+    public void incrementallyAddWord(int letterCount) {
+        int count = 0;
+        for (int lenOffset = 1; lenOffset < 3; lenOffset++) {
+            while (count < letterCount) {
+                if (answerMap.hiddenAnswersEmpty()) {
+                    Answer ans = findWordToAdd(lenOffset);
+                    if (ans != null) {
+                        answerMap.addHiddenAnswer(ans);
+                    }
+                }
+                if (answerMap.addHiddenLetter(grid::addLetter)) {
+                    count++;
+                } else {
+                    break;
+                }
+            }
+        }
     }
 
     /**

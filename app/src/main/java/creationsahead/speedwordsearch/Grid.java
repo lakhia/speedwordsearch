@@ -29,12 +29,22 @@ public class Grid {
     }
 
     /**
-     * Add a letter as placeholder
+     * Add a letter that is used by an answer
      * @param position where letter is inserted
      * @param letter letter to be added
      * @return true if store was successful
      */
     public boolean addLetter(@NonNull Position position, char letter) {
+        return mGrid[position.x][position.y].store(letter);
+    }
+
+    /**
+     * Add a letter as placeholder
+     * @param position where letter is inserted
+     * @param letter letter to be added
+     * @return true if store was successful
+     */
+    public boolean addPlaceholderLetter(@NonNull Position position, char letter) {
         return mGrid[position.x][position.y].storePlaceholder(letter);
     }
 

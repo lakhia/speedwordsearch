@@ -204,7 +204,7 @@ class GridTest {
         assertEquals('t', cell.letter)
 
         // Add a letter
-        assertFalse(grid.addLetter(Position(0, 0), 'b'))
-        assertTrue(grid.addLetter(Position(0, 0), 't'))
+        assertFalse(grid.addPlaceholderLetter(Position(0, 0), 'b'))
+        assertTrue(grid.addPlaceholderLetter(Position(0, 0), 't'))
     }
 }
