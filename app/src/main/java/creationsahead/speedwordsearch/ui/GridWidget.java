@@ -11,6 +11,7 @@ import android.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -31,11 +32,9 @@ import static creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATI
 /**
  * Widget that displays grid
  */
-public class GridWidget extends TableLayout implements View.OnClickListener {
-    private int lastX = -1, lastY = -1;
-    @Nullable private View lastSelection = null;
-    @NonNull
-    private final Center center;
+public class GridWidget extends TableLayout {
+    @NonNull private final Center center;
+    @NonNull private final ProgressTracker tracker;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -43,7 +42,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
 
         setBackgroundResource(R.color.black_overlay);
         Typeface typeface = ResourcesCompat.getFont(context, R.font.archivo_black);
-        ProgressTracker tracker = ProgressTracker.getInstance();
+        tracker = ProgressTracker.getInstance();
 
         for (int j = 0; j < tracker.config.sizeY; j++) {
             TableRow row = new TableRow(context);
@@ -55,7 +54,6 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
                 Cell cell = tracker.game.getCell(i, j);
                 textView.setText(cell.toString());
                 textView.setTypeface(typeface);
-                textView.setOnClickListener(this);
                 textView.setTag(R.string.row, i);
                 textView.setTag(R.string.column, j);
                 row.addView(textView);
@@ -64,6 +62,24 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
         }
 
         center = new Center(tracker.displayRect);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        View v = (View) getParent();
+        TouchHandler handler = v.findViewById(R.id.touchOverlay);
+        handler.setData(this, Math.min(
+                tracker.displayRect.width() / (float) tracker.config.sizeX,
+                tracker.displayRect.height() / (float) tracker.config.sizeY));
+
+        for (int i = 0; i < getChildCount(); i++) {
+            ViewGroup row = (ViewGroup) getChildAt(i);
+            for (int j = 0; j < row.getChildCount(); j++) {
+                View cell = row.getChildAt(j);
+                cell.setOnTouchListener(handler);
+            }
+        }
     }
 
     @Override
@@ -77,12 +93,12 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
         int measuredHeight = MeasureSpec.getSize(heightMeasureSpec);
         int measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
         int widgetSize = Math.min(measuredHeight, measuredWidth);
-        int cellSizeX = widgetSize / ProgressTracker.getInstance().config.sizeX;
-        int cellSizeY = widgetSize / ProgressTracker.getInstance().config.sizeY;
+        int cellSizeX = widgetSize / tracker.config.sizeX;
+        int cellSizeY = widgetSize / tracker.config.sizeY;
         setMeasuredDimension(measuredWidth, widgetSize);
 
         int childCount = getChildCount();
-        float fontSize = ProgressTracker.getInstance().normalizedFontSize / childCount;
+        float fontSize = tracker.normalizedFontSize / childCount;
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
             TableRow row = (TableRow) child;
@@ -110,7 +126,7 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
         }
     }
 
-    public void updateScore(@NonNull Guess guess) {
+    private void updateScore(@NonNull Guess guess) {
         new GuessAnimator(guess);
         if (guess.last) {
             {
@@ -144,27 +160,14 @@ public class GridWidget extends TableLayout implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onClick(@NonNull View view) {
-        int currentX = (int) view.getTag(R.string.row);
-        int currentY = (int) view.getTag(R.string.column);
-
-        if (lastSelection == null) {
-            lastX = currentX;
-            lastY = currentY;
-            lastSelection = view;
-            view.setBackgroundResource(R.drawable.cell_selected);
+    public void onGuess(int x1, int y1, int x2, int y2) {
+        Selection selection = Selection.isValid(x1, y1, x2, y2);
+        if (selection != null) {
+            Guess guess = tracker.game.guess(selection);
+            updateScore(guess);
         } else {
-            lastSelection.setBackgroundResource(R.drawable.cell);
-            lastSelection = null;
-            Selection selection = Selection.isValid(lastX, lastY, currentX, currentY);
-            if (selection != null) {
-                Guess guess = ProgressTracker.getInstance().game.guess(selection);
-                updateScore(guess);
-            } else {
-                if (currentX != lastX && currentY != lastY) {
-                    Toast.makeText(getContext(), "Invalid Selection", Toast.LENGTH_SHORT).show();
-                }
+            if (x1 != x2 && y1 != y2) {
+                Toast.makeText(getContext(), "Invalid Selection", Toast.LENGTH_SHORT).show();
             }
         }
     }
