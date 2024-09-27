@@ -24,7 +24,7 @@ public class ListAnimator implements  ValueAnimator.AnimatorUpdateListener {
         if (forward) {
             anim = ValueAnimator.ofFloat(1f, 0f);
         } else {
-            anim = ValueAnimator.ofFloat(0f, 1f);
+            anim = ValueAnimator.ofFloat(0f, 0.8f, 1f);
         }
         anim.setDuration(ANIMATION_DURATION/2);
         anim.setInterpolator(new LinearInterpolator());
@@ -33,7 +33,7 @@ public class ListAnimator implements  ValueAnimator.AnimatorUpdateListener {
             anim.addListener(listener);
         }
         if (!forward) {
-            anim.setStartDelay(ANIMATION_DURATION*2/3);
+            anim.setStartDelay(ANIMATION_DURATION/3);
         }
         anim.start();
     }

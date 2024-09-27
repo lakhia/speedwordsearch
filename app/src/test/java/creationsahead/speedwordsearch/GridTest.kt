@@ -64,7 +64,6 @@ class GridTest {
         grid.addWord(Selection(3, 2, Direction.SOUTH_WEST, 2), "ok")
         grid.addWord(Selection(0, 0, Direction.EAST, 3), "toy")
         grid.addWord(Selection(0, 0, Direction.SOUTH, 4), "task")
-        var string = grid.toString()
         assertEquals(
                 "t o y . \n" +
                 "a e . k \n" +
@@ -73,7 +72,7 @@ class GridTest {
 
         // Remove word
         grid.removeWord(Answer(selectionOrigin, "test"))
-        string = grid.toString()
+        val string = grid.toString()
         assertEquals(string, grid.toString())
 
         // Add different word that uses placeholder

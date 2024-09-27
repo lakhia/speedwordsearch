@@ -1,5 +1,6 @@
 package creationsahead.speedwordsearch.ui;
 
+import static java.lang.Math.min;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -20,7 +21,7 @@ public class TouchHandler extends View implements View.OnTouchListener {
     private float rawX2 = -1;
     private float rawY2 = -1;
     private int lastIndexX, lastIndexY;
-    private float cellSize;
+    private float cellSizeX, cellSizeY;
     private GridWidget gridWidget;
     private final Paint paint = new Paint();
 
@@ -47,16 +48,17 @@ public class TouchHandler extends View implements View.OnTouchListener {
         }
     }
 
-    public void setData(GridWidget widget, float cellSize) {
+    public void setWidgetAndSize(GridWidget widget, int sizeX, int sizeY) {
         gridWidget = widget;
-        this.cellSize = cellSize;
-        paint.setStrokeWidth(cellSize/3);
+        cellSizeX = sizeX;
+        cellSizeY = sizeY;
+        paint.setStrokeWidth(min(sizeX, sizeY) / 3.0f);
     }
 
     private static View findHit(ViewGroup parent, int index, int rawX, int rawY) {
         Rect hitRect = new Rect();
 
-        for (int i = (int) (index-1); i < index+1; i++) {
+        for (int i = index-1; i < index+1; i++) {
             View child = parent.getChildAt(i);
             if (child == null)
                 continue;
@@ -97,8 +99,8 @@ public class TouchHandler extends View implements View.OnTouchListener {
             rawX2 = -1;
             invalidate();
 
-            float indexX = lastIndexX + (event.getX() / cellSize);
-            float indexY = lastIndexY + (event.getY() / cellSize);
+            float indexX = lastIndexX + (event.getX() / cellSizeX);
+            float indexY = lastIndexY + (event.getY() / cellSizeY);
 
             ViewGroup row = (ViewGroup) findHit(gridWidget, (int) indexY, (int) event.getRawX(), (int) event.getRawY());
             if (row == null) {

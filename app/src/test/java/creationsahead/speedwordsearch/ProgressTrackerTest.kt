@@ -23,14 +23,14 @@ class ProgressTrackerTest {
         //var levels : Array<Level> = Array(10, { i -> Level("", i) })
         var levels : Array<Level?> = arrayOfNulls(10)
 
-        override fun getLevel(index: Int): Level? {
+        override fun getLevel(index: Int, name: String): Level? {
             if (index < levels.size) {
                 return levels[index]
             }
             return null
         }
 
-        override fun storeLevel(level: Level) {
+        override fun storeLevel(level: Level, name: String) {
             levels[level.number] = level
         }
 
@@ -70,12 +70,7 @@ class ProgressTrackerTest {
         assertNotNull(progress.config)
         assertEquals(4, progress.config.sizeX)
         assertEquals(4, progress.config.sizeY)
-
-        // Make sure exactly one level is visible when game starts
         assertNotNull(progress.game)
-        assertNotNull(progress.levels[0])
-        assertNull(progress.levels[1])
-        assertEquals(10, progress.levels.size)
     }
 
     @Test
@@ -90,31 +85,5 @@ class ProgressTrackerTest {
         progress.stopLevel(level)
         assertEquals(0, storage.levels[0]!!.number)
         assertEquals(2.5f, storage.levels[0]!!.stars, 0.005f)
-
-        // Make sure level 1 is now visible after winning level 0
-        assertEquals(1, storage.map[ProgressTracker.LEVEL_VISIBLE])
-        assertEquals(10, progress.levels.size)
-        assertNotNull(progress.levels[0])
-        assertNotNull(progress.levels[1])
-        assertNull(progress.levels[2])
-        assertEquals(1, storage.map[ProgressTracker.LEVEL_VISIBLE])
-    }
-
-    @Test
-    fun test_03_progress() {
-        // Initialize storage
-        storage.storePreference(ProgressTracker.LEVEL_VISIBLE, 3)
-        storage.storeLevel(Level("", 0))
-        storage.storeLevel(Level("", 1))
-        storage.storeLevel(Level("", 2))
-
-        progress.init(storage, Rect(), 0.0f)
-
-        // Verify that level[3] gets created because it is visible
-        assertNotNull(progress.levels[0])
-        assertNotNull(progress.levels[1])
-        assertNotNull(progress.levels[2])
-        assertNotNull(progress.levels[3])
-        assertNull(progress.levels[4])
     }
 }

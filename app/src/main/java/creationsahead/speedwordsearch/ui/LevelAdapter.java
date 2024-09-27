@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import java.util.List;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.mod.Level;
 import creationsahead.speedwordsearch.utils.Utils;
@@ -19,29 +20,10 @@ import creationsahead.speedwordsearch.utils.Utils;
 /**
  * Displays all the levels
  */
-public class LevelAdapter extends ArrayAdapter<Level>  {
+public class LevelAdapter extends ArrayAdapter<Level> {
 
-    private final Level[] levels;
-
-    public LevelAdapter(@NonNull Context context, int resource, Level[] levels) {
+    public LevelAdapter(@NonNull Context context, int resource, @NonNull List<Level> levels) {
         super(context, resource, levels);
-        this.levels = levels;
-    }
-
-    @Override
-    public int getCount() {
-        for (int i = 0; i < levels.length; i++) {
-            if (levels[i] == null) {
-                return i;
-            }
-        }
-        return levels.length;
-    }
-
-    @Nullable
-    @Override
-    public Level getItem(int position) {
-        return levels[position];
     }
 
     /// Inflates a level with text, buttons and stars
@@ -53,7 +35,6 @@ public class LevelAdapter extends ArrayAdapter<Level>  {
         }
 
         Level level = getItem(position);
-
         Button button = convertView.findViewById(R.id.toggleButton);
         button.setText(level.name);
 

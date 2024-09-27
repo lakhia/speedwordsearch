@@ -34,7 +34,7 @@ public class GameActivity extends Activity implements TickerCallback {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ticker = new Ticker(this, this, TIME_LEFT);
-        game = ProgressTracker.getInstance().game;
+        game = ProgressTracker.getInstance().getGame();
         sound_manager = new SoundManager(this);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -62,7 +62,7 @@ public class GameActivity extends Activity implements TickerCallback {
 
     @Override
     public void onBackPressed() {
-        EventBus.getDefault().post(ProgressTracker.getInstance().getCurrentLevel());
+        EventBus.getDefault().post(ProgressTracker.getInstance().currentLevel);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -75,7 +75,7 @@ public class GameActivity extends Activity implements TickerCallback {
     @Override
     public void onTick(int tickCount) {
         if (tickCount <= 0) {
-            EventBus.getDefault().post(ProgressTracker.getInstance().getCurrentLevel());
+            EventBus.getDefault().post(ProgressTracker.getInstance().currentLevel);
         } else {
             scoreBar.onTick(tickCount);
             game.onTick(tickCount);

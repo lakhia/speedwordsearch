@@ -17,6 +17,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import creationsahead.speedwordsearch.Cell;
+import creationsahead.speedwordsearch.Game;
 import creationsahead.speedwordsearch.Guess;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
@@ -35,6 +36,8 @@ import static creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATI
 public class GridWidget extends TableLayout {
     @NonNull private final Center center;
     @NonNull private final ProgressTracker tracker;
+    @NonNull private final Game game;
+    private TouchHandler handler;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -43,6 +46,7 @@ public class GridWidget extends TableLayout {
         setBackgroundResource(R.color.black_overlay);
         Typeface typeface = ResourcesCompat.getFont(context, R.font.archivo_black);
         tracker = ProgressTracker.getInstance();
+        game = tracker.getGame();
 
         for (int j = 0; j < tracker.config.sizeY; j++) {
             TableRow row = new TableRow(context);
@@ -51,7 +55,7 @@ public class GridWidget extends TableLayout {
             for (int i = 0; i < tracker.config.sizeX; i++) {
                 ContextThemeWrapper newContext = new ContextThemeWrapper(context, R.style.PuzzleLetter);
                 TextView textView = new TextView(newContext, null);
-                Cell cell = tracker.game.getCell(i, j);
+                Cell cell = game.getCell(i, j);
                 textView.setText(cell.toString());
                 textView.setTypeface(typeface);
                 textView.setTag(R.string.row, i);
@@ -68,10 +72,7 @@ public class GridWidget extends TableLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         View v = (View) getParent();
-        TouchHandler handler = v.findViewById(R.id.touchOverlay);
-        handler.setData(this, Math.min(
-                tracker.displayRect.width() / (float) tracker.config.sizeX,
-                tracker.displayRect.height() / (float) tracker.config.sizeY));
+        handler = v.findViewById(R.id.touchOverlay);
 
         for (int i = 0; i < getChildCount(); i++) {
             ViewGroup row = (ViewGroup) getChildAt(i);
@@ -96,6 +97,7 @@ public class GridWidget extends TableLayout {
         int cellSizeX = widgetSize / tracker.config.sizeX;
         int cellSizeY = widgetSize / tracker.config.sizeY;
         setMeasuredDimension(measuredWidth, widgetSize);
+        handler.setWidgetAndSize(this, cellSizeX, cellSizeY);
 
         int childCount = getChildCount();
         float fontSize = tracker.normalizedFontSize / childCount;
@@ -163,7 +165,7 @@ public class GridWidget extends TableLayout {
     public void onGuess(int x1, int y1, int x2, int y2) {
         Selection selection = Selection.isValid(x1, y1, x2, y2);
         if (selection != null) {
-            Guess guess = tracker.game.guess(selection);
+            Guess guess = game.guess(selection);
             updateScore(guess);
         } else {
             if (x1 != x2 && y1 != y2) {

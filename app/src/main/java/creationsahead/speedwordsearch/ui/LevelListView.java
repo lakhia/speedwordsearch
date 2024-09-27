@@ -2,8 +2,6 @@ package creationsahead.speedwordsearch.ui;
 
 import android.animation.Animator;
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
@@ -11,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import creationsahead.speedwordsearch.LevelTracker;
 import creationsahead.speedwordsearch.ProgressTracker;
 import creationsahead.speedwordsearch.R;
 import creationsahead.speedwordsearch.mod.Level;
@@ -27,7 +28,7 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
         super(context, attrs);
         ListView listView = new ListView(context);
         addView(listView);
-        mAdapter = new LevelAdapter(context, R.layout.single_level, ProgressTracker.getInstance().levels);
+        mAdapter = new LevelAdapter(context, R.layout.single_level, LevelTracker.levels);
         listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(this);
     }
@@ -60,9 +61,23 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
     public void unHideList() {
         if (clickedLevel != null) {
             new ListAnimator((ViewGroup) clickedLevel.getParent(), clickedLevel,
-                    false, null);
+                    false, new Animator.AnimatorListener() {
+
+                @Override
+                public void onAnimationStart(@NonNull Animator animator) {}
+
+                @Override
+                public void onAnimationEnd(@NonNull Animator animator) {
+                    mAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onAnimationCancel(@NonNull Animator animator) {}
+
+                @Override
+                public void onAnimationRepeat(@NonNull Animator animator) {}
+            });
             clickedLevel = null;
-            mAdapter.notifyDataSetChanged();
         }
     }
 }

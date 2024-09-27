@@ -41,7 +41,7 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         EventBus.getDefault().register(this);
-        ArrayList<Answer> answers = ProgressTracker.getInstance().game.getAnswers();
+        ArrayList<Answer> answers = ProgressTracker.getInstance().getGame().getAnswers();
         for (Answer answer : answers) {
             onNewAnswer(answer);
         }

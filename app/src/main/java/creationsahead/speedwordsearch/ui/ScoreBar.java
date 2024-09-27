@@ -42,7 +42,7 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
         TextView levelNameWidget = findViewById(R.id.levelName);
         timeWidget = findViewById(R.id.time);
         scoreWidget = findViewById(R.id.score);
-        level = ProgressTracker.getInstance().getCurrentLevel();
+        level = ProgressTracker.getInstance().currentLevel;
         levelNameWidget.setText(level.name);
         updateScoreWidget(level.score);
     }

@@ -21,7 +21,7 @@ public class Config {
 
     public Config(int level) {
         sizeX = 4 + level/2;
-        sizeY = 4 + level/2;
+        sizeY = 4 + (1 + level) / 2;
         difficulty = MAX_DIFFICULTY * level / 10;
         if (BuildConfig.DEBUG) {
             letterLimit = 13;

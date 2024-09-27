@@ -18,7 +18,7 @@ public class Level {
     }
 
     public Level(String levelName, int levelNumber) {
-        name = levelName;
+        name = levelName + " Level " + (1 + levelNumber);
         number = levelNumber;
         stars = -1;
         timeUsed = 0;

@@ -84,9 +84,9 @@ public class GameApplication extends Application implements StorageInterface {
 
     @Nullable
     @Override
-    public Level getLevel(int index) {
+    public Level getLevel(int index, @NonNull String name) {
         try {
-            FileInputStream fileIn = getApplicationContext().openFileInput("level_" + index);
+            FileInputStream fileIn = getApplicationContext().openFileInput("level_" + name + index);
             Input input = new Input(fileIn);
             Level level = serializer.readObject(input, Level.class);
             input.close();
@@ -101,9 +101,10 @@ public class GameApplication extends Application implements StorageInterface {
     }
 
     @Override
-    public void storeLevel(@NonNull Level level) {
+    public void storeLevel(@NonNull Level level, @NonNull String name) {
         try {
-            FileOutputStream fileOut = openFileOutput("level_" + level.number, Activity.MODE_PRIVATE);
+            FileOutputStream fileOut = openFileOutput("level_" + name + level.number,
+                    Activity.MODE_PRIVATE);
             Output output = new Output(fileOut);
             serializer.writeObject(output, level);
             output.close();
