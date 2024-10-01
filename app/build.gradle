@@ -19,25 +19,37 @@ android {
             }
         }
     }
-    flavorDimensions "type"
+    flavorDimensions "version"
     productFlavors {
-        unlimited {
+        paid {
+            dimension "version"
+            applicationIdSuffix ".paid"
+            versionNameSuffix " Paid"
         }
         free {
+            dimension "version"
+            applicationIdSuffix ".free"
+            versionNameSuffix " Free"
         }
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+        }
         release {
-            minifyEnabled false
+            debuggable false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     namespace 'creationsahead.speedwordsearch'
+    buildToolsVersion '33.0.2'
 }
 
 dependencies {

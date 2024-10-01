@@ -4,7 +4,7 @@
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-renamesourcefileattribute SourceFile
 
 # Skip useless warnings
 -dontwarn sun.**
@@ -12,14 +12,17 @@
 -dontnote org.apache.http.**
 -dontnote android.net.**
 #-ignorewarnings
--dontoptimize
--dontshrink
-
-# Very important line below
--dontskipnonpubliclibraryclassmembers
+#-dontoptimize
+#-dontshrink
 
 # Keep annotations
 -keepattributes *Annotation*
+
+# Models
+-keep class creationsahead.speedwordsearch.mod.** {
+    <fields>;
+    <init>();
+}
 
 # Needed for eventbus
 -keepclassmembers class ** {
@@ -27,13 +30,6 @@
 }
 -keep enum org.greenrobot.eventbus.ThreadMode { *; }
 
-# Add any project specific keep options here:
+# External libs
 -keep class com.nex3z.**
--keepclasseswithmembernames class com.esotericsoftware.** {
-    <fields>;
-    <methods>;
-}
--keepclasseswithmembernames class creationsahead.speedwordsearch.mod.** {
-    <fields>;
-    <methods>;
-}
+-keep class com.esotericsoftware.** { *; }
