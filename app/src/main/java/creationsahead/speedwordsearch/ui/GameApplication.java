@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.esotericsoftware.kryo.Kryo;
@@ -25,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.zip.GZIPInputStream;
 import org.greenrobot.eventbus.EventBus;
 
@@ -38,6 +41,14 @@ public class GameApplication extends Application implements StorageInterface {
 
     @Override
     public void onCreate() {
+        if (BuildConfig.FLAVOR == "Paid") {
+            Date todayDate = new Date();
+            if (todayDate.after(new GregorianCalendar(2023, 12, 31).getTime())) {
+                Toast.makeText(this,
+                        "Trial period has expired", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
         super.onCreate();
         serializer.register(Level.class, 15);
         EventBus.builder().addIndex(new EventBusIndex())

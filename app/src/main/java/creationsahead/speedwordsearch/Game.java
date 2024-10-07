@@ -52,8 +52,11 @@ public class Game {
      * Periodic ticker for game to handle events
      */
     public void onTick(int tickCount) {
-        if (tickCount % (config.difficulty + 5) == 4) {
+        if (tickCount % (config.difficulty/10 + 3) == 2) {
             clearPlaceholders(1);
+        }
+        if (tickCount % (10 - config.difficulty/10) == 3) {
+            incrementallyAddWord(1);
         }
     }
 
