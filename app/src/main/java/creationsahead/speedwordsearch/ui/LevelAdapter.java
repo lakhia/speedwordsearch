@@ -3,14 +3,13 @@ package creationsahead.speedwordsearch.ui;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.BitmapDrawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import java.util.List;
 import creationsahead.speedwordsearch.R;
@@ -22,8 +21,11 @@ import creationsahead.speedwordsearch.utils.Utils;
  */
 public class LevelAdapter extends ArrayAdapter<Level> {
 
+    private final int color;
+
     public LevelAdapter(@NonNull Context context, int resource, @NonNull List<Level> levels) {
         super(context, resource, levels);
+        color = context.getResources().getColor(R.color.pinkAccent);
     }
 
     /// Inflates a level with text, buttons and stars
@@ -41,10 +43,13 @@ public class LevelAdapter extends ArrayAdapter<Level> {
         TextView textView = convertView.findViewById(R.id.time);
         textView.setText(Utils.formatTime(level.timeUsed));
 
-        RatingBar bar = convertView.findViewById(R.id.ratingBar);
-        bar.setRating(level.stars);
-        LayerDrawable stars = (LayerDrawable) bar.getProgressDrawable();
-        stars.getDrawable(0).setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_IN);
+        SmartRatingBar bar = convertView.findViewById(R.id.ratingBar);
+        bar.setRatingNum(level.stars);
+        BitmapDrawable stars = (BitmapDrawable) bar.getRatingDrawable();
+        stars.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        stars = (BitmapDrawable) bar.getRatingBackgroundDrawable();
+        stars.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_IN);
+
         return convertView;
     }
 }
