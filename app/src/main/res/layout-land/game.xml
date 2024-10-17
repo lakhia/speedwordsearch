@@ -18,12 +18,12 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <creationsahead.speedwordsearch.ui.ScoreBar
+            <com.creationsahead.speedwordsearch.ui.ScoreBar
                 android:id="@+id/scoreBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <creationsahead.speedwordsearch.ui.WordListWidget
+            <com.creationsahead.speedwordsearch.ui.WordListWidget
                 android:id="@+id/wordList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
                 app:layout_constraintStart_toStartOf="parent" />
         </LinearLayout>
 
-        <creationsahead.speedwordsearch.ui.GridWidget
+        <com.creationsahead.speedwordsearch.ui.GridWidget
             android:id="@+id/grid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
 
     </LinearLayout>
 
-    <creationsahead.speedwordsearch.ui.TouchHandler
+    <com.creationsahead.speedwordsearch.ui.TouchHandler
         android:id="@+id/touchOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

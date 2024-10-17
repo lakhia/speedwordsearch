@@ -1,13 +1,15 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "creationsahead.com.speedwordsearch"
+        applicationId "com.creationsahead.speedwordsearch"
         minSdk 21
         targetSdk 33
         versionCode 1
@@ -15,7 +17,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [ eventBusIndex : 'creationsahead.speedwordsearch.EventBusIndex' ]
+                arguments = [ eventBusIndex : 'com.creationsahead.speedwordsearch.EventBusIndex' ]
             }
         }
     }
@@ -23,19 +25,16 @@ android {
     productFlavors {
         paid {
             dimension "version"
-            applicationIdSuffix ".paid"
             versionNameSuffix " Paid"
         }
         free {
             dimension "version"
-            applicationIdSuffix ".free"
             versionNameSuffix " Free"
         }
     }
 
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
         }
         release {
             debuggable false
@@ -48,7 +47,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-    namespace 'creationsahead.speedwordsearch'
+    namespace 'com.creationsahead.speedwordsearch'
     buildToolsVersion '33.0.2'
 }
 
@@ -59,6 +58,12 @@ dependencies {
     implementation 'com.nex3z:flow-layout:1.3.3'
     implementation 'com.esotericsoftware:kryo:4.0.2'
     implementation 'org.greenrobot:eventbus:3.3.1'
+
+    // Import for Firebase
+    implementation platform('com.google.firebase:firebase-bom:31.5.0')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
+
     annotationProcessor "org.greenrobot:eventbus-annotation-processor:3.3.1"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
