@@ -1,7 +1,6 @@
 package com.creationsahead.speedwordsearch;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import org.greenrobot.eventbus.EventBus;
 
@@ -104,12 +103,10 @@ public class Grid {
     /**
      * Find an empty cell or placeholder cells based on randomness
      * @param cellCallback called for each cell to identify if it meets criteria
-     * @param callback called for each valid position
-     * @return Position that indicates cell coordinates
+     * @param positionCallback called for each valid position
      */
-    @Nullable
-    public Position findCells(@NonNull CellCallback cellCallback,
-                              @Nullable PositionCallback callback) {
+    public void findCells(@NonNull CellCallback cellCallback,
+                          @NonNull PositionCallback positionCallback) {
         SequenceIterator<Integer> rows = mSequencer.getXCoordinateSequence();
         while (rows.hasNext()) {
             int x = rows.next();
@@ -118,18 +115,14 @@ public class Grid {
                 int y = cols.next();
                 if (cellCallback.callback(mGrid[x][y])) {
                     Position newPos = new Position(x, y);
-                    if (callback != null) {
-                        if (callback.onUpdate(newPos)) {
-                            return null;
-                        }
-                    } else {
-                        return newPos;
+                    if (positionCallback.onUpdate(newPos)) {
+                        return;
                     }
                 }
             }
         }
-        return null;
     }
+
 
     /**
      * Find a selection that starts with an unused cell and is of size length
@@ -150,34 +143,6 @@ public class Grid {
                     }
                     return false;
                 });
-    }
-
-    /**
-     * Find a random selection of size length
-     * @param length length of potential word
-     * @param callback called for each assignment that is possible
-     */
-    public void findRandomSelection(final int length, @NonNull final SelectionCallback callback) {
-        SequenceIterator<Integer> rows = mSequencer.getXCoordinateSequence();
-        while (rows.hasNext()) {
-            int x = rows.next();
-            SequenceIterator<Integer> cols = mSequencer.getYCoordinateSequence();
-            while (cols.hasNext()) {
-                int y = cols.next();
-                Position position = new Position(x, y);
-                SequenceIterator<Direction> dirs = mSequencer.getDirectionSequence();
-                while (dirs.hasNext()) {
-                    Direction dir  = dirs.next();
-                    // If position can accommodate length, process it
-                    if (Selection.inBounds(position, dir, sizeX, sizeY, length)) {
-                        Selection selection = new Selection(position, dir, length);
-                        if (callback.onUpdate(selection, findContents(selection, true))) {
-                            return;
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /**

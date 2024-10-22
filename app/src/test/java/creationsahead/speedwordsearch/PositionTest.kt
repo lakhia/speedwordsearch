@@ -2,6 +2,7 @@ package creationsahead.speedwordsearch
 
 import org.junit.Assert.*
 import org.junit.Test
+import com.creationsahead.speedwordsearch.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -37,47 +38,5 @@ class PositionTest {
         assertFalse(pos.inBounds(3, 3))
         assertFalse(pos.inBounds(3, 4))
         assertFalse(pos.inBounds(4, 3))
-    }
-
-    @Test
-    fun test_04_distance() {
-        var pos = Position(3, 3)
-        assertEquals(0, pos.getDistanceToBoundary(Direction.EAST, 3, 3))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.EAST, 6, 6))
-        assertEquals(0, pos.getDistanceToBoundary(Direction.EAST, 3, 6))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.EAST, 6, 3))
-
-        pos = Position(3, 3)
-        assertEquals(3, pos.getDistanceToBoundary(Direction.WEST, 3, 3))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.WEST, 6, 6))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.WEST, 3, 6))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.WEST, 6, 3))
-
-        pos = Position(3, 3)
-        assertEquals(0, pos.getDistanceToBoundary(Direction.SOUTH, 3, 3))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.SOUTH, 6, 6))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.SOUTH, 3, 6))
-        assertEquals(0, pos.getDistanceToBoundary(Direction.SOUTH, 6, 3))
-
-        pos = Position(3, 3)
-        assertEquals(3, pos.getDistanceToBoundary(Direction.NORTH, 3, 3))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.NORTH, 6, 6))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.NORTH, 3, 6))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.NORTH, 6, 3))
-
-        pos = Position(3, 3)
-        assertEquals(0, pos.getDistanceToBoundary(Direction.SOUTH_EAST, 3, 3))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.SOUTH_EAST, 6, 6))
-        assertEquals(0, pos.getDistanceToBoundary(Direction.SOUTH_EAST, 3, 6))
-        assertEquals(0, pos.getDistanceToBoundary(Direction.SOUTH_EAST, 6, 3))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.SOUTH_EAST, 6, 8))
-        assertEquals(3, pos.getDistanceToBoundary(Direction.SOUTH_EAST, 8, 6))
-
-        pos = Position(3, 3)
-        assertEquals(3, pos.getDistanceToBoundary(Direction.NORTH_WEST, 3, 3))
-        pos = Position(2, 3)
-        assertEquals(2, pos.getDistanceToBoundary(Direction.NORTH_WEST, 3, 3))
-        pos = Position(3, 2)
-        assertEquals(2, pos.getDistanceToBoundary(Direction.NORTH_WEST, 3, 3))
     }
 }

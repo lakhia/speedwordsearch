@@ -1,7 +1,6 @@
 package creationsahead.speedwordsearch
 
 import android.graphics.Rect
-import creationsahead.speedwordsearch.mod.Level
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -10,6 +9,8 @@ import org.junit.Before
 import org.junit.Test
 import java.io.Reader
 import java.io.StringReader
+import com.creationsahead.speedwordsearch.*
+import com.creationsahead.speedwordsearch.mod.Level
 
 /**
  * Example local unit test, which will execute on the development machine (host).

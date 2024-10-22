@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 
 /**
  * Trie to store dictionary words for quick searching
- *
  * Loosely based on:
  * http://www.programcreek.com/2014/05/leetcode-implement-trie-prefix-tree-java/
  */
@@ -46,20 +45,18 @@ public class Trie {
     }
 
     // Returns string that searches for string with wildcards
-    @Nullable
-    public String searchWithWildcards(@NonNull String s, @NonNull RandomSequencer sequencer,
-                                      ValidateCallback callback) {
+    public void searchWithWildcards(@NonNull String s, @NonNull RandomSequencer sequencer,
+                                    @NonNull ValidateCallback callback) {
         try {
-            return searchWithWildcards(root, s, "", sequencer, callback);
-        } catch (IllegalMonitorStateException ex) {
-            return ex.getMessage();
+            searchWithWildcards(root, s, "", sequencer, callback);
+        } catch (RuntimeException ignored) {
         }
     }
 
     @Nullable
     private String searchWithWildcards(@NonNull TrieNode p, @NonNull String query,
                                        String result, @NonNull RandomSequencer sequencer,
-                                       @Nullable ValidateCallback callback) {
+                                       @NonNull ValidateCallback callback) {
         // Base case
         if (query.isEmpty()) {
             return p.isEnd ? result : null;
@@ -88,15 +85,10 @@ public class Trie {
                         continue;
                     }
                 }
-                if (callback != null) {
-                    if (!callback.onValid(subString)) {
-                        continue;
-                    } else {
-                        // Hack to unwind stack
-                        throw new IllegalMonitorStateException(subString);
-                    }
+                if (callback.onValid(subString)) {
+                    // Hack to unwind stack
+                    throw new RuntimeException(subString);
                 }
-                return subString;
             }
         } while (iterator != null && iterator.hasNext());
 

@@ -2,6 +2,7 @@ package creationsahead.speedwordsearch
 
 import org.junit.Assert.*
 import org.junit.Test
+import com.creationsahead.speedwordsearch.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -63,8 +64,6 @@ class SelectionTest {
 
         assertEquals(selection, flipped)
         assertNotEquals(selection, notFlipped)
-        assertEquals(selection, flipped.flipped())
-        assertNotEquals(selection, notFlipped.flipped())
     }
 
     @Test

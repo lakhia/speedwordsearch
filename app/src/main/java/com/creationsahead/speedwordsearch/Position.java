@@ -21,21 +21,6 @@ public class Position {
         return (x >= 0 && y >= 0 && x < maxX && y < maxY);
     }
 
-    public int getDistanceToBoundary(@NonNull Direction direction, int maxX, int maxY) {
-        int xDist = maxX, yDist = maxY;
-        if (direction.x == 1) {
-            xDist = maxX - x;
-        } else if (direction.x == -1) {
-            xDist = x;
-        }
-        if (direction.y == 1) {
-            yDist = maxY - y;
-        } else if (direction.y == -1) {
-            yDist = y;
-        }
-        return Math.min(xDist, yDist);
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Position) {

@@ -10,6 +10,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
+import com.creationsahead.speedwordsearch.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).

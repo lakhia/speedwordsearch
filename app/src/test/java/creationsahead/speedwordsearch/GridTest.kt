@@ -2,6 +2,7 @@ package creationsahead.speedwordsearch
 
 import org.junit.Assert.*
 import org.junit.Test
+import com.creationsahead.speedwordsearch.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -110,20 +111,32 @@ class GridTest {
         val grid = fillGrid()
 
         // No vacant cells
-        var pos = grid.findCells({ obj: Cell -> obj.isUnused }, null)
-        assertEquals(null, pos)
+        grid.findCells(
+            { obj: Cell -> obj.isUnused },
+            { pos: Position ->
+                assertNull(pos)
+                return@findCells true
+            })
 
         // Remove two words that do not free any cells
         grid.removeWord(Answer(Selection(3, 0, Direction.SOUTH, 4), "tart"))
-        pos = grid.findCells({ obj: Cell -> obj.isUnused }, null)
-        assertEquals(null, pos)
+        grid.findCells(
+            { obj: Cell -> obj.isUnused },
+            { pos: Position ->
+                assertNull(pos)
+                return@findCells true
+            })
 
         // Remove one word that makes a few cells unused
         grid.removeWord(Answer(Selection(0, 1, Direction.EAST, 4), "saga"))
-        pos = grid.findCells({ obj: Cell -> obj.isUnused }, null)
-        assertNotNull(pos)
-        assertEquals(1, pos?.x)
-        assertEquals(1, pos?.y)
+        grid.findCells(
+            { obj: Cell -> obj.isUnused },
+            { pos: Position ->
+                assertNotNull(pos)
+                assertEquals(1, pos.x)
+                assertEquals(1, pos.y)
+                return@findCells true
+        })
 
         // Test cell
         var cell = grid.getCell(1, 1)

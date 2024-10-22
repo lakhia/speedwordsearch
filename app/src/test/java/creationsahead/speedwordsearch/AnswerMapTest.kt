@@ -2,6 +2,7 @@ package creationsahead.speedwordsearch
 
 import org.junit.Assert.*
 import org.junit.Test
+import com.creationsahead.speedwordsearch.*
 
 class AnswerMapTest {
     @Test

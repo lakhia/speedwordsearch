@@ -2,6 +2,7 @@ package creationsahead.speedwordsearch
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import com.creationsahead.speedwordsearch.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -21,28 +22,47 @@ class TrieTest {
         val seq = RandomSequencer(config, 1)
 
         // No wildcards
-        var word = dictionary.searchWithWildcards("ABAC", seq, null)
-        assertEquals("ABAC", word)
+        dictionary.searchWithWildcards("ABAC", seq) { word: String ->
+            assertEquals("ABAC", word)
+            return@searchWithWildcards true
+        }
 
         // 1 wildcard
-        word = dictionary.searchWithWildcards("AB.C", seq, null)
-        assertEquals("ABAC", word)
-        word = dictionary.searchWithWildcards(".BAC", seq, null)
-        assertEquals("BBAC", word)
-        word = dictionary.searchWithWildcards(".BAC", seq, null)
-        assertEquals("ABAC", word)
+        dictionary.searchWithWildcards("AB.C", seq) { word: String ->
+            assertEquals("ABAC", word)
+            return@searchWithWildcards true
+        }
+
+        dictionary.searchWithWildcards(".BAC", seq) { word: String ->
+            assertEquals("BBAC", word)
+            return@searchWithWildcards true
+        }
+        dictionary.searchWithWildcards(".BAC", seq) { word: String ->
+            assertEquals("ABAC", word)
+            return@searchWithWildcards true
+        }
 
         // Two wildcards
-        word = dictionary.searchWithWildcards("BB..", RandomSequencer(config, 3), null)
-        assertEquals("BBAC", word)
-        word = dictionary.searchWithWildcards("..AC", RandomSequencer(config, 10), null)
-        assertEquals("ABAC", word)
-        word = dictionary.searchWithWildcards("..AC", RandomSequencer(config, 30), null)
-        assertEquals("BBAC", word)
-        word = dictionary.searchWithWildcards("..AC", RandomSequencer(config, 100), null)
-        assertEquals("ABAC", word)
-        word = dictionary.searchWithWildcards("..AC", RandomSequencer(config, 300), null)
-        assertEquals("BBAC", word)
+        dictionary.searchWithWildcards("BB..", RandomSequencer(config, 3)) { word: String ->
+            assertEquals("BBAC", word)
+            return@searchWithWildcards true
+        }
+        dictionary.searchWithWildcards("..AC", RandomSequencer(config, 10)) { word: String ->
+            assertEquals("ABAC", word)
+            return@searchWithWildcards true
+        }
+        dictionary.searchWithWildcards("..AC", RandomSequencer(config, 30)) { word: String ->
+            assertEquals("BBAC", word)
+            return@searchWithWildcards true
+        }
+        dictionary.searchWithWildcards("..AC", RandomSequencer(config, 100)) { word: String ->
+            assertEquals("ABAC", word)
+            return@searchWithWildcards true
+        }
+        dictionary.searchWithWildcards("..AC", RandomSequencer(config, 300)) { word: String ->
+            assertEquals("BBAC", word)
+            return@searchWithWildcards true
+        }
     }
 
     @Test
@@ -57,20 +77,34 @@ class TrieTest {
 
         val seq = RandomSequencer(Config(1, 1, 0), 1)
 
-        var word = dictionary.searchWithWildcards("C", seq, null)
-        assertEquals(null, word)
-        word = dictionary.searchWithWildcards("A", seq, null)
-        assertEquals("A", word)
-        word = dictionary.searchWithWildcards("AB", seq, null)
-        assertEquals("AB", word)
-        word = dictionary.searchWithWildcards("ABA", seq, null)
-        assertEquals("ABA", word)
-        word = dictionary.searchWithWildcards("ABAC", seq, null)
-        assertEquals("ABAC", word)
-        word = dictionary.searchWithWildcards("ABACA", seq, null)
-        assertEquals("ABACA", word)
-        word = dictionary.searchWithWildcards("ABACAB", seq, null)
-        assertEquals("ABACAB", word)
+        dictionary.searchWithWildcards("C", seq) { word: String ->
+            assertEquals(null, word)
+            return@searchWithWildcards true
+        }
+        dictionary.searchWithWildcards("A", seq) { word: String ->
+            assertEquals("A", word)
+            return@searchWithWildcards true
+        }
+        dictionary.searchWithWildcards("AB", seq) { word: String ->
+            assertEquals("AB", word)
+            return@searchWithWildcards true
+        }
+        dictionary.searchWithWildcards("ABA", seq) { word: String ->
+            assertEquals("ABA", word)
+            return@searchWithWildcards true
+        }
+        dictionary.searchWithWildcards("ABAC", seq) { word: String ->
+            assertEquals("ABAC", word)
+            return@searchWithWildcards true
+        }
+        dictionary.searchWithWildcards("ABACA", seq) { word: String ->
+            assertEquals("ABACA", word)
+            return@searchWithWildcards true
+        }
+        dictionary.searchWithWildcards("ABACAB", seq) { word: String ->
+            assertEquals("ABACAB", word)
+            return@searchWithWildcards true
+        }
     }
 
     @Test
@@ -87,38 +121,35 @@ class TrieTest {
         val seq = RandomSequencer(Config(1, 1, 0), 1)
 
         var counter = 0
-        var word = dictionary.searchWithWildcards("....", seq) { counter++; false; }
-        assertEquals(null, word)
+        dictionary.searchWithWildcards("....", seq) { counter++; false; }
         assertEquals(8, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards(".G..", seq) { counter++; false; }
-        assertEquals(null, word)
+        dictionary.searchWithWildcards(".G..", seq) { counter++; false; }
         assertEquals(3, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("A...", seq) { counter++; false; }
-        assertEquals(null, word)
+        dictionary.searchWithWildcards("A...", seq) { counter++; false; }
         assertEquals(6, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("A...", seq) { counter++; counter == 3; }
-        assertEquals("ADDA", word)
+        dictionary.searchWithWildcards("A...", seq) { word: String ->
+            counter++; counter == 3 && word == "ADDA"; }
         assertEquals(3, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("...A", seq) { counter++; counter == 4; }
-        assertEquals("AFFA", word)
+        dictionary.searchWithWildcards("...A", seq) { word: String ->
+            counter++; counter == 4 && word == "AFFA"; }
         assertEquals(4, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards(".BB.", seq) { counter++; true; }
-        assertEquals("ABBA", word)
+        dictionary.searchWithWildcards(".BB.", seq) { word: String ->
+            counter++; word == "ABBA"; }
         assertEquals(1, counter)
 
         counter = 0
-        word = dictionary.searchWithWildcards("C...", seq) { counter++; true; }
-        assertEquals("CGGA", word)
+        dictionary.searchWithWildcards("C...", seq) { word: String ->
+            counter++; word == "CGGA"; }
         assertEquals(1, counter)
     }
 
@@ -135,26 +166,23 @@ class TrieTest {
 
         var counter = 0
         val buffer = StringBuffer()
-        var word = dictionary.searchWithWildcards("......", seq)
+        dictionary.searchWithWildcards("......", seq)
         { buffer.append(it); counter++; false; }
-        assertEquals(null, word)
         assertEquals(6, counter)
         assertEquals("ABCDEFABCDEABCDABCABA", buffer.toString())
 
 
         counter = 0
         buffer.delete(0, buffer.length)
-        word = dictionary.searchWithWildcards("A.....", seq)
+        dictionary.searchWithWildcards("A.....", seq)
         { buffer.append(it); counter++; false; }
-        assertEquals(null, word)
         assertEquals(6, counter)
         assertEquals("ABCDEFABCDEABCDABCABA", buffer.toString())
 
         counter = 0
         buffer.delete(0, buffer.length)
-        word = dictionary.searchWithWildcards(".B....", seq)
+        dictionary.searchWithWildcards(".B....", seq)
         { buffer.append(it); counter++; false; }
-        assertEquals(null, word)
         assertEquals(6, counter)
         assertEquals("ABCDEFABCDEABCDABCABA", buffer.toString())
     }

@@ -74,18 +74,6 @@ public class Selection {
         return new Selection(startX, startY, Direction.find(diffX, diffY), len+1);
     }
 
-    /**
-     * Change the selection so that start and end are flipped
-     * @return New flipped selection
-     */
-    @NonNull
-    public Selection flipped() {
-        Direction newDir = direction.negate();
-        return new Selection(position.x + direction.x * (length-1),
-                             position.y + direction.y * (length-1),
-                             newDir, length);
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Selection) {

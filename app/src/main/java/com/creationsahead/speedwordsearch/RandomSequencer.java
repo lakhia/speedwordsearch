@@ -24,7 +24,7 @@ public class RandomSequencer {
     @NonNull private final Random coordinateYRandomGen;
     @NonNull private final Random directionRandomGen;
 
-    RandomSequencer(@NonNull Config config, int seed) {
+    public RandomSequencer(@NonNull Config config, int seed) {
         // Initialize all the random vars
         letterRandomGen = new Random(seed / 3);
         directionRandomGen = new Random(seed / 5);
