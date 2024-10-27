@@ -35,7 +35,7 @@ public class TouchHandler extends View implements View.OnTouchListener {
 
     public TouchHandler(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        paint.setColor(getResources().getColor(R.color.bright_yellow));
+        paint.setColor(getResources().getColor(R.color.bright_yellow_alpha));
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeCap(Paint.Cap.ROUND);
     }
