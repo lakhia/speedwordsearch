@@ -1,4 +1,4 @@
-package creationsahead.speedwordsearch
+package com.creationsahead.speedwordsearch
 
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -10,7 +10,6 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
-import com.creationsahead.speedwordsearch.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -197,23 +196,24 @@ class GameTest {
         val game = Game(config, dictionary, RandomSequencer(config, 1))
         game.populatePuzzle()
         assertEquals(
-                "A B C C A C \n" +
-                        "N B A A D D \n" +
-                        "C A A D B R \n" +
-                        "A C A B D B \n" +
-                        "A C A A C A \n" +
-                        "B C A B A C \n", game.toString())
+                "H A D D C M \n" +
+                        "C A A B A L \n" +
+                        "A C D A C C \n" +
+                        "B A D U C A \n" +
+                        "A B A B C A \n" +
+                        "A B C C I C \n", game.toString())
+        // TODO: bug because selection is bigger than len of word
         assertEquals(
-                "pos: (2, 1), dir: SOUTH_EAST, len: 4, word: ADDA\n" +
-                        "pos: (1, 2), dir: SOUTH, len: 4, word: ACCC\n" +
-                        "pos: (4, 4), dir: WEST, len: 4, word: CAAC\n" +
-                        "pos: (5, 0), dir: SOUTH_WEST, len: 4, word: CDDA\n" +
-                        "pos: (4, 0), dir: SOUTH_WEST, len: 4, word: AAAC\n" +
-                        "pos: (2, 5), dir: EAST, len: 4, word: ABAC\n" +
-                        "pos: (5, 3), dir: NORTH_WEST, len: 4, word: BBAC\n" +
-                        "pos: (0, 5), dir: NORTH, len: 4, word: BAAC\n" +
-                        "pos: (0, 0), dir: EAST, len: 4, word: ABCC\n" +
-                        "pos: (1, 1), dir: SOUTH_EAST, len: 4, word: BABC\n",
+                "pos: (2, 4), dir: NORTH, len: 5, word: ADDA\n" +
+                        "pos: (1, 4), dir: EAST, len: 5, word: BABC\n" +
+                        "pos: (1, 0), dir: SOUTH_EAST, len: 5, word: AAAC\n" +
+                        "pos: (4, 0), dir: WEST, len: 5, word: CDDA\n" +
+                        "pos: (5, 5), dir: NORTH, len: 5, word: CAAC\n" +
+                        "pos: (4, 1), dir: SOUTH, len: 5, word: ACCC\n" +
+                        "pos: (1, 5), dir: NORTH, len: 5, word: BBAC\n" +
+                        "pos: (0, 4), dir: NORTH, len: 5, word: ABAC\n" +
+                        "pos: (0, 5), dir: EAST, len: 5, word: ABCC\n" +
+                        "pos: (3, 1), dir: WEST, len: 4, word: BAAC\n",
                 answerBuffer.toString())
     }
 

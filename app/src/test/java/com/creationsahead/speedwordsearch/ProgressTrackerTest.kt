@@ -1,4 +1,4 @@
-package creationsahead.speedwordsearch
+package com.creationsahead.speedwordsearch
 
 import android.graphics.Rect
 import org.junit.After
@@ -9,7 +9,6 @@ import org.junit.Before
 import org.junit.Test
 import java.io.Reader
 import java.io.StringReader
-import com.creationsahead.speedwordsearch.*
 import com.creationsahead.speedwordsearch.mod.Level
 
 /**

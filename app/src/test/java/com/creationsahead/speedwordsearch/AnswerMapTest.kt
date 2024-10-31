@@ -1,8 +1,7 @@
-package creationsahead.speedwordsearch
+package com.creationsahead.speedwordsearch
 
 import org.junit.Assert.*
 import org.junit.Test
-import com.creationsahead.speedwordsearch.*
 
 class AnswerMapTest {
     @Test
@@ -16,6 +15,17 @@ class AnswerMapTest {
         assertFalse(answerMap.validate("testing"))
         assertFalse(answerMap.validate("tes"))
         assertTrue(answerMap.validate("tee"))
+    }
+
+    @Test
+    fun test_validate_with_hidden() {
+        val selection = Selection(0, 0, Direction.EAST, 4)
+        val answerMap = AnswerMap()
+        answerMap.addHiddenAnswer(Answer(selection, "generic"))
+        assertFalse(answerMap.validate("generic"))
+        assertFalse(answerMap.validate("gene"))
+        assertFalse(answerMap.validate("generics"))
+        assertTrue(answerMap.validate("test"))
     }
 
     @Test

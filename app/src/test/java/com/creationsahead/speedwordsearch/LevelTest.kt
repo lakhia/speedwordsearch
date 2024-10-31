@@ -1,4 +1,4 @@
-package creationsahead.speedwordsearch
+package com.creationsahead.speedwordsearch
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

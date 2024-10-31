@@ -83,6 +83,7 @@ public class ProgressTracker {
         currentLevel = level;
         currentLevel.totalScore = 0;
         currentLevel.score = 0;
+        currentLevel.timeUsed = 0;
         config = new Config(currentLevel.number);
         game = new Game(config, WordList.dictionary,
                 new RandomSequencer(config, (int) System.currentTimeMillis()));

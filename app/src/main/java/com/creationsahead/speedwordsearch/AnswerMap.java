@@ -42,8 +42,13 @@ public class AnswerMap {
                 return false;
             }
         }
-        return lastHiddenAnswer == null || !lastHiddenAnswer.word.contains(word) ||
-                word.contains(lastHiddenAnswer.word);
+        if (lastHiddenAnswer == null) {
+            return true;
+        }
+        if (lastHiddenAnswer.word.contains(word)) {
+            return false;
+        }
+        return !word.contains(lastHiddenAnswer.word);
     }
 
     public void add(@NonNull Answer answer) {

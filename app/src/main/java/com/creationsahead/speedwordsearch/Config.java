@@ -35,4 +35,13 @@ public class Config {
             }
         }
     }
+
+    public int getFreqBasedOnSizeDifficulty(boolean flipped) {
+        int letterCount = sizeX * sizeY;
+        if (flipped) {
+            return (int) (Math.sqrt(100 - difficulty) * letterCount / 10);
+        } else {
+            return (int) (Math.sqrt(difficulty + 1) * letterCount / 10);
+        }
+    }
 }

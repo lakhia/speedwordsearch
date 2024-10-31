@@ -43,25 +43,16 @@ public enum Direction {
      */
     @NonNull
     public static Direction find(int x, int y) {
-        switch (x*10 + y) {
-            case 1:
-                return SOUTH;
-            case -1:
-                return NORTH;
-            case 10:
-                return EAST;
-            case -10:
-                return WEST;
-            case -11:
-                return NORTH_WEST;
-            case 11:
-                return SOUTH_EAST;
-            case -9:
-                return SOUTH_WEST;
-            case 9:
-                return NORTH_EAST;
-            default:
-                return NONE;
-        }
+        return switch (x * 10 + y) {
+            case 1 -> SOUTH;
+            case -1 -> NORTH;
+            case 10 -> EAST;
+            case -10 -> WEST;
+            case -11 -> NORTH_WEST;
+            case 11 -> SOUTH_EAST;
+            case -9 -> SOUTH_WEST;
+            case 9 -> NORTH_EAST;
+            default -> NONE;
+        };
     }
 }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import org.greenrobot.eventbus.EventBus;
+import static com.creationsahead.speedwordsearch.mod.Level.TIME_LEFT;
 
 /**
  * A game manages the puzzle grid
@@ -14,6 +15,8 @@ public class Game {
     @NonNull final AnswerMap answerMap;
     @NonNull private final RandomSequencer sequencer;
     @NonNull private final Trie dictionary;
+    @NonNull private final SequenceIterator<Integer> clearEvents;
+    @NonNull private final SequenceIterator<Integer> addEvents;
     private int letterCount;
 
     /**
@@ -27,6 +30,8 @@ public class Game {
         this.config = config;
         this.sequencer = sequencer;
         this.dictionary = dictionary;
+        clearEvents = sequencer.getEventSequence(config.getFreqBasedOnSizeDifficulty(true), TIME_LEFT);
+        addEvents = sequencer.getEventSequence(config.getFreqBasedOnSizeDifficulty(false), TIME_LEFT);
         EventBus.getDefault().post(this);
     }
 
@@ -51,13 +56,9 @@ public class Game {
     /**
      * Periodic ticker for game to handle events
      */
-    public void onTick(int tickCount) {
-        if (tickCount % (config.difficulty/10 + 3) == 2) {
-            clearPlaceholders(1);
-        }
-        if (tickCount % (10 - config.difficulty/10) == 3) {
-            incrementallyAddWord(1);
-        }
+    public void onTick(int ignoredTickCount) {
+        clearPlaceholders(clearEvents.next());
+        incrementallyAddWord(addEvents.next());
     }
 
     /**
@@ -80,16 +81,18 @@ public class Game {
 
     /**
      * Clear placeholder cells
-     * @param count clear count, must be at least 1
+     * @param count clear count
      */
     public void clearPlaceholders(int count) {
+        if (count < 1)
+            return;
         final int[] letterCount = { count };
         grid.findCells(Cell::isNotEmpty,
                 (position) -> {
                     if (grid.clearLetter(position)) {
                         --letterCount[0];
                     }
-                    return letterCount[0] == 0;
+                    return letterCount[0] < 1;
                 });
     }
 

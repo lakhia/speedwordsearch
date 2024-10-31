@@ -1,0 +1,23 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/sound">
+
+        <SeekBarPreference
+            app:min="0"
+            app:seekBarIncrement="1"
+            app:key="music"
+            app:title="@string/music"
+            app:useSimpleSummaryProvider="true" />
+
+        <SeekBarPreference
+            app:min="0"
+            app:seekBarIncrement="1"
+            app:key="special_effects"
+            app:title="@string/special_effects"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
