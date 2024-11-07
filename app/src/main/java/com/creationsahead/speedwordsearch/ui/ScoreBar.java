@@ -79,19 +79,19 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
             // Last word guessed, trigger event after animation is finished
             anim.addListener(new Animator.AnimatorListener() {
                 @Override
-                public void onAnimationStart(Animator animator) {}
+                public void onAnimationStart(@NonNull Animator animator) {}
 
                 @Override
-                public void onAnimationEnd(Animator animator) {
+                public void onAnimationEnd(@NonNull Animator animator) {
                     level.won = true;
                     EventBus.getDefault().post(level);
                 }
 
                 @Override
-                public void onAnimationCancel(Animator animator) {}
+                public void onAnimationCancel(@NonNull Animator animator) {}
 
                 @Override
-                public void onAnimationRepeat(Animator animator) {}
+                public void onAnimationRepeat(@NonNull Animator animator) {}
             });
         }
         anim.start();

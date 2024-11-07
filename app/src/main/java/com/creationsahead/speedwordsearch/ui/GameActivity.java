@@ -1,12 +1,8 @@
 package com.creationsahead.speedwordsearch.ui;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.creationsahead.speedwordsearch.Game;
@@ -33,15 +29,11 @@ public class GameActivity extends Activity implements TickerCallback {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ticker = new Ticker(this, this, TIME_LEFT);
         game = ProgressTracker.getInstance().getGame();
+        ticker = new Ticker(this, this, TIME_LEFT);
         sound_manager = new SoundManager(this);
-
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.game, null);
-        scoreBar = view.findViewById(R.id.scoreBar);
-        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        addContentView(view, params);
+        setContentView(R.layout.game);
+        scoreBar = findViewById(R.id.scoreBar);
     }
 
     @Override

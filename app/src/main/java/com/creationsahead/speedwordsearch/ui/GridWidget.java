@@ -58,8 +58,8 @@ public class GridWidget extends TableLayout {
                 Cell cell = game.getCell(i, j);
                 textView.setText(cell.toString());
                 textView.setTypeface(typeface);
-                textView.setTag(R.string.row, i);
-                textView.setTag(R.string.column, j);
+                textView.setTag(R.string.column, i);
+                textView.setTag(R.string.row, j);
                 row.addView(textView);
                 cell.tag = textView;
             }

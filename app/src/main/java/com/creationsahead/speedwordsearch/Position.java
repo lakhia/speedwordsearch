@@ -23,8 +23,7 @@ public class Position {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Position) {
-            Position that = (Position) obj;
+        if (obj instanceof Position that) {
             return (that.x == x && that.y == y);
         }
         return false;

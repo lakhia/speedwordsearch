@@ -76,8 +76,7 @@ public class Selection {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Selection) {
-            Selection that = (Selection) obj;
+        if (obj instanceof Selection that) {
             if (that.length != length) {
                 return false;
             }

@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.creationsahead.speedwordsearch.R;
 
@@ -41,7 +42,7 @@ public class TouchHandler extends View implements View.OnTouchListener {
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
+    public void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         if (rawX1 != -1 || rawX2 != -1) {
             canvas.drawLine(rawX1, rawY1, rawX2, rawY2, paint);
@@ -73,8 +74,8 @@ public class TouchHandler extends View implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        int currentX = (int) view.getTag(R.string.row);
-        int currentY = (int) view.getTag(R.string.column);
+        int currentX = (int) view.getTag(R.string.column);
+        int currentY = (int) view.getTag(R.string.row);
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             lastIndexX = currentX;
@@ -124,13 +125,13 @@ public class TouchHandler extends View implements View.OnTouchListener {
                 } else {
                     // Two single clicks determine a selection, clear selection
                     lastSelection.setBackgroundResource(R.drawable.cell);
-                    lastIndexX = (int) lastSelection.getTag(R.string.row);
-                    lastIndexY = (int) lastSelection.getTag(R.string.column);
+                    lastIndexX = (int) lastSelection.getTag(R.string.column);
+                    lastIndexY = (int) lastSelection.getTag(R.string.row);
                     lastSelection = null;
                 }
             }
-            currentX = (int) textView.getTag(R.string.row);
-            currentY = (int) textView.getTag(R.string.column);
+            currentX = (int) textView.getTag(R.string.column);
+            currentY = (int) textView.getTag(R.string.row);
             gridWidget.onGuess(lastIndexX, lastIndexY, currentX, currentY);
             return true;
         }

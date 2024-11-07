@@ -20,7 +20,7 @@ public class CellAnimator implements ValueAnimator.AnimatorUpdateListener {
     public CellAnimator(@NonNull TextView textView, String new_value) {
         this.textView = textView;
         newValue = new_value;
-        ValueAnimator anim = ValueAnimator.ofFloat(1, 0, 1);
+        ValueAnimator anim = ValueAnimator.ofFloat(1, 0.001f, 1);
         anim.setDuration(ANIMATION_DURATION / 2);
         anim.setInterpolator(new LinearInterpolator());
         anim.addUpdateListener(this);
