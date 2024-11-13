@@ -30,9 +30,7 @@ public class ProgressTracker {
         return game;
     }
 
-    private static class SingletonHolder {
-        @NonNull private final static ProgressTracker instance = new ProgressTracker();
-    }
+    @NonNull private final static ProgressTracker instance = new ProgressTracker();
     private ProgressTracker() {}
 
     /**
@@ -40,7 +38,7 @@ public class ProgressTracker {
      */
     @NonNull
     public static ProgressTracker getInstance() {
-        return SingletonHolder.instance;
+        return instance;
     }
 
     /**

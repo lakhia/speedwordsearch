@@ -38,10 +38,6 @@ class ProgressTrackerTest {
             return map[key] ?: return 0
         }
 
-        override fun storePreference(key: String, score: Int) {
-            map[key] = score
-        }
-
         override fun getAssetInputStream(name: String): Reader {
             return StringReader("ONE\nTWO\nTHREE")
         }

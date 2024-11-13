@@ -4,19 +4,16 @@ import static java.lang.Math.min;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.creationsahead.speedwordsearch.R;
 
 public class TouchHandler extends View implements View.OnTouchListener {
 
-    private View lastHit, lastSelection;
+    private View lastSelection;
     private float rawX1 = -1;
     private float rawY1 = -1;
     private float rawX2 = -1;
@@ -56,31 +53,12 @@ public class TouchHandler extends View implements View.OnTouchListener {
         paint.setStrokeWidth(min(sizeX, sizeY) / 3.0f);
     }
 
-    private static View findHit(ViewGroup parent, int index, int rawX, int rawY) {
-        Rect hitRect = new Rect();
-
-        for (int i = index-1; i < index+1; i++) {
-            View child = parent.getChildAt(i);
-            if (child == null)
-                continue;
-            child.getGlobalVisibleRect(hitRect);
-
-            if (hitRect.contains(rawX, rawY)) {
-                return child;
-            }
-        }
-        return null;
-    }
-
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        int currentX = (int) view.getTag(R.string.column);
-        int currentY = (int) view.getTag(R.string.row);
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            lastIndexX = currentX;
-            lastIndexY = currentY;
-            lastHit = view;
+            lastIndexX = (int) view.getTag(R.string.column);
+            lastIndexY = (int) view.getTag(R.string.row);
             rawX1 = event.getRawX();
             rawY1 = event.getRawY();
             rawX2 = -1;
@@ -100,26 +78,14 @@ public class TouchHandler extends View implements View.OnTouchListener {
             rawX2 = -1;
             invalidate();
 
-            float indexX = lastIndexX + (event.getX() / cellSizeX);
-            float indexY = lastIndexY + (event.getY() / cellSizeY);
+            int indexX = (int) (lastIndexX + (event.getX() / cellSizeX));
+            int indexY = (int) (lastIndexY + (event.getY() / cellSizeY));
 
-            ViewGroup row = (ViewGroup) findHit(gridWidget, (int) indexY, (int) event.getRawX(), (int) event.getRawY());
-            if (row == null) {
-                return false;
-            }
-            TextView textView = (TextView) findHit(row, (int) indexX, (int) event.getRawX(), (int) event.getRawY());
-            if (textView == null) {
-                return false;
-            }
-            if (lastHit != textView) {
-                // Drag action
-                lastHit = null;
-            } else {
+            if (indexX == lastIndexX && indexY == lastIndexY) {
                 // Single click action
                 if (lastSelection == null) {
                     // First single click, save state and mark selected cell
-                    lastSelection = lastHit;
-                    lastHit = null;
+                    lastSelection = view;
                     lastSelection.setBackgroundResource(R.drawable.cell_selected);
                     return true;
                 } else {
@@ -130,9 +96,8 @@ public class TouchHandler extends View implements View.OnTouchListener {
                     lastSelection = null;
                 }
             }
-            currentX = (int) textView.getTag(R.string.column);
-            currentY = (int) textView.getTag(R.string.row);
-            gridWidget.onGuess(lastIndexX, lastIndexY, currentX, currentY);
+
+            gridWidget.onGuess(lastIndexX, lastIndexY, indexX, indexY);
             return true;
         }
         return false;

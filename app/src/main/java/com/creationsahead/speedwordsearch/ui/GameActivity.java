@@ -31,7 +31,7 @@ public class GameActivity extends Activity implements TickerCallback {
         super.onCreate(savedInstanceState);
         game = ProgressTracker.getInstance().getGame();
         ticker = new Ticker(this, this, TIME_LEFT);
-        sound_manager = new SoundManager(this);
+        sound_manager = SoundManager.getInstance();
         setContentView(R.layout.game);
         scoreBar = findViewById(R.id.scoreBar);
     }

@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import com.creationsahead.speedwordsearch.R;
+import com.creationsahead.speedwordsearch.StorageInterface;
+import com.creationsahead.speedwordsearch.utils.SoundManager;
+
 import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -27,11 +30,12 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int musicVolume = prefs.getInt("music", 0);
-        int soundEffectsVolume = prefs.getInt("special_effects", 0);
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SoundManager.getInstance().syncSettingsFromStorage((StorageInterface) getApplicationContext());
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {

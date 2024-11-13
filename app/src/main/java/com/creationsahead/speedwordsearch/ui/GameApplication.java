@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -19,6 +20,7 @@ import com.creationsahead.speedwordsearch.EventBusIndex;
 import com.creationsahead.speedwordsearch.ProgressTracker;
 import com.creationsahead.speedwordsearch.StorageInterface;
 import com.creationsahead.speedwordsearch.mod.Level;
+import com.creationsahead.speedwordsearch.utils.SoundManager;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,6 +41,7 @@ import org.greenrobot.eventbus.EventBus;
 public class GameApplication extends Application implements StorageInterface {
     public final static int ANIMATION_DURATION = 1000;
     @NonNull private final Kryo serializer = new Kryo();
+    private SharedPreferences prefs;
 
     @Override
     public void onCreate() {
@@ -54,6 +57,7 @@ public class GameApplication extends Application implements StorageInterface {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false);
         }
         super.onCreate();
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         serializer.register(Level.class, 15);
         EventBus.builder().addIndex(new EventBusIndex())
                 .throwSubscriberException(BuildConfig.DEBUG)
@@ -70,6 +74,8 @@ public class GameApplication extends Application implements StorageInterface {
         int max = Math.max(bounds.width(), bounds.height());
         float fontSize = 0.3f * textView.getTextSize() * max(display.width(), display.height()) / max;
         ProgressTracker.getInstance().init(this, display, fontSize);
+        SoundManager.getInstance().init(this);
+        SoundManager.getInstance().syncSettingsFromStorage(this);
     }
 
     @Override
@@ -87,14 +93,7 @@ public class GameApplication extends Application implements StorageInterface {
 
     @Override
     public int getPreference(@NonNull String key) {
-        SharedPreferences prefs = getSharedPreferences(getClass().getName(), Context.MODE_PRIVATE);
         return prefs.getInt(key, 0);
-    }
-
-    @Override
-    public void storePreference(@NonNull String key, int val) {
-        SharedPreferences prefs = getSharedPreferences(getClass().getName(), Context.MODE_PRIVATE);
-        prefs.edit().putInt(key, val).apply();
     }
 
     @Nullable
