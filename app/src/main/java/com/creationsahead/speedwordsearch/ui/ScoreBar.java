@@ -1,10 +1,8 @@
 package com.creationsahead.speedwordsearch.ui;
 
 import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -25,11 +23,9 @@ import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DU
 /**
  * Top bar showing time
  */
-public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnimator.AnimatorUpdateListener {
+public class ScoreBar extends LinearLayout implements TickerCallback {
     @NonNull private final TextView timeWidget;
     @NonNull private final TextView scoreWidget;
-    private ValueAnimator anim;
-    private int deltaScore, prevScore;
     private final Level level;
 
     public ScoreBar(Context context, AttributeSet attrs) {
@@ -56,57 +52,42 @@ public class ScoreBar extends LinearLayout implements TickerCallback, ValueAnima
     @Override
     public void onTick(int timeLeft) {
         level.timeUsed = TIME_LEFT - timeLeft;
-        timeWidget.setText(Utils.formatTime(timeLeft));
+        if (timeLeft < 30) {
+            NumberAnimator timeAnim = new NumberAnimator(timeWidget, 250, 1.75f, timeLeft) {
+                @Override
+                @NonNull
+                protected String format(int n) {
+                    return Utils.formatTime(n);
+                }
+            };
+            timeAnim.start(timeLeft);
+        } else {
+            timeWidget.setText(Utils.formatTime(timeLeft));
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateScore(@NonNull Guess guess) {
-        if (anim != null) {
-            anim.cancel();
-        }
         if (guess.answer == null) {
             return;
         }
-        deltaScore = guess.answer.score;
-        prevScore = level.score;
+        int prevScore = level.score;
+        int deltaScore = guess.answer.score;
         level.score += deltaScore;
 
-        anim = ValueAnimator.ofFloat(1, 4.5f, 1);
-        anim.setDuration(ANIMATION_DURATION);
-        anim.setInterpolator(new AccelerateDecelerateInterpolator());
-        anim.addUpdateListener(this);
-        if (guess.last) {
-            // Last word guessed, trigger event after animation is finished
-            anim.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(@NonNull Animator animator) {}
-
-                @Override
-                public void onAnimationEnd(@NonNull Animator animator) {
+        NumberAnimator anim = new NumberAnimator(scoreWidget, ANIMATION_DURATION, 4.5f, prevScore) {
+            @Override
+            public void onAnimationEnd(@NonNull Animator animator) {
+                if (guess.last) {
                     level.won = true;
                     EventBus.getDefault().post(level);
                 }
-
-                @Override
-                public void onAnimationCancel(@NonNull Animator animator) {}
-
-                @Override
-                public void onAnimationRepeat(@NonNull Animator animator) {}
-            });
-        }
-        anim.start();
+            }
+        };
+        anim.start(level.score);
     }
 
     private void updateScoreWidget(int score) {
         scoreWidget.setText(String.format(Locale.ENGLISH, "%03d", score));
-    }
-
-    @Override
-    public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-        float fraction = (float) valueAnimator.getAnimatedValue();
-        scoreWidget.setScaleX(fraction);
-        scoreWidget.setScaleY(fraction);
-        int score = (int) (prevScore + valueAnimator.getAnimatedFraction() * deltaScore);
-        updateScoreWidget(score);
     }
 }

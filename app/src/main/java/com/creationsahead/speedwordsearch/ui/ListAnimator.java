@@ -11,14 +11,13 @@ import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DU
 /**
  * Animates list of levels
  */
-public class ListAnimator implements  ValueAnimator.AnimatorUpdateListener {
+public class ListAnimator implements ValueAnimator.AnimatorUpdateListener {
     private final ViewGroup parent;
     private final View child;
 
-    public ListAnimator(ViewGroup parent, View child, boolean forward,
-                        Animator.AnimatorListener listener) {
-        this.parent = parent;
+    public ListAnimator(View child, boolean forward, Animator.AnimatorListener listener) {
         this.child = child;
+        parent = (ViewGroup) child.getParent();
         ValueAnimator anim;
         if (forward) {
             anim = ValueAnimator.ofFloat(1f, 0f);
@@ -32,7 +31,7 @@ public class ListAnimator implements  ValueAnimator.AnimatorUpdateListener {
             anim.addListener(listener);
         }
         if (!forward) {
-            anim.setStartDelay(ANIMATION_DURATION/3);
+            anim.setStartDelay(ANIMATION_DURATION/2);
         }
         anim.start();
     }
