@@ -136,7 +136,21 @@ public class GridWidget extends TableLayout {
                 explode.setEpicenterCallback(center);
                 explode.setDuration(ANIMATION_DURATION);
                 TransitionManager.beginDelayedTransition(this, explode);
-                removeSomeViews();
+                removeSomeViews(8);
+            }
+            {
+                Transition explode = new Explode();
+                explode.setEpicenterCallback(center);
+                explode.setDuration(ANIMATION_DURATION);
+                TransitionManager.beginDelayedTransition(this, explode);
+                removeSomeViews(5);
+            }
+            {
+                Transition explode = new Explode();
+                explode.setEpicenterCallback(center);
+                explode.setDuration(ANIMATION_DURATION);
+                TransitionManager.beginDelayedTransition(this, explode);
+                removeSomeViews(3);
             }
             {
                 Transition explode = new Explode();
@@ -148,14 +162,14 @@ public class GridWidget extends TableLayout {
         }
     }
 
-    private void removeSomeViews() {
+    private void removeSomeViews(int ratio) {
         Random rand = new Random();
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             TableRow child = (TableRow) getChildAt(i);
             int cellCount = child.getChildCount();
             for (int j = cellCount - 1; j >= 0; j--) {
-                if (rand.nextBoolean()) {
+                if (rand.nextInt(ratio) < 1) {
                     child.removeViewAt(j);
                 }
             }
