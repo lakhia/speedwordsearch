@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setAnimation(TableLayout table) {
         table.removeAllViews();
-        Typeface typeface = ResourcesCompat.getFont(this, R.font.archivo_black);
+        GameApplication app = (GameApplication) getApplicationContext();
+        Typeface typeface = app.loader.letterTypeface;
         float fontSize = ProgressTracker.getInstance().normalizedFontSize / 8;
 
         int rowIndex = 1;

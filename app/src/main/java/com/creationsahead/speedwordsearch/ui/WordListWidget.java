@@ -2,14 +2,13 @@ package com.creationsahead.speedwordsearch.ui;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.creationsahead.speedwordsearch.Answer;
 import com.creationsahead.speedwordsearch.Guess;
 import com.creationsahead.speedwordsearch.ProgressTracker;
@@ -27,6 +26,8 @@ import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DU
  */
 public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
 
+    private Typeface typeface;
+
     public WordListWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
@@ -40,6 +41,8 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        GameApplication app = (GameApplication) getContext().getApplicationContext();
+        typeface = app.loader.wordListTypeface;
         EventBus.getDefault().register(this);
         ArrayList<Answer> answers = ProgressTracker.getInstance().getGame().getAnswers();
         for (Answer answer : answers) {
@@ -58,11 +61,8 @@ public class WordListWidget extends com.nex3z.flowlayout.FlowLayout {
         TextView textView;
         ContextThemeWrapper newContext = new ContextThemeWrapper(getContext(), R.style.WordList);
         textView = new TextView(newContext, null);
-        // TODO: Using fixed font-size for now
         textView.setTextSize(COMPLEX_UNIT_PX, ProgressTracker.getInstance().normalizedFontSize / 12.0f);
-
         textView.setText(answer.getDisplay());
-        Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.artifika);
         textView.setTypeface(typeface);
 
         addView(textView);

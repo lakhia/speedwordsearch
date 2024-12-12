@@ -57,6 +57,7 @@ public class SoundManager {
         try {
             AssetFileDescriptor afd = context.getAssets().openFd(asset);
             mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            afd.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

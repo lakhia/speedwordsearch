@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import android.transition.Explode;
 import android.transition.Transition;
 import android.transition.TransitionManager;
@@ -44,7 +43,8 @@ public class GridWidget extends TableLayout {
         EventBus.getDefault().register(this);
 
         setBackgroundResource(R.color.black_overlay);
-        Typeface typeface = ResourcesCompat.getFont(context, R.font.archivo_black);
+        GameApplication app = (GameApplication) getContext().getApplicationContext();
+        Typeface typeface = app.loader.letterTypeface;
         tracker = ProgressTracker.getInstance();
         game = tracker.getGame();
 
@@ -71,9 +71,11 @@ public class GridWidget extends TableLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        View v = (View) getParent();
-        handler = v.findViewById(R.id.touchOverlay);
-
+        View view = this;
+        do {
+            view = (View) view.getParent();
+            handler = view.findViewById(R.id.touchOverlay);
+        } while (handler == null);
         for (int i = 0; i < getChildCount(); i++) {
             ViewGroup row = (ViewGroup) getChildAt(i);
             for (int j = 0; j < row.getChildCount(); j++) {

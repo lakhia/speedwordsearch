@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.creationsahead.speedwordsearch.mod.Level;
 import java.io.IOException;
+import java.io.Reader;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -55,7 +57,9 @@ public class ProgressTracker {
         EventBus.getDefault().register(this);
 
         try {
-            WordList.init(storage.getAssetInputStream("words_9k.db"));
+            Reader stream = storage.getAssetInputStream("words_9k.db");
+            WordList.init(stream);
+            stream.close();
         } catch (IOException ignored) {
         }
     }
