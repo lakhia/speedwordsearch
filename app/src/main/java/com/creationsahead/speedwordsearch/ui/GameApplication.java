@@ -14,6 +14,7 @@ import com.creationsahead.speedwordsearch.mod.Level;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.creationsahead.speedwordsearch.mod.SubLevel;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import org.greenrobot.eventbus.EventBus;
 import java.io.FileInputStream;
@@ -51,7 +52,8 @@ public class GameApplication extends Application implements StorageInterface {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false);
         }
         super.onCreate();
-        serializer.register(Level.class, 15);
+        serializer.register(SubLevel.class, 15);
+        serializer.register(Level.class, 14);
         EventBus.builder().addIndex(new EventBusIndex())
                 .throwSubscriberException(BuildConfig.DEBUG)
                 .eventInheritance(false)
@@ -80,11 +82,11 @@ public class GameApplication extends Application implements StorageInterface {
 
     @Nullable
     @Override
-    public Level getLevel(int index, @NonNull String name) {
+    public SubLevel getSubLevel(@NonNull String name) {
         try {
-            FileInputStream fileIn = getApplicationContext().openFileInput("level_" + name + index);
+            FileInputStream fileIn = getApplicationContext().openFileInput(name);
             Input input = new Input(fileIn);
-            Level level = serializer.readObject(input, Level.class);
+            SubLevel level = serializer.readObject(input, SubLevel.class);
             input.close();
             fileIn.close();
             return level;
@@ -97,12 +99,12 @@ public class GameApplication extends Application implements StorageInterface {
     }
 
     @Override
-    public void storeLevel(@NonNull Level level, @NonNull String name) {
+    public void storeSubLevel(@NonNull SubLevel subLevel) {
         try {
-            FileOutputStream fileOut = openFileOutput("level_" + name + level.number,
+            FileOutputStream fileOut = openFileOutput(subLevel.name,
                     Activity.MODE_PRIVATE);
             Output output = new Output(fileOut);
-            serializer.writeObject(output, level);
+            serializer.writeObject(output, subLevel);
             output.close();
             fileOut.close();
         } catch (IOException e) {

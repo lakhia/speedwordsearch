@@ -23,6 +23,13 @@
             android:theme="@style/FullscreenTheme">
         </activity>
         <activity
+            android:name=".ui.SubLevelActivity"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/FullscreenTheme">
+        </activity>
+        <activity
             android:name=".ui.SettingsActivity"
             android:exported="true"
             android:label="@string/title_activity_settings">

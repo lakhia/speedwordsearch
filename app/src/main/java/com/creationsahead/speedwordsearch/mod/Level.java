@@ -1,11 +1,13 @@
 package com.creationsahead.speedwordsearch.mod;
 
+import androidx.annotation.NonNull;
+
 /**
  * A single level
  */
 public class Level {
     public static final int TIME_LEFT = 120;
-    public final String name;
+    @NonNull public final String name;
     public final int number;
     public float stars;
     public int score;
@@ -17,8 +19,8 @@ public class Level {
         this("", 0);
     }
 
-    public Level(String levelName, int levelNumber) {
-        name = levelName + " Level " + (1 + levelNumber);
+    public Level(@NonNull String levelName, int levelNumber) {
+        name = levelName;
         number = levelNumber;
         stars = -1;
         timeUsed = 0;

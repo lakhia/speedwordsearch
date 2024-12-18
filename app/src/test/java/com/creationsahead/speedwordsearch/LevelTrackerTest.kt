@@ -16,9 +16,9 @@ class LevelTrackerTest {
 
     @Test
     fun test_init() {
-        LevelTracker.init(storage, "Basic Level")
-        assertNotNull(LevelTracker.levels)
-        assertEquals(1, LevelTracker.levels.size)
-        assertNotNull(LevelTracker.levels[0])
+        LevelTracker.init(storage)
+        assertNotNull(LevelTracker.subLevels)
+        assertEquals(1, LevelTracker.subLevels.size)
+        assertNotNull(LevelTracker.subLevels[0])
     }
 }

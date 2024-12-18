@@ -15,9 +15,13 @@ public class LevelActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        levelListView = new LevelListView(this, null);
+        levelListView = createLevelListView();
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         addContentView(levelListView, params);
+    }
+
+    protected LevelListView createLevelListView() {
+        return new LevelListView(this, null);
     }
 
     @Override

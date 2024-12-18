@@ -3,40 +3,54 @@ package com.creationsahead.speedwordsearch;
 import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import com.creationsahead.speedwordsearch.mod.Level;
+import com.creationsahead.speedwordsearch.mod.SubLevel;
 
 public class LevelTracker {
 
-    private static final int MAX_LEVEL = 10;
-    private static StorageInterface storageInterface;
-    @NonNull public final static ArrayList<Level> levels = new ArrayList<>();
-    @NonNull private static String levelNamePrefix = "";
+    private static final String[] LEVEL_NAMES = new String[]{
+            "Beginner I", "Beginner II", "Beginner III",
+            "Intermediate I", "Intermediate II", "Intermediate III",
+            "Advanced I", "Advanced II", "Advanced III",
+            "Expert I", "Expert II", "Expert III"};
+    public static final int MAX_LEVEL = 10;
+    public static final int MAX_SUB_LEVEL = LEVEL_NAMES.length;
 
-    public static void init(@NonNull StorageInterface storage, @NonNull String name) {
+    private static StorageInterface storageInterface;
+    @NonNull public final static ArrayList<SubLevel> subLevels = new ArrayList<>();
+
+    public static void init(@NonNull StorageInterface storage) {
         storageInterface = storage;
-        levelNamePrefix = name;
         for (int i = 0; i < MAX_LEVEL; i++) {
-            Level level = storageInterface.getLevel(i, levelNamePrefix);
-            if (level == null) {
+            SubLevel subLevel = storageInterface.getSubLevel(LEVEL_NAMES[i]);
+            if (subLevel == null) {
                 break;
             }
-            levels.add(level);
+            subLevels.add(subLevel);
         }
-        createLevel();
+        createSubLevel();
      }
 
-    private static void createLevel() {
-        if (levels.size() == 0 || (levels.get(levels.size() - 1).won &&
-                levels.size() < MAX_LEVEL)) {
-            levels.add(new Level(levelNamePrefix, levels.size()));
+
+    private static void createLevel(SubLevel subLevel) {
+        ArrayList<Level> levels = subLevel.levels;
+        if (levels.size() == 0 || (levels.get(levels.size() - 1).won)) {
+            if (levels.size() < MAX_LEVEL) {
+                subLevel.addLevel(levels.size());
+            } else if (subLevels.size() < MAX_SUB_LEVEL) {
+                createSubLevel();
+            }
         }
     }
 
-    public static void store(Level level) {
-        level.score();
-        if (level.stars < 0) {
-            return;
+    private static void createSubLevel() {
+        if (subLevels.size() == 0 || (subLevels.get(subLevels.size() - 1).won &&
+                subLevels.size() < MAX_LEVEL)) {
+            subLevels.add(new SubLevel(LEVEL_NAMES[subLevels.size()], subLevels.size(), 1));
         }
-        createLevel();
-        storageInterface.storeLevel(level, levelNamePrefix);
+    }
+
+    public static void store(SubLevel subLevel) {
+        createLevel(subLevel);
+        storageInterface.storeSubLevel(subLevel);
     }
 }

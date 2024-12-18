@@ -10,6 +10,7 @@ import org.junit.Test
 import java.io.Reader
 import java.io.StringReader
 import com.creationsahead.speedwordsearch.mod.Level
+import com.creationsahead.speedwordsearch.mod.SubLevel
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -20,18 +21,14 @@ class ProgressTrackerTest {
 
     class Storage : StorageInterface {
         var map: HashMap<String, Int> = HashMap()
-        //var levels : Array<Level> = Array(10, { i -> Level("", i) })
-        var levels : Array<Level?> = arrayOfNulls(10)
+        var levels : HashMap<String, SubLevel?> = HashMap()
 
-        override fun getLevel(index: Int, name: String): Level? {
-            if (index < levels.size) {
-                return levels[index]
-            }
-            return null
+        override fun getSubLevel(name: String): SubLevel? {
+            return levels[name]
         }
 
-        override fun storeLevel(level: Level, name: String) {
-            levels[level.number] = level
+        override fun storeSubLevel(level: SubLevel) {
+            levels[level.name] = level
         }
 
         override fun getPreference(key: String): Int {
@@ -72,14 +69,20 @@ class ProgressTrackerTest {
     @Test
     fun test_02_progress() {
         // Initialize storage
-        val level = Level("", 0)
-        level.totalScore = 150
-        level.score = 150
-        level.timeUsed = 90
+        val subLevel = SubLevel("name", 1, 1)
 
         progress.init(storage, Rect(), 0.0f)
-        progress.stopLevel(level)
-        assertEquals(0, storage.levels[0]!!.number)
-        assertEquals(2.5f, storage.levels[0]!!.stars, 0.005f)
+        progress.currentSubLevel = subLevel
+        subLevel.levels[0].totalScore = 150
+        subLevel.levels[0].score = 150
+        subLevel.levels[0].timeUsed = 90
+
+        progress.stopLevel(subLevel.levels[0])
+        assertEquals(1, storage.levels["name"]!!.number)
+        assertEquals(2.5f, subLevel.levels[0].stars, 0.005f)
+        assertEquals(true, subLevel.levels[0].won)
+        assertEquals(0.25f, subLevel.stars)
+        assertEquals(15, subLevel.score)
+        assertEquals(false, subLevel.won)
     }
 }

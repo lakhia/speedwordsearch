@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.creationsahead.speedwordsearch.LevelTracker;
 import com.creationsahead.speedwordsearch.ProgressTracker;
 import com.creationsahead.speedwordsearch.R;
 import com.creationsahead.speedwordsearch.mod.Level;
@@ -25,16 +24,12 @@ import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DU
  */
 public class LevelListView extends FrameLayout implements AdapterView.OnItemClickListener {
 
-    private final LevelAdapter mAdapter;
+    private LevelAdapter mAdapter;
     private View clickedLevel;
 
     public LevelListView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        ListView listView = new ListView(context);
-        addView(listView);
-        mAdapter = new LevelAdapter(context, R.layout.single_level, LevelTracker.levels);
-        listView.setAdapter(mAdapter);
-        listView.setOnItemClickListener(this);
+        createAdapter(context);
     }
 
     @Override
@@ -46,13 +41,12 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
             new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(@NonNull Animator animator) {
-                    Level level = (Level) adapterView.getItemAtPosition(position);
-                    ProgressTracker.getInstance().createGame(level);
+                    LevelListView.this.onAnimationStart(adapterView, position);
                 }
 
                 @Override
                 public void onAnimationEnd(@NonNull Animator animator) {
-                    Intent intent = new Intent(view.getContext(), GameActivity.class);
+                    Intent intent = new Intent(view.getContext(), getOnClickClass());
                     view.getContext().startActivity(intent);
                 }
 
@@ -64,13 +58,36 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
         });
     }
 
+
+    protected void createAdapter(Context context) {
+        mAdapter = new LevelAdapter(context, R.layout.single_level,
+                ProgressTracker.getInstance().currentSubLevel.levels);
+        ListView listView = new ListView(context);
+        addView(listView);
+        listView.setAdapter(mAdapter);
+        listView.setOnItemClickListener(this);
+    }
+
+    protected void onAnimationStart(AdapterView<?> adapterView, int position) {
+        Level level = (Level) adapterView.getItemAtPosition(position);
+        ProgressTracker.getInstance().createGame(level);
+    }
+
+    protected Class<?> getOnClickClass() {
+        return GameActivity.class;
+    }
+
     public void unHideList() {
         if (clickedLevel != null) {
-            mAdapter.notifyDataSetChanged();
+            notifyDataSetChanged();
             bounceAnimation();
             new ListAnimator(clickedLevel, false, null);
             clickedLevel = null;
         }
+    }
+
+    protected void notifyDataSetChanged() {
+        mAdapter.notifyDataSetChanged();
     }
 
     private void bounceAnimation() {

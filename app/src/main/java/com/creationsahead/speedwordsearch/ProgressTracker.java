@@ -4,9 +4,9 @@ import android.graphics.Rect;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.creationsahead.speedwordsearch.mod.Level;
+import com.creationsahead.speedwordsearch.mod.SubLevel;
 import java.io.IOException;
 import java.io.Reader;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -20,14 +20,14 @@ public class ProgressTracker {
     /** Current game */
     @Nullable public Game game;
 
+    public SubLevel currentSubLevel;
     public Level currentLevel;
     public Rect displayRect;
     public float normalizedFontSize;
 
     @NonNull public Game getGame() {
         if (game == null) {
-            Level level = LevelTracker.levels.get(LevelTracker.levels.size() - 1);
-            ProgressTracker.getInstance().createGame(level);
+            ProgressTracker.getInstance().createGame(currentLevel);
         }
         return game;
     }
@@ -50,7 +50,7 @@ public class ProgressTracker {
      * @param fontSize Size of font to use for entire width of screen
      */
     public void init(@NonNull StorageInterface storage, @NonNull Rect display, float fontSize) {
-        LevelTracker.init(storage, "Beginner");
+        LevelTracker.init(storage);
         displayRect = display;
         normalizedFontSize = fontSize;
 
@@ -75,7 +75,9 @@ public class ProgressTracker {
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void stopLevel(@NonNull Level level) {
         // Store progress
-        LevelTracker.store(level);
+        level.score();
+        currentSubLevel.score();
+        LevelTracker.store(currentSubLevel);
     }
 
     /**
@@ -83,12 +85,17 @@ public class ProgressTracker {
      */
     public void createGame(@NonNull Level level) {
         currentLevel = level;
-        currentLevel.totalScore = 0;
-        currentLevel.score = 0;
-        currentLevel.timeUsed = 0;
-        config = new Config(currentLevel.number);
+        level.totalScore = 0;
+        level.score = 0;
+        level.timeUsed = 0;
+        config = new Config(level.number);
         game = new Game(config, WordList.dictionary,
                 new RandomSequencer(config, (int) System.currentTimeMillis()));
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void startSubLevel(@NonNull SubLevel subLevel) {
+        currentSubLevel = subLevel;
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)

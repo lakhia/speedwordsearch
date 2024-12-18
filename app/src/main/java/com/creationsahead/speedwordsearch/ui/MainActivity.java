@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         Intent intent;
         if (view.getId() == R.id.play) {
-            intent = new Intent(this, LevelActivity.class);
+            intent = new Intent(this, SubLevelActivity.class);
         } else {
             intent = new Intent(this, SettingsActivity.class);
         }
