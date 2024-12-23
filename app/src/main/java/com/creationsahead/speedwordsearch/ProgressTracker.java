@@ -1,5 +1,6 @@
 package com.creationsahead.speedwordsearch;
 
+import static java.lang.Thread.sleep;
 import android.graphics.Rect;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,7 +28,21 @@ public class ProgressTracker {
 
     @NonNull public Game getGame() {
         if (game == null) {
-            ProgressTracker.getInstance().createGame(currentLevel);
+            if (currentLevel != null) {
+                ProgressTracker.getInstance().createGame(currentLevel);
+            } else {
+                while (LevelTracker.subLevels.isEmpty() ||
+                        LevelTracker.subLevels.get(0).levels == null ||
+                        LevelTracker.subLevels.get(0).levels.isEmpty()) {
+                    try {
+                        sleep(100);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                }
+                // No level retrieved, pick the first game
+                ProgressTracker.getInstance().createGame(LevelTracker.subLevels.get(0).levels.get(0));
+            }
         }
         return game;
     }
