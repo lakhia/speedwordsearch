@@ -1,15 +1,19 @@
 package com.creationsahead.speedwordsearch.ui;
 
-import static java.lang.Math.min;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Insets;
 import android.graphics.Paint;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowInsets;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.creationsahead.speedwordsearch.R;
+import static android.os.Build.VERSION.SDK_INT;
+import static java.lang.Math.min;
 
 public class TouchHandler extends View implements View.OnTouchListener {
 
@@ -18,6 +22,7 @@ public class TouchHandler extends View implements View.OnTouchListener {
     private float rawY1 = -1;
     private float rawX2 = -1;
     private float rawY2 = -1;
+    private int topMargin = 0;
     private int lastIndexX, lastIndexY;
     private float cellSizeX, cellSizeY;
     private GridWidget gridWidget;
@@ -42,7 +47,19 @@ public class TouchHandler extends View implements View.OnTouchListener {
     public void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         if (rawX1 != -1 || rawX2 != -1) {
-            canvas.drawLine(rawX1, rawY1, rawX2, rawY2, paint);
+            canvas.drawLine(rawX1, rawY1 - topMargin, rawX2, rawY2 - topMargin, paint);
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsets insets = getRootWindowInsets();
+            if (insets != null) {
+                Insets inset = insets.getInsets(2);
+                topMargin = inset.bottom;
+            }
         }
     }
 
