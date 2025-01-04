@@ -29,7 +29,7 @@ public class ProgressTracker {
     @NonNull public Game getGame() {
         if (game == null) {
             if (currentLevel != null) {
-                ProgressTracker.getInstance().createGame(currentLevel);
+                createGame(currentLevel);
             } else {
                 while (LevelTracker.subLevels.isEmpty() ||
                         LevelTracker.subLevels.get(0).levels == null ||
@@ -40,8 +40,8 @@ public class ProgressTracker {
                         break;
                     }
                 }
-                // No level retrieved, pick the first game
-                ProgressTracker.getInstance().createGame(LevelTracker.subLevels.get(0).levels.get(0));
+                currentSubLevel = LevelTracker.subLevels.get(0);
+                createGame(currentSubLevel.levels.get(0));
             }
         }
         return game;
@@ -103,7 +103,7 @@ public class ProgressTracker {
         level.totalScore = 0;
         level.score = 0;
         level.timeUsed = 0;
-        config = new Config(level.number);
+        config = new Config(currentSubLevel.number, level.number);
         game = new Game(config, WordList.dictionary,
                 new RandomSequencer(config, (int) System.currentTimeMillis()));
     }

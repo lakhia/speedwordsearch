@@ -7,7 +7,7 @@ public class Config {
     private static final int MAX_DIFFICULTY = 100;
     public final int sizeX, sizeY;
     /** Difficulty of game, 0 means very easy and 100 is very hard */
-    public int difficulty;
+    public float difficulty;
     public final int letterLimit;
     public boolean isWordListSorted;
 
@@ -19,29 +19,27 @@ public class Config {
         isWordListSorted = true;
     }
 
-    public Config(int level) {
-        sizeX = 4 + level/2;
-        sizeY = 4 + (1 + level) / 2;
-        difficulty = MAX_DIFFICULTY * level / 10;
-        if (BuildConfig.DEBUG) {
-            letterLimit = 13;
+    public Config(int subLevelNumber, int levelNumber) {
+        sizeX = 4 + levelNumber/2 + subLevelNumber/3;
+        sizeY = 4 + (1 + levelNumber) / 2 + subLevelNumber/3;
+        difficulty = 25f * (subLevelNumber/4f + levelNumber/10f);
+        isWordListSorted = subLevelNumber < 6;
+
+        float letterRatio = difficulty / MAX_DIFFICULTY * 1.5f;
+        letterRatio = sizeX * sizeY * letterRatio;
+        if (letterRatio < 5) {
+            letterLimit = 5;
         } else {
-            float letterRatio = (MAX_DIFFICULTY - difficulty) * 1.5f;
-            letterRatio = sizeX * sizeY * letterRatio / 100;
-            if (letterRatio < 5) {
-                letterLimit = 5;
-            } else {
-                letterLimit = (int) letterRatio;
-            }
+            letterLimit = (int) letterRatio;
         }
     }
 
     public int getFreqBasedOnSizeDifficulty(boolean flipped) {
-        int letterCount = sizeX * sizeY;
+        double letterCount = sizeX * sizeY;
         if (flipped) {
-            return (int) (Math.sqrt(100 - difficulty) * letterCount / 10);
+            return (int) (Math.sqrt(101 - difficulty) * letterCount / 10d);
         } else {
-            return (int) (Math.sqrt(difficulty + 1) * letterCount / 10);
+            return (int) (Math.sqrt(difficulty + 1) * letterCount / 10d);
         }
     }
 }

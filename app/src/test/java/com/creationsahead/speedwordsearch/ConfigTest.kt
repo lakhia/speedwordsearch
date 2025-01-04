@@ -1,5 +1,7 @@
 package com.creationsahead.speedwordsearch
 
+import com.creationsahead.speedwordsearch.LevelTracker.MAX_LEVEL
+import com.creationsahead.speedwordsearch.LevelTracker.MAX_SUB_LEVEL
 import org.junit.Test
 
 class ConfigTest {
@@ -31,7 +33,7 @@ class ConfigTest {
     fun test_config_getFreqBasedOnSizeDifficulty_size() {
         for (i in 4..15) {
             val config = Config(i, i, 0)
-            config.difficulty = 30
+            config.difficulty = 30f
             val freq = config.getFreqBasedOnSizeDifficulty(false)
             val freqFlipped = config.getFreqBasedOnSizeDifficulty(true)
             println("For size $i, config freq is $freq, flipped is $freqFlipped")
@@ -39,12 +41,26 @@ class ConfigTest {
     }
 
     @Test
+    fun test_config_difficulty() {
+        for (i in 0..MAX_SUB_LEVEL) {
+            for (j in 0..MAX_LEVEL) {
+                val config = Config(i, j)
+                val difficulty = config.difficulty
+                val letterLimit = config.letterLimit
+                println("For $i $j, config difficulty is $difficulty, limit is $letterLimit")
+            }
+        }
+    }
+
+    @Test
     fun test_config_getFreqBasedOnSizeDifficulty_level() {
-        for (i in 0..15) {
-            val config = Config(i)
-            val freq = config.getFreqBasedOnSizeDifficulty(false)
-            val freqFlipped = config.getFreqBasedOnSizeDifficulty(true)
-            println("For size $i, config freq is $freq, flipped is $freqFlipped")
+        for (i in 0..MAX_SUB_LEVEL) {
+            for (j in 0..MAX_LEVEL) {
+                val config = Config(i, j)
+                val freq = config.getFreqBasedOnSizeDifficulty(false)
+                val freqFlipped = config.getFreqBasedOnSizeDifficulty(true)
+                println("For size $i $j, config freq is $freq, flipped is $freqFlipped")
+            }
         }
     }
 }

@@ -58,6 +58,7 @@ class ProgressTrackerTest {
         progress.init(storage, Rect(), 0.0f)
         assertNull(progress.config)
         assertNull(progress.game)
+        progress.currentSubLevel = SubLevel("name", 1, 1)
         progress.createGame(Level())
 
         assertNotNull(progress.config)
