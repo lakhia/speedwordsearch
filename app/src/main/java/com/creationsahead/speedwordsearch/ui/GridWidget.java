@@ -14,13 +14,11 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.creationsahead.speedwordsearch.Cell;
 import com.creationsahead.speedwordsearch.Game;
 import com.creationsahead.speedwordsearch.Guess;
 import com.creationsahead.speedwordsearch.ProgressTracker;
 import com.creationsahead.speedwordsearch.R;
-import com.creationsahead.speedwordsearch.Selection;
 import java.util.Random;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -35,7 +33,6 @@ import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DU
 public class GridWidget extends TableLayout {
     @NonNull private final Center center;
     @NonNull private final ProgressTracker tracker;
-    @NonNull private final Game game;
     private TouchHandler handler;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -46,7 +43,7 @@ public class GridWidget extends TableLayout {
         GameApplication app = (GameApplication) getContext().getApplicationContext();
         Typeface typeface = app.loader.letterTypeface;
         tracker = ProgressTracker.getInstance();
-        game = tracker.getGame();
+        Game game = tracker.getGame();
 
         for (int j = 0; j < tracker.config.sizeY; j++) {
             TableRow row = new TableRow(context);
@@ -83,6 +80,7 @@ public class GridWidget extends TableLayout {
                 cell.setOnTouchListener(handler);
             }
         }
+        handler.setActivity((GameActivity) getContext());
     }
 
     @Override
@@ -99,7 +97,7 @@ public class GridWidget extends TableLayout {
         int cellSizeX = widgetSize / tracker.config.sizeX;
         int cellSizeY = widgetSize / tracker.config.sizeY;
         setMeasuredDimension(measuredWidth, widgetSize);
-        handler.setWidgetAndSize(this, cellSizeX, cellSizeY);
+        handler.setCellSize(cellSizeX, cellSizeY);
 
         int childCount = getChildCount();
         float fontSize = tracker.normalizedFontSize / childCount;
@@ -130,7 +128,7 @@ public class GridWidget extends TableLayout {
         }
     }
 
-    private void updateScore(@NonNull Guess guess) {
+    public void onGuess(@NonNull Guess guess) {
         new GuessAnimator(guess);
         if (guess.last) {
             {
@@ -174,18 +172,6 @@ public class GridWidget extends TableLayout {
                 if (rand.nextInt(ratio) < 1) {
                     child.removeViewAt(j);
                 }
-            }
-        }
-    }
-
-    public void onGuess(int x1, int y1, int x2, int y2) {
-        Selection selection = Selection.isValid(x1, y1, x2, y2);
-        if (selection != null) {
-            Guess guess = game.guess(selection);
-            updateScore(guess);
-        } else {
-            if (x1 != x2 && y1 != y2) {
-                Toast.makeText(getContext(), "Invalid Selection", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -179,7 +179,7 @@ public class Game {
      * @param selection selection made by user
      * @return Guess object that indicates status of guess
      */
-    public Guess guess(@NonNull Selection selection) {
+    @NonNull public Guess guess(@NonNull Selection selection) {
         String contents = grid.findContents(selection, false);
         Answer answer = answerMap.pop(contents);
         return grid.guess(answer, selection, answerMap.isSolved());

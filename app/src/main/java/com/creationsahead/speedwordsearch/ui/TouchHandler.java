@@ -25,7 +25,7 @@ public class TouchHandler extends View implements View.OnTouchListener {
     private int topMargin = 0;
     private int lastIndexX, lastIndexY;
     private float cellSizeX, cellSizeY;
-    private GridWidget gridWidget;
+    private GameActivity gameActivity;
     private final Paint paint = new Paint();
 
     public TouchHandler(Context context) {
@@ -63,8 +63,7 @@ public class TouchHandler extends View implements View.OnTouchListener {
         }
     }
 
-    public void setWidgetAndSize(GridWidget widget, int sizeX, int sizeY) {
-        gridWidget = widget;
+    public void setCellSize(int sizeX, int sizeY) {
         cellSizeX = sizeX;
         cellSizeY = sizeY;
         paint.setStrokeWidth(min(sizeX, sizeY) / 3.0f);
@@ -114,9 +113,13 @@ public class TouchHandler extends View implements View.OnTouchListener {
                 }
             }
 
-            gridWidget.onGuess(lastIndexX, lastIndexY, indexX, indexY);
+            gameActivity.onGuess(lastIndexX, lastIndexY, indexX, indexY);
             return true;
         }
         return false;
+    }
+
+    public void setActivity(GameActivity activity) {
+        gameActivity = activity;
     }
 }
