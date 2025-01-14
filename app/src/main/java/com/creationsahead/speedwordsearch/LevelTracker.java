@@ -31,7 +31,7 @@ public class LevelTracker {
      }
 
 
-    private static void createLevel(SubLevel subLevel) {
+    public static void createLevel(SubLevel subLevel) {
         ArrayList<Level> levels = subLevel.levels;
         if (levels.size() == 0 || (levels.get(levels.size() - 1).won)) {
             if (levels.size() < MAX_LEVEL) {
@@ -50,7 +50,6 @@ public class LevelTracker {
     }
 
     public static void store(SubLevel subLevel) {
-        createLevel(subLevel);
         storageInterface.storeSubLevel(subLevel);
     }
 }

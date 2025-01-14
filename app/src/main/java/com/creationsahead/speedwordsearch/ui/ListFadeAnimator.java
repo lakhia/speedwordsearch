@@ -11,27 +11,26 @@ import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DU
 /**
  * Animates list of levels
  */
-public class ListAnimator implements ValueAnimator.AnimatorUpdateListener {
+public abstract class ListFadeAnimator implements ValueAnimator.AnimatorUpdateListener,
+        Animator.AnimatorListener {
     private final ViewGroup parent;
     private final View child;
 
-    public ListAnimator(View child, boolean forward, Animator.AnimatorListener listener) {
+    public ListFadeAnimator(View child, boolean fadeOut) {
         this.child = child;
         parent = (ViewGroup) child.getParent();
         ValueAnimator anim;
-        if (forward) {
+        if (fadeOut) {
             anim = ValueAnimator.ofFloat(1f, 0f);
         } else {
             anim = ValueAnimator.ofFloat(0f, 0.8f, 1f);
         }
-        anim.setDuration(ANIMATION_DURATION/2);
+        anim.setDuration(ANIMATION_DURATION / 2);
         anim.setInterpolator(new LinearInterpolator());
         anim.addUpdateListener(this);
-        if (listener != null) {
-            anim.addListener(listener);
-        }
-        if (!forward) {
-            anim.setStartDelay(ANIMATION_DURATION/2);
+        anim.addListener(this);
+        if (!fadeOut) {
+            anim.setStartDelay(ANIMATION_DURATION / 2);
         }
         anim.start();
     }
@@ -46,4 +45,10 @@ public class ListAnimator implements ValueAnimator.AnimatorUpdateListener {
             }
         }
     }
+
+    @Override
+    public void onAnimationCancel(@NonNull Animator animator) {}
+
+    @Override
+    public void onAnimationRepeat(@NonNull Animator animator) {}
 }

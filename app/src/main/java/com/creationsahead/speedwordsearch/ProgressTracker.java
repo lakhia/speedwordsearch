@@ -89,8 +89,6 @@ public class ProgressTracker {
      */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void stopLevel(@NonNull Level level) {
-        // Store progress
-        level.score();
         currentSubLevel.score();
         LevelTracker.store(currentSubLevel);
     }

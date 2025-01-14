@@ -12,11 +12,7 @@ import com.creationsahead.speedwordsearch.ProgressTracker;
 import com.creationsahead.speedwordsearch.R;
 import com.creationsahead.speedwordsearch.Selection;
 import com.creationsahead.speedwordsearch.TickerCallback;
-import com.creationsahead.speedwordsearch.mod.Level;
 import com.creationsahead.speedwordsearch.utils.SoundManager;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import static com.creationsahead.speedwordsearch.mod.Level.TIME_LEFT;
 
 /**
@@ -46,7 +42,6 @@ public class GameActivity extends Activity implements TickerCallback {
         super.onResume();
         sound_manager.resume();
         ticker.resume();
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -54,16 +49,10 @@ public class GameActivity extends Activity implements TickerCallback {
         super.onPause();
         sound_manager.pause();
         ticker.pause();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onBackPressed() {
-        EventBus.getDefault().post(ProgressTracker.getInstance().currentLevel);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWinOrLose(@NonNull Level level) {
         finish();
         Intent intent = new Intent(this, LevelActivity.class);
         startActivity(intent);
@@ -73,7 +62,7 @@ public class GameActivity extends Activity implements TickerCallback {
     public void onTick(int tickCount) {
         scoreBar.onTick(tickCount);
         if (tickCount <= 0) {
-            EventBus.getDefault().post(ProgressTracker.getInstance().currentLevel);
+            onBackPressed();
         } else {
             game.onTick(tickCount);
         }

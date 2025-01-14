@@ -2,25 +2,24 @@ package com.creationsahead.speedwordsearch.ui;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
-import java.util.Locale;
 
-public class NumberAnimator implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
+public abstract class NumberAnimator implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
     @NonNull
     private final ValueAnimator anim;
     private int delta;
     private int mCurrent;
     private int mPrev;
     @NonNull
-    private final TextView mWidget;
+    private final View mWidget;
 
-    public NumberAnimator(@NonNull TextView textView, int duration, float scale, int currentValue) {
+    public NumberAnimator(@NonNull View view, int duration, float scale, int currentValue) {
         mPrev = currentValue;
         mCurrent = currentValue;
         delta = 0;
-        mWidget = textView;
+        mWidget = view;
         anim = ValueAnimator.ofFloat(1.0f, scale, 1.0f);
         anim.setDuration(duration);
         anim.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -28,10 +27,7 @@ public class NumberAnimator implements ValueAnimator.AnimatorUpdateListener, Ani
         anim.addListener(this);
     }
 
-    @NonNull
-    protected String format(int n) {
-        return String.format(Locale.ENGLISH, "%03d", n);
-    }
+    abstract public void setWidget(int n);
 
     public void onAnimationCancel(@NonNull Animator animator) {}
 
@@ -46,7 +42,7 @@ public class NumberAnimator implements ValueAnimator.AnimatorUpdateListener, Ani
         mWidget.setScaleX(fraction);
         mWidget.setScaleY(fraction);
         mCurrent = (int)(mPrev + valueAnimator.getAnimatedFraction() * delta);
-        mWidget.setText(format(mCurrent));
+        setWidget(mCurrent);
     }
 
     public void start(int newValue) {

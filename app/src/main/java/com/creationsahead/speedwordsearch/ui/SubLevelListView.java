@@ -7,7 +7,9 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.creationsahead.speedwordsearch.LevelTracker;
+import com.creationsahead.speedwordsearch.ProgressTracker;
 import com.creationsahead.speedwordsearch.R;
+import com.creationsahead.speedwordsearch.mod.Level;
 import com.creationsahead.speedwordsearch.mod.SubLevel;
 import org.greenrobot.eventbus.EventBus;
 
@@ -40,6 +42,12 @@ public class SubLevelListView extends LevelListView {
 
     @Override
     protected void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected Level getLevel() {
+        return ProgressTracker.getInstance().currentSubLevel;
     }
 }

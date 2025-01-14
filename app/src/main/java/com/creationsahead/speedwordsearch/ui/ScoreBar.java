@@ -1,6 +1,7 @@
 package com.creationsahead.speedwordsearch.ui;
 
 import android.animation.Animator;
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
@@ -55,9 +56,8 @@ public class ScoreBar extends LinearLayout implements TickerCallback {
         if (timeLeft < 30) {
             NumberAnimator timeAnim = new NumberAnimator(timeWidget, 250, 1.75f, timeLeft) {
                 @Override
-                @NonNull
-                protected String format(int n) {
-                    return Utils.formatTime(n);
+                public void setWidget(int n) {
+                    timeWidget.setText(Utils.formatTime(n));
                 }
             };
             timeAnim.start(timeLeft);
@@ -77,10 +77,16 @@ public class ScoreBar extends LinearLayout implements TickerCallback {
 
         NumberAnimator anim = new NumberAnimator(scoreWidget, ANIMATION_DURATION, 4.5f, prevScore) {
             @Override
+            public void setWidget(int n) {
+                scoreWidget.setText(String.format(Locale.ENGLISH, "%03d", n));
+            }
+
+            @Override
             public void onAnimationEnd(@NonNull Animator animator) {
                 if (guess.last) {
                     level.won = true;
-                    EventBus.getDefault().post(level);
+                    Activity activity = (Activity) getContext();
+                    activity.onBackPressed();
                 }
             }
         };

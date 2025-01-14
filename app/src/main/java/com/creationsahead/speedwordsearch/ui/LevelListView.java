@@ -14,9 +14,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.creationsahead.speedwordsearch.LevelTracker;
 import com.creationsahead.speedwordsearch.ProgressTracker;
 import com.creationsahead.speedwordsearch.R;
 import com.creationsahead.speedwordsearch.mod.Level;
+import com.creationsahead.speedwordsearch.mod.SubLevel;
+import com.creationsahead.speedwordsearch.utils.Utils;
+import org.greenrobot.eventbus.EventBus;
 import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATION;
 
 /**
@@ -26,6 +30,8 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
 
     private LevelAdapter mAdapter;
     private View clickedLevel;
+    private TextView timeTextView;
+    private SmartRatingBar ratingView;
 
     public LevelListView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -35,29 +41,56 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
     @Override
     public void onItemClick(@NonNull AdapterView<?> adapterView, View view, int position, long id) {
         clickedLevel = view;
+        timeTextView = clickedLevel.findViewById(R.id.time);
+        ratingView = clickedLevel.findViewById(R.id.ratingBar);
         bounceAnimation();
 
-        new ListAnimator(view, true,
-            new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(@NonNull Animator animator) {
-                    LevelListView.this.onAnimationStart(adapterView, position);
-                }
+        new ListFadeAnimator(view, true) {
+            @Override
+            public void onAnimationStart(@NonNull Animator animator) {
+                LevelListView.this.onAnimationStart(adapterView, position);
+            }
 
-                @Override
-                public void onAnimationEnd(@NonNull Animator animator) {
-                    Intent intent = new Intent(view.getContext(), getOnClickClass());
-                    view.getContext().startActivity(intent);
-                }
-
-                @Override
-                public void onAnimationCancel(@NonNull Animator animator) {}
-
-                @Override
-                public void onAnimationRepeat(@NonNull Animator animator) {}
-        });
+            @Override
+            public void onAnimationEnd(@NonNull Animator animator) {
+                Intent intent = new Intent(view.getContext(), getOnClickClass());
+                view.getContext().startActivity(intent);
+            }
+        };
     }
 
+    public void unHideList() {
+        if (clickedLevel == null) {
+            return;
+        }
+        Level level = getLevel();
+        level.score();
+        new ListFadeAnimator(clickedLevel, false) {
+            @Override
+            public void onAnimationStart(@NonNull Animator animator) {}
+
+            @Override
+            public void onAnimationEnd(@NonNull Animator animator) {
+                notifyDataSetChanged();
+            }
+        };
+        NumberAnimator anim = new NumberAnimator(timeTextView,
+                ANIMATION_DURATION, 1.75f, 0) {
+            @Override
+            public void setWidget(int n) {
+                timeTextView.setText(Utils.formatTime(n));
+            }
+        };
+        anim.start(level.timeUsed);
+        anim = new NumberAnimator(ratingView, ANIMATION_DURATION, 1.75f, 0) {
+            @Override
+            public void setWidget(int n) {
+                ratingView.setRatingNum(n / 10.0f);
+            }
+        };
+        clickedLevel = null;
+        anim.start((int) (level.stars * 10));
+    }
 
     protected void createAdapter(Context context) {
         mAdapter = new LevelAdapter(context, R.layout.single_level,
@@ -77,17 +110,17 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
         return GameActivity.class;
     }
 
-    public void unHideList() {
-        if (clickedLevel != null) {
-            notifyDataSetChanged();
-            bounceAnimation();
-            new ListAnimator(clickedLevel, false, null);
-            clickedLevel = null;
-        }
+    protected Level getLevel() {
+        return ProgressTracker.getInstance().currentLevel;
     }
 
     protected void notifyDataSetChanged() {
-        mAdapter.notifyDataSetChanged();
+        SubLevel subLevel = ProgressTracker.getInstance().currentSubLevel;
+        LevelTracker.createLevel(subLevel);
+        EventBus.getDefault().post(getLevel());
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     private void bounceAnimation() {
@@ -105,9 +138,7 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
         AnimationSet animationSet = new AnimationSet(true);
         animationSet.addAnimation(scaleAnimation1);
         animationSet.addAnimation(scaleAnimation2);
-        TextView textView = clickedLevel.findViewById(R.id.time);
-        textView.startAnimation(animationSet);
-        View viewGroup = clickedLevel.findViewById(R.id.ratingBar);
-        viewGroup.startAnimation(animationSet);
+        timeTextView.startAnimation(animationSet);
+        ratingView.startAnimation(animationSet);
     }
 }
