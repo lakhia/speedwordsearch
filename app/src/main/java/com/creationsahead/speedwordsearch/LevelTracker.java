@@ -20,7 +20,7 @@ public class LevelTracker {
 
     public static void init(@NonNull StorageInterface storage) {
         storageInterface = storage;
-        for (int i = 0; i < MAX_LEVEL; i++) {
+        for (int i = 0; i < MAX_SUB_LEVEL; i++) {
             SubLevel subLevel = storageInterface.getSubLevel(LEVEL_NAMES[i]);
             if (subLevel == null) {
                 break;
@@ -44,7 +44,7 @@ public class LevelTracker {
 
     private static void createSubLevel() {
         if (subLevels.size() == 0 || (subLevels.get(subLevels.size() - 1).won &&
-                subLevels.size() < MAX_LEVEL)) {
+                subLevels.size() < MAX_SUB_LEVEL)) {
             subLevels.add(new SubLevel(LEVEL_NAMES[subLevels.size()], subLevels.size(), 1));
         }
     }

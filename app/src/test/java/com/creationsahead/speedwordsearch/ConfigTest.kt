@@ -63,4 +63,15 @@ class ConfigTest {
             }
         }
     }
+
+    @Test
+    fun test_config_smallerWords() {
+        for (i in 0..MAX_SUB_LEVEL) {
+            for (j in 0..MAX_LEVEL) {
+                val config = Config(i, j)
+                val small = config.smallerWords
+                println("For size $i $j, config words $small")
+            }
+        }
+    }
 }

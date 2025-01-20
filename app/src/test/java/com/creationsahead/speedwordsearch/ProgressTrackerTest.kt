@@ -78,7 +78,11 @@ class ProgressTrackerTest {
         subLevel.levels[0].score = 150
         subLevel.levels[0].timeUsed = 90
 
+        // Act
+        subLevel.levels[0].score()
         progress.stopLevel(subLevel.levels[0])
+
+        // Assert
         assertEquals(1, storage.levels["name"]!!.number)
         assertEquals(2.5f, subLevel.levels[0].stars, 0.005f)
         assertEquals(true, subLevel.levels[0].won)

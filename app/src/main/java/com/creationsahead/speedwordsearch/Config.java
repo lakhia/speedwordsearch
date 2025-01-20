@@ -10,6 +10,7 @@ public class Config {
     public float difficulty;
     public final int letterLimit;
     public boolean isWordListSorted;
+    public int smallerWords;
 
     public Config(int sizeX, int sizeY, int letterLimit) {
         this.sizeX = sizeX;
@@ -17,6 +18,7 @@ public class Config {
         this.letterLimit = letterLimit;
         difficulty = 0;
         isWordListSorted = true;
+        smallerWords = 0;
     }
 
     public Config(int subLevelNumber, int levelNumber) {
@@ -25,13 +27,14 @@ public class Config {
         difficulty = 25f * (subLevelNumber/4f + levelNumber/10f);
         isWordListSorted = subLevelNumber < 6;
 
-        float letterRatio = difficulty / MAX_DIFFICULTY * 1.5f;
-        letterRatio = sizeX * sizeY * letterRatio;
+        double letterRatio = difficulty / MAX_DIFFICULTY * 2.0;
+        letterRatio = sizeX * Math.sqrt(sizeY) * letterRatio;
         if (letterRatio < 5) {
             letterLimit = 5;
         } else {
             letterLimit = (int) letterRatio;
         }
+        smallerWords = Math.min(subLevelNumber / 3, sizeY - 4);
     }
 
     public int getFreqBasedOnSizeDifficulty(boolean flipped) {

@@ -40,7 +40,7 @@ public class Game {
      */
     public void populatePuzzle() {
         int maxSize = config.sizeX;
-        int minSize = config.sizeX - 1;
+        int minSize = config.sizeX - config.smallerWords;
         while (letterCount < config.letterLimit) {
             if (!addOneWord(minSize, maxSize)) {
                 maxSize--;

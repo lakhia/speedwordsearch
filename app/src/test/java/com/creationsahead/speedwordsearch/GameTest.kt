@@ -193,6 +193,7 @@ class GameTest {
         dictionary.insert("FF")
 
         val config = Config(6, 6, 53)
+        config.smallerWords = 1
         val game = Game(config, dictionary, RandomSequencer(config, 1))
         game.populatePuzzle()
         assertEquals(
