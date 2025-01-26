@@ -94,7 +94,7 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
 
     protected void createAdapter(Context context) {
         mAdapter = new LevelAdapter(context, R.layout.single_level,
-                ProgressTracker.getInstance().currentSubLevel.levels);
+                ProgressTracker.getInstance().getCurrentSubLevel().levels);
         ListView listView = new ListView(context);
         addView(listView);
         listView.setAdapter(mAdapter);
@@ -115,7 +115,7 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
     }
 
     protected void notifyDataSetChanged() {
-        SubLevel subLevel = ProgressTracker.getInstance().currentSubLevel;
+        SubLevel subLevel = ProgressTracker.getInstance().getCurrentSubLevel();
         LevelTracker.createLevel(subLevel);
         EventBus.getDefault().post(getLevel());
         if (mAdapter != null) {

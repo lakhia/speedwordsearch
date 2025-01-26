@@ -21,7 +21,7 @@ public class ProgressTracker {
     /** Current game */
     @Nullable public Game game;
 
-    public SubLevel currentSubLevel;
+    private SubLevel currentSubLevel;
     public Level currentLevel;
     public Rect displayRect;
     public float normalizedFontSize;
@@ -31,20 +31,39 @@ public class ProgressTracker {
             if (currentLevel != null) {
                 createGame(currentLevel);
             } else {
-                while (LevelTracker.subLevels.isEmpty() ||
-                        LevelTracker.subLevels.get(0).levels == null ||
-                        LevelTracker.subLevels.get(0).levels.isEmpty()) {
-                    try {
-                        sleep(100);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
-                }
+                wait_for_loading_thread();
                 currentSubLevel = LevelTracker.subLevels.get(0);
                 createGame(currentSubLevel.levels.get(0));
             }
         }
         return game;
+    }
+
+    private void wait_for_loading_thread() {
+        int timeCounter = 1;
+        while (LevelTracker.subLevels.isEmpty() ||
+                LevelTracker.subLevels.get(0).levels == null ||
+                LevelTracker.subLevels.get(0).levels.isEmpty()) {
+            try {
+                sleep(100);
+                timeCounter++;
+                if (timeCounter > 20) {
+                    throw new RuntimeException("Could not load levels");
+                }
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+    }
+
+    public SubLevel getCurrentSubLevel() {
+        if (currentSubLevel == null) {
+            if (LevelTracker.subLevels.isEmpty()) {
+                wait_for_loading_thread();
+            }
+            currentSubLevel = LevelTracker.subLevels.get(0);
+        }
+        return currentSubLevel;
     }
 
     @NonNull private final static ProgressTracker instance = new ProgressTracker();
@@ -66,6 +85,7 @@ public class ProgressTracker {
      */
     public void init(@NonNull StorageInterface storage, @NonNull Rect display, float fontSize) {
         LevelTracker.init(storage);
+        currentSubLevel = LevelTracker.subLevels.get(0);
         displayRect = display;
         normalizedFontSize = fontSize;
 

@@ -48,6 +48,6 @@ public class SubLevelListView extends LevelListView {
 
     @Override
     protected Level getLevel() {
-        return ProgressTracker.getInstance().currentSubLevel;
+        return ProgressTracker.getInstance().getCurrentSubLevel();
     }
 }

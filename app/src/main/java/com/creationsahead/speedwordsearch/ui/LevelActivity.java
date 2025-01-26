@@ -1,6 +1,7 @@
 package com.creationsahead.speedwordsearch.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ViewGroup.LayoutParams;
 import androidx.annotation.Nullable;
@@ -29,4 +30,16 @@ public class LevelActivity extends Activity {
         super.onResume();
         levelListView.unHideList();
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent intent = new Intent(this, getPrevActivityClass());
+        startActivity(intent);
+    }
+
+    protected Class<?> getPrevActivityClass() {
+        return SubLevelActivity.class;
+    }
+
 }
