@@ -52,4 +52,8 @@ public class LevelTracker {
     public static void store(SubLevel subLevel) {
         storageInterface.storeSubLevel(subLevel);
     }
+
+    public static boolean loaded() {
+        return subLevels.isEmpty() || subLevels.get(0).levels.isEmpty();
+    }
 }

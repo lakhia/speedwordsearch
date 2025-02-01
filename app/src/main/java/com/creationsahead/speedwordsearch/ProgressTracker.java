@@ -41,9 +41,7 @@ public class ProgressTracker {
 
     private void wait_for_loading_thread() {
         int timeCounter = 1;
-        while (LevelTracker.subLevels.isEmpty() ||
-                LevelTracker.subLevels.get(0).levels == null ||
-                LevelTracker.subLevels.get(0).levels.isEmpty()) {
+        while (LevelTracker.loaded()) {
             try {
                 sleep(100);
                 timeCounter++;

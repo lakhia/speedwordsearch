@@ -11,7 +11,7 @@ public class SubLevel extends Level {
     public ArrayList<Level> levels;
 
     public SubLevel() {
-        super("", 0);
+        this("", 0, 0);
     }
 
     public SubLevel(@NonNull String name, int levelNumber, int numberOfSubLevels) {
