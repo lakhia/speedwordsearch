@@ -39,17 +39,20 @@ public class GameApplication extends Application implements StorageInterface {
 
     @Override
     public void onCreate() {
+        loader = new Loader(this, this);
+        new Thread(loader).start();
+
         if (BuildConfig.FLAVOR.equals("paid")) {
             Date todayDate = new Date();
-            if (todayDate.after(new GregorianCalendar(2023, 12, 31).getTime())) {
+            if (todayDate.after(new GregorianCalendar(2024, 12, 31).getTime())) {
                 Toast.makeText(this,
                         "Trial period has expired", Toast.LENGTH_LONG).show();
                 return;
             }
         }
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         if (BuildConfig.BUILD_TYPE.equals("debug")) {
             StrictMode.enableDefaults();
-            //FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false);
         }
         super.onCreate();
         serializer.register(SubLevel.class, 15);
@@ -58,8 +61,6 @@ public class GameApplication extends Application implements StorageInterface {
                 .throwSubscriberException(BuildConfig.DEBUG)
                 .eventInheritance(false)
                 .sendNoSubscriberEvent(false).installDefaultEventBus();
-        loader = new Loader(this, this);
-        new Thread(loader).start();
     }
 
     @Override

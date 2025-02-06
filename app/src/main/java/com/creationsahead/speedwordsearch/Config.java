@@ -27,7 +27,7 @@ public class Config {
         difficulty = 25f * (subLevelNumber/4f + levelNumber/10f);
         isWordListSorted = subLevelNumber < 6;
 
-        double letterRatio = difficulty / MAX_DIFFICULTY * 2.0;
+        double letterRatio = difficulty / MAX_DIFFICULTY * 6.0;
         letterRatio = sizeX * Math.sqrt(sizeY) * letterRatio;
         if (letterRatio < 5) {
             letterLimit = 5;

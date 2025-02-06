@@ -1,12 +1,10 @@
 package com.creationsahead.speedwordsearch.ui;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 import com.creationsahead.speedwordsearch.R;
 import com.creationsahead.speedwordsearch.StorageInterface;
 import com.creationsahead.speedwordsearch.utils.SoundManager;

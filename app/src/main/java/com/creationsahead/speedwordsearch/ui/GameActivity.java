@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.creationsahead.speedwordsearch.Game;
 import com.creationsahead.speedwordsearch.Guess;
@@ -13,6 +12,7 @@ import com.creationsahead.speedwordsearch.R;
 import com.creationsahead.speedwordsearch.Selection;
 import com.creationsahead.speedwordsearch.TickerCallback;
 import com.creationsahead.speedwordsearch.utils.SoundManager;
+import org.greenrobot.eventbus.EventBus;
 import static com.creationsahead.speedwordsearch.mod.Level.TIME_LEFT;
 
 /**
@@ -54,6 +54,7 @@ public class GameActivity extends Activity implements TickerCallback {
     @Override
     public void onBackPressed() {
         finish();
+        EventBus.getDefault().post(ProgressTracker.getInstance().currentLevel);
         Intent intent = new Intent(this, LevelActivity.class);
         startActivity(intent);
     }

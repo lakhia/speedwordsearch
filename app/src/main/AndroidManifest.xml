@@ -10,6 +10,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:screenOrientation="sensorPortrait"
+            android:launchMode="singleInstance"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,12 +21,14 @@
             android:name=".ui.LevelActivity"
             android:exported="true"
             android:screenOrientation="sensorPortrait"
+            android:launchMode="singleInstance"
             android:theme="@style/FullscreenTheme">
         </activity>
         <activity
             android:name=".ui.SubLevelActivity"
             android:exported="true"
             android:screenOrientation="sensorPortrait"
+            android:launchMode="singleInstance"
             android:theme="@style/FullscreenTheme">
         </activity>
         <activity
@@ -38,6 +41,7 @@
             android:name=".ui.GameActivity"
             android:exported="true"
             android:screenOrientation="sensorPortrait"
+            android:launchMode="singleInstance"
             android:theme="@style/FullscreenTheme">
         </activity>
 

@@ -33,6 +33,7 @@ public class LevelActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         finish();
         Intent intent = new Intent(this, getPrevActivityClass());
         startActivity(intent);
