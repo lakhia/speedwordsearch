@@ -33,7 +33,7 @@ public class LevelTracker {
 
     public static void createLevel(SubLevel subLevel) {
         ArrayList<Level> levels = subLevel.levels;
-        if (levels.size() == 0 || (levels.get(levels.size() - 1).won)) {
+        if (levels.isEmpty() || (levels.get(levels.size() - 1).won)) {
             if (levels.size() < MAX_LEVEL) {
                 subLevel.addLevel(levels.size());
             } else if (subLevels.size() < MAX_SUB_LEVEL) {
@@ -43,7 +43,7 @@ public class LevelTracker {
     }
 
     private static void createSubLevel() {
-        if (subLevels.size() == 0 || (subLevels.get(subLevels.size() - 1).won &&
+        if (subLevels.isEmpty() || (subLevels.get(subLevels.size() - 1).won &&
                 subLevels.size() < MAX_SUB_LEVEL)) {
             subLevels.add(new SubLevel(LEVEL_NAMES[subLevels.size()], subLevels.size(), 1));
         }

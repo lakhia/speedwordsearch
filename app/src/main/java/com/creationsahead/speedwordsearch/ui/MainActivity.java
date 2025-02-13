@@ -2,7 +2,6 @@ package com.creationsahead.speedwordsearch.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;

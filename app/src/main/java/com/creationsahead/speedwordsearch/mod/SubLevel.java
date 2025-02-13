@@ -7,7 +7,7 @@ import static com.creationsahead.speedwordsearch.LevelTracker.MAX_LEVEL;
 /**
  * A single level
  */
-public class SubLevel extends Level {
+public final class SubLevel extends Level {
     public ArrayList<Level> levels;
 
     public SubLevel() {

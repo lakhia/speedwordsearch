@@ -47,7 +47,9 @@ class ConfigTest {
                 val config = Config(i, j)
                 val difficulty = config.difficulty
                 val letterLimit = config.letterLimit
-                println("For $i $j, config difficulty is $difficulty, limit is $letterLimit")
+                val smallerWords = config.smallerWords
+                println("For $i $j, config difficulty is $difficulty, limit is $letterLimit, smaller word is $smallerWords")
+                println("  Size: ${config.sizeX} and ${config.sizeY}")
             }
         }
     }

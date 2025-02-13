@@ -1,0 +1,74 @@
+Bugs:
+* Splash screen shows as huge on smaller screens
+* Logo for old devices
+
+UI:
+* Contrast
+* Top section is black
+* Setting buttons legibility
+* Colorful background
+
+Gameplay:
+* Finding new words always uses an placeholder cell as a starter
+
+Monetization / ads:
+* https://support.google.com/googleplay/android-developer/answer/12955712?visit_id=638549065174201471-3133538509&rd=2
+* https://developers.google.com/admob/android/banner
+* https://www.appbrain.com/info/help/sdk/interstitial.html
+
+Analytics:
+* https://firebase.google.com/docs/analytics/get-started?technology=android&platform=android
+
+Crashlytics:
+* https://console.firebase.google.com/u/9/project/speed-word-search/crashlytics/app/android:com.creationsahead.speedwordsearch/issues?state=open&time=last-seven-days&tag=all&sort=eventCount
+
+Low Priority:
+* Landscape orientation issues with game activity
+* Logo for old devices
+* Intent to select level
+* Colorful background?
+* Show time left bonus award / animation
+* YouTube video
+
+Future:
+* Leader board
+* Advance to next level automatically rather than going to level screen
+* Challenge and coop
+* https://www.pythonanywhere.com/pricing/
+
+
+******************************************************************************
+
+Answer: Word stored in grid
+Cell: Single cell that stores a letter
+Config: Parameters for a game such as grid size, number of letters, time limit, etc
+Direction: Lists the 8 directions an answer can point in
+Game: Stores the grid, config, sequence for controlling randomness, dictionary of words
+Grid: Stores a 2d array of cells, answer map, sequencer, config
+Guess: Stores a list of Cell tags that represent a guess
+Level: Score, time and stars gained for each level
+Position: x and y coordinates that represent a single grid's cell but has no reference to a cell itself
+ProgressTracker: Stores levels, scores, config and misc stats such as display and font size 
+Selection: Stores a position, direction and length to indicate a guess / answer
+Sequencer: Allows a way to randomly traverse grid, directions, letters, etc.
+Trie: An efficient dictionary of words
+Wordlist: A small wrapper class to create a dictionary
+
+******************************************************************************
+
+Flutter example with tests and high quality:
+  * https://flutter.dev/games
+  * https://www.youtube.com/watch?v=zGgeBNiRy-8
+  * Ping Ball game from "Very good ventures"
+  * https://docs.flutter.dev/resources/games-toolkit
+
+Rive:
+  * https://rive.app/blog/why-we-chose-flutter-for-the-rive-gamekit
+
+Flame:
+  * https://docs.flame-engine.org/latest/
+  
+******************************************************************************
+
+Color palettes:
+ * https://lospec.com/palette-list/sweetie-16

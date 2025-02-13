@@ -34,7 +34,7 @@ public class Config {
         } else {
             letterLimit = (int) letterRatio;
         }
-        smallerWords = Math.min(subLevelNumber / 3, sizeY - 4);
+        smallerWords = subLevelNumber / 2;
     }
 
     public int getFreqBasedOnSizeDifficulty(boolean flipped) {

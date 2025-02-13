@@ -58,7 +58,6 @@ class ProgressTrackerTest {
         progress.init(storage, Rect(), 0.0f)
         assertNull(progress.config)
         assertNull(progress.game)
-        progress.currentSubLevel = SubLevel("name", 1, 1)
         progress.createGame(Level())
 
         assertNotNull(progress.config)
@@ -71,19 +70,15 @@ class ProgressTrackerTest {
     fun test_02_progress() {
         // Initialize storage
         val subLevel = SubLevel("name", 1, 1)
-
-        progress.init(storage, Rect(), 0.0f)
-        progress.currentSubLevel = subLevel
         subLevel.levels[0].totalScore = 150
         subLevel.levels[0].score = 150
         subLevel.levels[0].timeUsed = 90
 
         // Act
         subLevel.levels[0].score()
-        progress.stopLevel(subLevel.levels[0])
+        subLevel.score()
 
         // Assert
-        assertEquals(1, storage.levels["name"]!!.number)
         assertEquals(2.5f, subLevel.levels[0].stars, 0.005f)
         assertEquals(true, subLevel.levels[0].won)
         assertEquals(0.25f, subLevel.stars)

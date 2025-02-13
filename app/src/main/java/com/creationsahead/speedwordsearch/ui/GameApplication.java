@@ -40,11 +40,12 @@ public class GameApplication extends Application implements StorageInterface {
     @Override
     public void onCreate() {
         loader = new Loader(this, this);
-        new Thread(loader).start();
+        Thread thread = new Thread(loader);
+        thread.start();
 
         if (BuildConfig.FLAVOR.equals("paid")) {
             Date todayDate = new Date();
-            if (todayDate.after(new GregorianCalendar(2024, 12, 31).getTime())) {
+            if (todayDate.after(new GregorianCalendar(2025, 12, 31).getTime())) {
                 Toast.makeText(this,
                         "Trial period has expired", Toast.LENGTH_LONG).show();
                 return;
@@ -61,6 +62,11 @@ public class GameApplication extends Application implements StorageInterface {
                 .throwSubscriberException(BuildConfig.DEBUG)
                 .eventInheritance(false)
                 .sendNoSubscriberEvent(false).installDefaultEventBus();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
