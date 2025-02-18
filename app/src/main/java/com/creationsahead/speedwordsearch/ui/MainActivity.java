@@ -63,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 textView.setTypeface(typeface);
                 textView.setTextSize(COMPLEX_UNIT_PX, fontSize);
-                textView.setMinimumHeight(133);
-                textView.setMinimumWidth(133);
+                textView.setMinimumHeight((int) (fontSize * 1.4f));
+                textView.setMinimumWidth((int) (fontSize * 1.4f));
                 row.addView(textView);
             }
         }
