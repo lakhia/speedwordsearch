@@ -107,28 +107,28 @@ class GameTest {
                 displayBuffer.toString())
 
         // Correct direction guessing
-        var guess = game.guess(Selection(1, 2, Direction.EAST, 4))
+        var guess = game.guess(1, 2, 4, 2)
         assertNull(guess.answer)
         assertFalse(guess.last)
-        guess = game.guess(Selection(7, 2, Direction.WEST, 4))
+        guess = game.guess(7, 2, 4, 2)
         assertNull(guess.answer)
         assertFalse(guess.last)
-        guess = game.guess(Selection(7, 2, Direction.SOUTH, 4))
+        guess = game.guess(7, 2, 7,5)
         assertNotNull(guess.answer)
         assertFalse(guess.last)
-        guess = game.guess(Selection(2, 5, Direction.EAST, 4))
+        guess = game.guess(2, 5, 5, 5)
         assertNotNull(guess.answer)
         assertFalse(guess.last)
         assertEquals(18, totalScore)
 
         // Opposite direction guessing
-        guess = game.guess(Selection(4, 3, Direction.WEST, 4))
+        guess = game.guess(4, 3, 1, 3)
         assertNotNull(guess.answer)
         assertFalse(guess.last)
         assertEquals(27, totalScore)
 
         // Palindrome
-        guess = game.guess(Selection(0, 0, Direction.SOUTH_EAST, 4))
+        guess = game.guess(0, 0, 3, 3)
         assertNotNull(guess.answer)
         assertFalse(guess.last)
         assertEquals(36, totalScore)
@@ -230,5 +230,17 @@ class GameTest {
                         "I L R T C D \n" +
                         "S A S R E A \n" +
                         "C N B L D G \n", game.toString())
+    }
+
+    @Test
+    fun test_07_get_selection() {
+        val config = Config(6, 6, 0)
+        val game = Game(config, dictionary, RandomSequencer(config, 1))
+        var selection = game.getSelection(-1, 0, -1, 1)
+        assertNull(selection)
+        selection = game.getSelection(0, 20, 0, 20)
+        assertNull(selection)
+        selection = game.getSelection(1, 1, 1, 1)
+        assertNull(selection)
     }
 }

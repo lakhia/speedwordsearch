@@ -9,7 +9,6 @@ import com.creationsahead.speedwordsearch.Game;
 import com.creationsahead.speedwordsearch.Guess;
 import com.creationsahead.speedwordsearch.ProgressTracker;
 import com.creationsahead.speedwordsearch.R;
-import com.creationsahead.speedwordsearch.Selection;
 import com.creationsahead.speedwordsearch.TickerCallback;
 import com.creationsahead.speedwordsearch.utils.SoundManager;
 import org.greenrobot.eventbus.EventBus;
@@ -53,6 +52,7 @@ public class GameActivity extends Activity implements TickerCallback {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         finish();
         EventBus.getDefault().post(ProgressTracker.getInstance().currentLevel);
         Intent intent = new Intent(this, LevelActivity.class);
@@ -70,13 +70,12 @@ public class GameActivity extends Activity implements TickerCallback {
     }
 
     public void onGuess(int x1, int y1, int x2, int y2) {
-        Selection selection = Selection.isValid(x1, y1, x2, y2);
-        if (selection != null) {
-            Guess guess = game.guess(selection);
+        Guess guess = game.guess(x1, y1, x2, y2);
+        if (guess != null) {
             if (guess.last) {
                 ticker.pause();
             }
-            gridWidget.onGuess(guess);
+            gridWidget.animateGuess(guess);
         } else {
             if (x1 != x2 && y1 != y2) {
                 Toast.makeText(this, "Invalid Selection", Toast.LENGTH_SHORT).show();

@@ -128,7 +128,7 @@ public class GridWidget extends TableLayout {
         }
     }
 
-    public void onGuess(@NonNull Guess guess) {
+    public void animateGuess(@NonNull Guess guess) {
         new GuessAnimator(guess);
         if (guess.last) {
             {

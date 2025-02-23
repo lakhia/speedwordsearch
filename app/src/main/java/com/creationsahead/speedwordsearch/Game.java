@@ -176,13 +176,26 @@ public class Game {
 
     /**
      * Validate a guess and mark word from grid as un-used
-     * @param selection selection made by user
-     * @return Guess object that indicates status of guess
+     * @return Guess object that indicates status of guess or null if selection is invalid
      */
-    @NonNull public Guess guess(@NonNull Selection selection) {
+    public Guess guess(int x1, int y1, int x2, int y2) {
+        Selection selection = getSelection(x1, y1, x2, y2);
+        if (selection == null) {
+            return null;
+        }
         String contents = grid.findContents(selection, false);
         Answer answer = answerMap.pop(contents);
         return grid.guess(answer, selection, answerMap.isSolved());
+    }
+
+    public Selection getSelection(int x1, int y1, int x2, int y2) {
+        if (x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
+            return null;
+        }
+        if (x1 >= config.sizeX || y1 >= config.sizeY || x2 >= config.sizeX || y2 >= config.sizeY) {
+            return null;
+        }
+        return Selection.isValid(x1, y1, x2, y2);
     }
 
     @NonNull

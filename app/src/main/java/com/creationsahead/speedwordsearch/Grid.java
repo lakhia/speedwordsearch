@@ -8,7 +8,7 @@ import org.greenrobot.eventbus.EventBus;
  * Grid to manage the puzzle
  */
 public class Grid {
-    @NonNull private final Cell[][] mGrid;
+    @NonNull private final Cell[][] cells;
     private final int sizeX, sizeY;
     @NonNull private final RandomSequencer mSequencer;
 
@@ -19,10 +19,10 @@ public class Grid {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         mSequencer = sequencer;
-        mGrid = new Cell[sizeX][sizeY];
+        cells = new Cell[sizeX][sizeY];
         for (int x=0; x < sizeX; x++) {
             for (int y=0; y < sizeY; y++) {
-                mGrid[x][y] = new Cell();
+                cells[x][y] = new Cell();
             }
         }
     }
@@ -34,7 +34,7 @@ public class Grid {
      * @return true if store was successful
      */
     public boolean addLetter(@NonNull Position position, char letter) {
-        return mGrid[position.x][position.y].store(letter);
+        return cells[position.x][position.y].store(letter);
     }
 
     /**
@@ -44,7 +44,7 @@ public class Grid {
      * @return true if store was successful
      */
     public boolean addPlaceholderLetter(@NonNull Position position, char letter) {
-        return mGrid[position.x][position.y].storePlaceholder(letter);
+        return cells[position.x][position.y].storePlaceholder(letter);
     }
 
     /**
@@ -53,7 +53,7 @@ public class Grid {
      * @return true if clear was successful
      */
     public boolean clearLetter(@NonNull Position position) {
-        return mGrid[position.x][position.y].clear();
+        return cells[position.x][position.y].clear();
     }
 
     /**
@@ -74,7 +74,7 @@ public class Grid {
         // Check overwriting letters
         Direction dir = selection.direction;
         for (int x = selection.position.x, y = selection.position.y, i=0; i < word.length(); i++) {
-            if (!mGrid[x][y].store(word.charAt(i))) {
+            if (!cells[x][y].store(word.charAt(i))) {
                 throw new RuntimeException("Board in inconsistent state, word partially inserted");
             }
             x += dir.x;
@@ -92,7 +92,7 @@ public class Grid {
         Selection selection = answer.selection;
         Position pos = selection.position;
         for (int x = pos.x, y = pos.y, i=0; i <= len; i++) {
-            if (!mGrid[x][y].erase(answer.word.charAt(i))) {
+            if (!cells[x][y].erase(answer.word.charAt(i))) {
                 throw new RuntimeException("Board in inconsistent state, word not stored in previous step");
             }
             x += selection.direction.x;
@@ -113,7 +113,7 @@ public class Grid {
             SequenceIterator<Integer> cols = mSequencer.getYCoordinateSequence();
             while (cols.hasNext()) {
                 int y = cols.next();
-                if (cellCallback.callback(mGrid[x][y])) {
+                if (cellCallback.callback(cells[x][y])) {
                     Position newPos = new Position(x, y);
                     if (positionCallback.onUpdate(newPos)) {
                         return;
@@ -159,9 +159,9 @@ public class Grid {
         for (int i = 0; i < selection.length; i++) {
             char letter;
             if (searchValue) {
-                letter = mGrid[x][y].getSearchValue();
+                letter = cells[x][y].getSearchValue();
             } else {
-                letter = mGrid[x][y].letter;
+                letter = cells[x][y].letter;
             }
             result.append(letter);
             x += dir.x;
@@ -175,7 +175,7 @@ public class Grid {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int y=0; y < sizeY; y++) {
-            for (Cell[] cells: mGrid) {
+            for (Cell[] cells: cells) {
                 sb.append(cells[y]);
             }
             sb.append("\n");
@@ -190,7 +190,7 @@ public class Grid {
     private ArrayList<Object> createTagsFromSelection(@NonNull Selection selection) {
         ArrayList<Object> arrayList = new ArrayList<>();
         for (int x = selection.position.x, y = selection.position.y, i=0; i < selection.length; i++) {
-            arrayList.add(mGrid[x][y].tag);
+            arrayList.add(cells[x][y].tag);
             x += selection.direction.x;
             y += selection.direction.y;
         }
@@ -201,7 +201,7 @@ public class Grid {
      * Get cell at coordinate x and y, assumes coordinates are within range
      */
     public Cell getCell(int x, int y) {
-        return mGrid[x][y];
+        return cells[x][y];
     }
 
     @NonNull
