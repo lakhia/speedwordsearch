@@ -1,9 +1,7 @@
 Bugs:
-* Splash screen shows as huge on smaller screens
 * Logo for old devices
 
 UI:
-* Contrast
 * Top section is black
 * Setting buttons legibility
 * Settings top navigation back button doesn't work

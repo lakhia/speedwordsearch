@@ -37,8 +37,8 @@ public class SoundManager {
 
     public void init(@NonNull Context context) {
         dict.put(SOUND_TYPE.FAIL, load(context, "error-2-126514.mp3"));
-        dict.put(SOUND_TYPE.BONUS, load(context, "mixkit-bonus-earned-in-video-game-2058.wav"));
-        dict.put(SOUND_TYPE.LEVEL, load(context, "mixkit-completion-of-a-level-2063.wav"));
+        dict.put(SOUND_TYPE.BONUS, load(context, "mixkit-bonus-earned-in-video-game-2058.mp3"));
+        dict.put(SOUND_TYPE.LEVEL, load(context, "mixkit-completion-of-a-level-2063.mp3"));
         soundTracks[0] = load(context, "mixkit-eyes-in-the-puddle-257.mp3");
         soundTracks[1] = load(context, "mixkit-infected-vibes-157.mp3");
         soundTracks[2] = load(context, "mixkit-deep-urban-623.mp3");
