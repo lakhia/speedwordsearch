@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.zip.GZIPInputStream;
@@ -56,6 +57,7 @@ public class GameApplication extends Application implements StorageInterface {
             StrictMode.enableDefaults();
         }
         super.onCreate();
+        serializer.register(ArrayList.class, 16);
         serializer.register(SubLevel.class, 15);
         serializer.register(Level.class, 14);
         EventBus.builder().addIndex(new EventBusIndex())
