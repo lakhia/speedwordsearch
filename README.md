@@ -1,0 +1,46 @@
+# Speed Word Search Game
+
+Welcome to the Speed Word Search app for Android!
+
+You have 2 minutes to find all the words. Beware that as you are searching for the words and removing them from the list, the board is changing and new words are being added in!
+
+## Splash Screen
+
+I made a simple splash screen where the game's name are shown as tiles and they pop into view:
+
+![Splash Screen](docs/splash.png)
+
+## Levels
+
+![Levels](docs/levels.png)
+
+The game has top levels named "Beginner I", "Intermediate II" etc. and each of those levels and 10 sub-levels under it. 
+
+## History and Scores
+
+Each top-level is scored based on the scores of the sub-level. The sub-level scores are based on a combination of how much time was left on the clock and how many words were found.
+
+All the scores and progress are stored via game files so that the next time you start playing, you can continue where you left off. 
+
+## Game Play
+
+![Game Play](docs/game.png)
+
+## Privacy Policy
+
+As an avid Android user myself, I take privacy very seriously. I know how frustrating it is when apps collect your data without your knowledge.
+
+### Data collected by the app
+
+I hereby state, to the best of my knowledge and belief, that I have not programmed this app to collect any personally identifiable information. All app preferences (like sound controls) and level progress are created by the you (the user) and is stored locally in your device only. This data can be simply erased by clearing the app's data or uninstalling it. No analytics software is present in the app.
+
+### Explanation of permissions
+
+Currently, the app is in testing / beta. Therefore, it shows no ads at the moment. After testing, I plan to insert family friendly ads and also allow the user to purchase an ad free version. Once that happens, the appropriate permissions for displaying ads will be added.
+
+### Report Issues
+
+If you find any security vulnerability that has been inadvertently caused by me, or have any question regarding how the app protectes your privacy, please send me an email and I will surely try to fix it/help you.
+
+Yours sincerely,
+yamani.photographs@gmail.com
