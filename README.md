@@ -8,7 +8,7 @@ You have 2 minutes to find all the words. Beware that as you are searching for t
 
 I made a simple splash screen where the game's name are shown as tiles and they pop into view:
 
-![Splash Screen](docs/splash.png)
+![Splash Screen](docs/splash.gif)
 
 ## Levels
 
@@ -23,6 +23,10 @@ Each top-level is scored based on the scores of the sub-level. The sub-level sco
 All the scores and progress are stored via game files so that the next time you start playing, you can continue where you left off. 
 
 ## Game Play
+
+The hidden words are listed on the top section of the game screen. The grid of letters are in the bottom half. Search for any of the words in the list but they must be in a straight or diagonal line (total of 8 directions: N, E, S, W, NE, NW, SE, SW).
+
+Once you find a word, click on the first letter. Then click on the second letter. Alternatively, you can use the drag motion by starting with the first letter and ending at the last letter. If the word matches, your score will increase and the word will disappear from the top list.
 
 ![Game Play](docs/game.png)
 
