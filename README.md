@@ -36,7 +36,7 @@ As an avid Android user myself, I take privacy very seriously. I know how frustr
 
 ### Data collected by the app
 
-I hereby state, to the best of my knowledge and belief, that I have not programmed this app to collect any personally identifiable information. All app preferences (like sound controls) and level progress are created by the you (the user) and is stored locally in your device only. This data can be simply erased by clearing the app's data or uninstalling it. No analytics software is present in the app.
+I hereby state, to the best of my knowledge and belief, that I have not programmed this app to collect any personally identifiable information. All app preferences (like sound controls) and level progress are created by you (the user) and is stored locally in your device only. This data can be simply erased by clearing the app's data or uninstalling it. No analytics software is present in the app.
 
 ### Explanation of permissions
 
@@ -44,7 +44,4 @@ Currently, the app is in testing / beta. Therefore, it shows no ads at the momen
 
 ### Report Issues
 
-If you find any security vulnerability that has been inadvertently caused by me, or have any question regarding how the app protectes your privacy, please send me an email and I will surely try to fix it/help you.
-
-Yours sincerely,
-yamani.photographs@gmail.com
+If you find any security vulnerability that has been inadvertently caused by me, or have any question regarding how the app protectes your privacy, please create an issue on the repo and I will surely try to fix it/help you.
