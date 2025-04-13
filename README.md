@@ -28,7 +28,7 @@ The hidden words are listed on the top section of the game screen. The grid of l
 
 Once you find a word, click on the first letter. Then click on the second letter. Alternatively, you can use the drag motion by starting with the first letter and ending at the last letter. If the word matches, your score will increase and the word will disappear from the top list.
 
-![Game Play](docs/game.png)
+![Game Play](docs/gameplay.gif)
 
 ## Privacy Policy
 
