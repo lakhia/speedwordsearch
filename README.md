@@ -30,18 +30,22 @@ Once you find a word, click on the first letter. Then click on the second letter
 
 ![Game Play](docs/gameplay.gif)
 
-## Privacy Policy
+# Privacy Policy
 
 As an avid Android user myself, I take privacy very seriously. I know how frustrating it is when apps collect your data without your knowledge.
 
-### Data collected by the app
+## Data collected by the app
 
 I hereby state, to the best of my knowledge and belief, that I have not programmed this app to collect any personally identifiable information. All app preferences (like sound controls) and level progress are created by you (the user) and is stored locally in your device only. This data can be simply erased by clearing the app's data or uninstalling it. No analytics software is present in the app.
 
-### Explanation of permissions
+## Explanation of permissions
 
 Currently, the app is in testing / beta. Therefore, it shows no ads at the moment. After testing, I plan to insert family friendly ads and also allow the user to purchase an ad free version. Once that happens, the appropriate permissions for displaying ads will be added.
 
-### Report Issues
+## Report Issues
 
 If you find any security vulnerability that has been inadvertently caused by me, or have any question regarding how the app protectes your privacy, please create an issue on the repo and I will surely try to fix it/help you.
+
+# License
+
+This code is provided under the "Creative Commons NonCommercial NoDerivatives" license. AKA [CC BY-NC-ND](https://github.com/Gibberlings3/GitHub-Templates/blob/master/License-Templates/CC-BY-NC-ND-4.0/LICENSE-CC-BY-NC-ND-4.0.md). 
