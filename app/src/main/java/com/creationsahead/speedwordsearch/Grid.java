@@ -108,9 +108,9 @@ public class Grid {
     public void findCells(@NonNull CellCallback cellCallback,
                           @NonNull PositionCallback positionCallback) {
         SequenceIterator<Integer> rows = mSequencer.getXCoordinateSequence();
+        SequenceIterator<Integer> cols = mSequencer.getYCoordinateSequence();
         while (rows.hasNext()) {
             int x = rows.next();
-            SequenceIterator<Integer> cols = mSequencer.getYCoordinateSequence();
             while (cols.hasNext()) {
                 int y = cols.next();
                 if (cellCallback.callback(cells[x][y])) {
@@ -120,6 +120,7 @@ public class Grid {
                     }
                 }
             }
+            cols.shuffle();
         }
     }
 
@@ -130,9 +131,9 @@ public class Grid {
      * @param callback called for each assignment that is possible
      */
     public void findUnusedSelection(final int length, @NonNull final SelectionCallback callback) {
+        SequenceIterator<Direction> dirs = mSequencer.getDirectionSequence();
         findCells(Cell::isUnused,
                 (position) -> {
-                    SequenceIterator<Direction> dirs = mSequencer.getDirectionSequence();
                     while (dirs.hasNext()) {
                         Direction dir = dirs.next();
                         // If position can accommodate length, process it
@@ -141,6 +142,7 @@ public class Grid {
                             return callback.onUpdate(selection, findContents(selection, true));
                         }
                     }
+                    dirs.shuffle();
                     return false;
                 });
     }

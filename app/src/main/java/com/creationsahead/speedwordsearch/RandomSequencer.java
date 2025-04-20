@@ -55,7 +55,7 @@ public class RandomSequencer {
     }
 
     @NonNull
-    public SequenceIterator<Integer>  getYCoordinateSequence() {
+    public SequenceIterator<Integer> getYCoordinateSequence() {
         return new SequenceIterator<>(coordinateYCombinations, coordinateYRandomGen);
     }
 
