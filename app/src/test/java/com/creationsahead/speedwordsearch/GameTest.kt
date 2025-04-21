@@ -69,10 +69,10 @@ class GameTest {
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(
-        "B C . C \n" +
+        "B C C C \n" +
                 ". B A A \n" +
                 ". A A A \n" +
-                "B B . C \n", game.toString())
+                ". B B C \n", game.toString())
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(false, game.addOneWord(3, 3))
         assertEquals(false, game.addOneWord(1, 1))
@@ -94,16 +94,16 @@ class GameTest {
         assertEquals(true, game.addOneWord(4, 4))
         assertEquals(false, game.addOneWord(4, 4))
         assertEquals(
-                "C . B B . . . . \n" +
-                        ". A A B . . . . \n" +
-                        ". B A . A . . A \n" +
-                        "C C C C A C . B \n" +
-                        ". . C A B A . C \n" +
-                        ". . A A A C . C \n" +
-                        ". . . C A A B . \n" +
-                        ". . . . . . . . \n", game.toString())
+                "C . B . . . . . \n" +
+                        ". A A . . . . C \n" +
+                        ". . A . . . B C \n" +
+                        ". . C C . A C C \n" +
+                        ". . B . B A A C \n" +
+                        "C C B A B . A A \n" +
+                        ". . A A . . A . \n" +
+                        ". . C . . . . . \n", game.toString())
 
-        assertEquals("CAAC ABAC ACCC BABC AAAC BBAC BAAC ABCC ",
+        assertEquals("CAAC ABAC BABC ABCC BBAC BAAC AAAC ACCC ",
                 displayBuffer.toString())
 
         // Correct direction guessing
@@ -113,16 +113,16 @@ class GameTest {
         guess = game.guess(7, 2, 4, 2)
         assertNull(guess.answer)
         assertFalse(guess.last)
-        guess = game.guess(7, 2, 7,5)
+        guess = game.guess(2, 0, 2,3)
         assertNotNull(guess.answer)
         assertFalse(guess.last)
-        guess = game.guess(2, 5, 5, 5)
+        guess = game.guess(7, 5, 7, 2)
         assertNotNull(guess.answer)
         assertFalse(guess.last)
         assertEquals(18, totalScore)
 
         // Opposite direction guessing
-        guess = game.guess(4, 3, 1, 3)
+        guess = game.guess(3, 5, 0, 5)
         assertNotNull(guess.answer)
         assertFalse(guess.last)
         assertEquals(27, totalScore)
@@ -136,32 +136,32 @@ class GameTest {
         // Get answers
         var ans = game.answers
         assertEquals("[" +
-                "pos: (5, 4), dir: WEST, len: 4, word: ABAC, " +
-                "pos: (6, 6), dir: WEST, len: 4, word: BAAC, " +
-                "pos: (3, 0), dir: SOUTH_WEST, len: 4, word: BABC, " +
-                "pos: (2, 0), dir: SOUTH_EAST, len: 4, word: BBAC]",
+                "pos: (6, 6), dir: NORTH, len: 4, word: AAAC, " +
+                "pos: (5, 4), dir: SOUTH_WEST, len: 4, word: ABAC, " +
+                "pos: (4, 4), dir: NORTH_EAST, len: 4, word: BABC, " +
+                "pos: (2, 4), dir: SOUTH, len: 4, word: BBAC]",
                 ans.toString())
 
         config.isWordListSorted = false
         ans = game.answers
         assertEquals("[" +
-                "pos: (5, 4), dir: WEST, len: 4, word: ABAC, " +
-                "pos: (2, 0), dir: SOUTH_EAST, len: 4, word: BBAC, " +
-                "pos: (3, 0), dir: SOUTH_WEST, len: 4, word: BABC, " +
-                "pos: (6, 6), dir: WEST, len: 4, word: BAAC]",
+                "pos: (6, 6), dir: NORTH, len: 4, word: AAAC, " +
+                "pos: (5, 4), dir: SOUTH_WEST, len: 4, word: ABAC, " +
+                "pos: (2, 4), dir: SOUTH, len: 4, word: BBAC, " +
+                "pos: (4, 4), dir: NORTH_EAST, len: 4, word: BABC]",
                 ans.toString())
 
         // Clear placeholders
         game.clearPlaceholders(30)
         assertEquals(
-                ". . B B . . . . \n" +
-                        ". . A B . . . . \n" +
-                        ". B . . A . . . \n" +
-                        "C . . . . C . . \n" +
-                        ". . C A B A . . \n" +
-                        ". . . . . . . . \n" +
-                        ". . . C A A B . \n" +
-                        ". . . . . . . . \n", game.toString())
+                ". . . . . . . . \n" +
+                        ". . . . . . . C \n" +
+                        ". . . . . . B . \n" +
+                        ". . . . . A C . \n" +
+                        ". . B . B A A . \n" +
+                        ". . B . B . A . \n" +
+                        ". . A A . . A . \n" +
+                        ". . C . . . . . \n", game.toString())
     }
 
     @Test
@@ -197,24 +197,25 @@ class GameTest {
         val game = Game(config, dictionary, RandomSequencer(config, 1))
         game.populatePuzzle()
         assertEquals(
-                "H A D D C M \n" +
-                        "C A A B A L \n" +
-                        "A C D A C C \n" +
-                        "B A D U C A \n" +
-                        "A B A B C A \n" +
-                        "A B C C I C \n", game.toString())
+                "B A A A C C \n" +
+                        "B C B C D A \n" +
+                        "A A C F D A \n" +
+                        "C B C F A C \n" +
+                        "G A C B A B \n" +
+                        "G P A D D A \n", game.toString())
         // TODO: bug because selection is bigger than len of word
         assertEquals(
-                "pos: (2, 4), dir: NORTH, len: 5, word: ADDA\n" +
-                        "pos: (1, 4), dir: EAST, len: 5, word: BABC\n" +
-                        "pos: (1, 0), dir: SOUTH_EAST, len: 5, word: AAAC\n" +
-                        "pos: (4, 0), dir: WEST, len: 5, word: CDDA\n" +
-                        "pos: (5, 5), dir: NORTH, len: 5, word: CAAC\n" +
-                        "pos: (4, 1), dir: SOUTH, len: 5, word: ACCC\n" +
-                        "pos: (1, 5), dir: NORTH, len: 5, word: BBAC\n" +
-                        "pos: (0, 4), dir: NORTH, len: 5, word: ABAC\n" +
-                        "pos: (0, 5), dir: EAST, len: 5, word: ABCC\n" +
-                        "pos: (3, 1), dir: WEST, len: 4, word: BAAC\n",
+                "pos: (2, 5), dir: NORTH, len: 5, word: ACCC\n" +
+                        "pos: (2, 0), dir: SOUTH, len: 5, word: ABCC\n" +
+                        "pos: (1, 4), dir: NORTH, len: 5, word: ABAC\n" +
+                        "pos: (4, 0), dir: SOUTH, len: 5, word: CDDA\n" +
+                        "pos: (5, 0), dir: SOUTH, len: 5, word: CAAC\n" +
+                        "pos: (0, 0), dir: SOUTH, len: 5, word: BBAC\n" +
+                        "pos: (1, 0), dir: EAST, len: 5, word: AAAC\n" +
+                        "pos: (5, 4), dir: WEST, len: 5, word: BABC\n" +
+                        "pos: (5, 5), dir: WEST, len: 5, word: ADDA\n" +
+                        "pos: (3, 2), dir: SOUTH, len: 3, word: FF\n" +
+                        "pos: (0, 5), dir: NORTH, len: 3, word: GG\n",
                 answerBuffer.toString())
     }
 
