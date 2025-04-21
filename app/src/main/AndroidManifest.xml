@@ -11,6 +11,7 @@
             android:name=".ui.MainActivity"
             android:screenOrientation="sensorPortrait"
             android:launchMode="singleInstance"
+            android:theme="@style/FullscreenTheme"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,6 +36,7 @@
             android:name=".ui.SettingsActivity"
             android:exported="true"
             android:screenOrientation="sensorPortrait"
+            android:theme="@style/FullscreenTheme"
             android:label="@string/title_activity_settings">
         </activity>
         <activity

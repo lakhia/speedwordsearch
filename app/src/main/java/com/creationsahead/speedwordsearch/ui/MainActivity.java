@@ -12,6 +12,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.creationsahead.speedwordsearch.ProgressTracker;
 import com.creationsahead.speedwordsearch.R;
+import com.google.android.material.appbar.MaterialToolbar;
 import static android.util.TypedValue.COMPLEX_UNIT_PX;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         findViewById(R.id.play).setOnClickListener(this);
         findViewById(R.id.setting).setOnClickListener(this);
+        MaterialToolbar materialToolbar = findViewById(R.id.toolbar);
+        materialToolbar.setTitle(R.string.app_name);
     }
 
     @Override
