@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#1976D2</color>
     <color name="colorPrimaryDark">#673AB7</color>
+    <color name="colorPrimaryVeryDark">#261C3B</color>
     <color name="colorLetters">#404040</color>
     <color name="pinkAccent">#FF4081</color>
     <color name="lightBlue">#D0BCFF</color>
