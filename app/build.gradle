@@ -49,6 +49,9 @@ android {
     }
     namespace 'com.creationsahead.speedwordsearch'
     buildToolsVersion '35.0.0'
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {
