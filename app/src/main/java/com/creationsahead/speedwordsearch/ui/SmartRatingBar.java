@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import com.creationsahead.speedwordsearch.R;
 
@@ -102,7 +103,7 @@ public class SmartRatingBar extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
         final Drawable ratingDrawable = mRatingDrawable;

@@ -39,7 +39,6 @@ public class GridWidget extends TableLayout {
         super(context, attrs);
         EventBus.getDefault().register(this);
 
-        setBackgroundResource(R.color.black_overlay);
         GameApplication app = (GameApplication) getContext().getApplicationContext();
         Typeface typeface = app.loader.letterTypeface;
         tracker = ProgressTracker.getInstance();
