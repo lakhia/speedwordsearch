@@ -42,6 +42,6 @@ public final class SubLevel extends Level {
         score = score / MAX_LEVEL;
         stars = stars / MAX_LEVEL;
         stars = Math.min(stars, 4f);
-        won = stars > 2.0f;
+        won = levels.size() >= MAX_LEVEL ;
     }
 }
