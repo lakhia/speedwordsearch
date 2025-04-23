@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/pinkAccent</item>
         <!-- don't show button text in all caps -->
         <item name="android:textAllCaps">false</item>
-        <item name="android:textColorHighlight">@color/lightBlue</item>
+        <item name="android:textColorHighlight">@color/colorPrimary</item>
         <item name="android:windowEnterAnimation">@anim/trans_left_in</item>
         <item name="android:windowExitAnimation">@anim/trans_right_out</item>
     </style>
@@ -28,7 +28,7 @@
 
     <style name="PuzzleLetter">
         <item name="android:background">@drawable/cell</item>
-        <item name="android:colorBackground">@color/lightBlue</item>
+        <item name="android:colorBackground">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorLetters</item>
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
@@ -38,7 +38,7 @@
 
     <style name="WordList">
         <item name="android:padding">8dp</item>
-        <item name="android:textColor">@color/pinkAccent</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
