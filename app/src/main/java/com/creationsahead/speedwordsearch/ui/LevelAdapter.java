@@ -25,7 +25,7 @@ public class LevelAdapter extends ArrayAdapter<Level> {
 
     public LevelAdapter(@NonNull Context context, int resource, @NonNull List<Level> levels) {
         super(context, resource, levels);
-        color = context.getResources().getColor(R.color.pinkAccent);
+        color = context.getResources().getColor(R.color.bright_yellow);
     }
 
     /// Inflates a level with text, buttons and stars

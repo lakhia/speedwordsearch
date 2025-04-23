@@ -4,9 +4,8 @@
     <color name="colorPrimaryDark">#673AB7</color>
     <color name="colorPrimaryVeryDark">#261C3B</color>
     <color name="colorLetters">#404040</color>
-    <color name="pinkAccent">#FF4081</color>
     <color name="lightGrey">#dfdfdf</color>
     <color name="black_overlay">#000000</color>
     <color name="bright_yellow_alpha">#c0FFEB3B</color>
-    <color name="bright_yellow_no_alpha">#FFEB3B</color>
+    <color name="bright_yellow">#FFEB3B</color>
 </resources>

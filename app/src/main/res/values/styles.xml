@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/black_overlay</item>
-        <item name="colorAccent">@color/pinkAccent</item>
+        <item name="colorAccent">@color/colorPrimary</item>
         <!-- don't show button text in all caps -->
         <item name="android:textAllCaps">false</item>
         <item name="android:textColorHighlight">@color/colorPrimary</item>
