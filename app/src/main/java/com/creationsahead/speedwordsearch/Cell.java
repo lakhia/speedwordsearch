@@ -107,7 +107,7 @@ public class Cell {
     @NonNull
     @Override
     public String toString() {
-        return letter + " ";
+        return String.valueOf(letter);
     }
 
     /**

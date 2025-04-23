@@ -178,7 +178,7 @@ public class Grid {
         StringBuilder sb = new StringBuilder();
         for (int y=0; y < sizeY; y++) {
             for (Cell[] cells: cells) {
-                sb.append(cells[y]);
+                sb.append(cells[y]).append(" ");
             }
             sb.append("\n");
         }
