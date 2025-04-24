@@ -12,7 +12,7 @@ I made a simple splash screen where the game's name are shown as tiles and they 
 
 ## Levels
 
-![Levels](docs/levels.png)
+![Levels](docs/levels.gif)
 
 The game has top levels named "Beginner I", "Intermediate II" etc. and each of those levels and 10 sub-levels under it. 
 
@@ -29,6 +29,12 @@ The hidden words are listed on the top section of the game screen. The grid of l
 Once you find a word, click on the first letter. Then click on the second letter. Alternatively, you can use the drag motion by starting with the first letter and ending at the last letter. If the word matches, your score will increase and the word will disappear from the top list.
 
 ![Game Play](docs/gameplay.gif)
+
+## Scoring
+
+Each word gets points based on its length. Two of the four stars are based on how many points you got out of maximum points possible based on all the words on the board. The last two stars are based on the amount of time you took to complete the level. If you score 2 out of 4 stars, you unlock the next level. Following is the animation on winning a level:
+
+![Completing level and winning](docs/win.gif)
 
 # Privacy Policy
 
