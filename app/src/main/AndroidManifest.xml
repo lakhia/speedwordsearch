@@ -11,7 +11,7 @@
             android:name=".ui.MainActivity"
             android:screenOrientation="sensorPortrait"
             android:launchMode="singleInstance"
-            android:theme="@style/FullscreenTheme"
+            android:theme="@style/AppTheme"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,20 +23,20 @@
             android:exported="true"
             android:screenOrientation="sensorPortrait"
             android:launchMode="singleInstance"
-            android:theme="@style/FullscreenTheme">
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".ui.SubLevelActivity"
             android:exported="true"
             android:screenOrientation="sensorPortrait"
             android:launchMode="singleInstance"
-            android:theme="@style/FullscreenTheme">
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".ui.SettingsActivity"
             android:exported="true"
             android:screenOrientation="sensorPortrait"
-            android:theme="@style/FullscreenTheme"
+            android:theme="@style/AppTheme"
             android:label="@string/title_activity_settings">
         </activity>
         <activity
@@ -44,7 +44,7 @@
             android:exported="true"
             android:screenOrientation="sensorPortrait"
             android:launchMode="singleInstance"
-            android:theme="@style/FullscreenTheme">
+            android:theme="@style/AppTheme">
         </activity>
 
         <meta-data
