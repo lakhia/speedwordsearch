@@ -2,11 +2,10 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:windowBackground">@color/black_overlay</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryVeryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
-        <!-- don't show button text in all caps -->
+        <item name="android:windowBackground">@drawable/gradient</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColorHighlight">@color/colorPrimary</item>
         <item name="android:windowEnterAnimation">@anim/trans_left_in</item>
