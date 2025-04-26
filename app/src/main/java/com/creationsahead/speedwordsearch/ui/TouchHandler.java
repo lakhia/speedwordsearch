@@ -6,6 +6,7 @@ import android.graphics.Insets;
 import android.graphics.Paint;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.DisplayCutout;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
@@ -54,11 +55,13 @@ public class TouchHandler extends View implements View.OnTouchListener {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (SDK_INT >= Build.VERSION_CODES.R) {
+        if (SDK_INT >= Build.VERSION_CODES.P) {
             WindowInsets insets = getRootWindowInsets();
             if (insets != null) {
-                Insets inset = insets.getInsets(WindowInsets.Type.displayCutout());
-                topMargin = inset.top;
+                DisplayCutout cutout = insets.getDisplayCutout();
+                if (cutout != null) {
+                    topMargin = cutout.getSafeInsetTop();
+                }
             }
         }
     }
