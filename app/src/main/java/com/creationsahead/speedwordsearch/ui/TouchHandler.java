@@ -57,8 +57,8 @@ public class TouchHandler extends View implements View.OnTouchListener {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsets insets = getRootWindowInsets();
             if (insets != null) {
-                Insets inset = insets.getInsets(2);
-                topMargin = inset.bottom;
+                Insets inset = insets.getInsets(WindowInsets.Type.displayCutout());
+                topMargin = inset.top;
             }
         }
     }
