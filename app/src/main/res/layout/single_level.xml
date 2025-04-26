@@ -12,14 +12,14 @@
         android:id="@+id/toggleButton"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_margin="8dp"
         android:background="@color/colorPrimary"
         android:clickable="false"
         android:focusable="false"
         android:textColor="@color/black_overlay"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         tool:text="Level 1" />
 
     <TextView
