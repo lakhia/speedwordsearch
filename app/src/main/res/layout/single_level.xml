@@ -45,9 +45,6 @@
         android:paddingEnd="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:maxRating="4"
-        app:orientation="horizontal"
-        app:rating="3.5" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

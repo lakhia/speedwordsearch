@@ -1,9 +1,6 @@
 package com.creationsahead.speedwordsearch.ui;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -21,11 +18,8 @@ import com.creationsahead.speedwordsearch.utils.Utils;
  */
 public class LevelAdapter extends ArrayAdapter<Level> {
 
-    private final int color;
-
     public LevelAdapter(@NonNull Context context, int resource, @NonNull List<Level> levels) {
         super(context, resource, levels);
-        color = context.getResources().getColor(R.color.bright_yellow);
     }
 
     /// Inflates a level with text, buttons and stars
@@ -48,11 +42,6 @@ public class LevelAdapter extends ArrayAdapter<Level> {
 
         SmartRatingBar bar = convertView.findViewById(R.id.ratingBar);
         bar.setRatingNum(level.stars);
-        BitmapDrawable stars = (BitmapDrawable) bar.getRatingDrawable();
-        stars.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        stars = (BitmapDrawable) bar.getRatingBackgroundDrawable();
-        stars.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_IN);
-
         return convertView;
     }
 }

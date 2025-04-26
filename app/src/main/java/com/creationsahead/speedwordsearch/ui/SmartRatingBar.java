@@ -2,8 +2,9 @@ package com.creationsahead.speedwordsearch.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -19,54 +20,39 @@ import com.creationsahead.speedwordsearch.R;
  */
 public class SmartRatingBar extends View {
 
-    private int mMaxStarNum = 5;
+    private final int mMaxStarNum = 4;
     private float mRatingNum = 3.3f;
     private Drawable mRatingDrawable;
     private Drawable mRatingBackgroundDrawable;
-    private int mOrientation = LinearLayout.HORIZONTAL;
-    private static TypedArray typedArray = null;
+    private final int mOrientation = LinearLayout.HORIZONTAL;
 
     public SmartRatingBar(Context context) {
         super(context);
-        init(context, null);
+        init(context);
     }
 
     public SmartRatingBar(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(context);
     }
 
-    private void init(Context context, AttributeSet attrs) {
-        if (attrs != null) {
-            if (typedArray == null) {
-                typedArray = context.obtainStyledAttributes(attrs, R.styleable.SmartRatingBar);
-            }
-            mRatingNum = typedArray.getFloat(R.styleable.SmartRatingBar_rating, 2.5f);
-            mMaxStarNum = typedArray.getInt(R.styleable.SmartRatingBar_maxRating, 4);
-            mOrientation = typedArray.getInt(R.styleable.SmartRatingBar_orientation, LinearLayout.HORIZONTAL);
-            mRatingDrawable = typedArray.getDrawable(R.styleable.SmartRatingBar_ratingDrawable);
-            mRatingBackgroundDrawable = typedArray.getDrawable(R.styleable.SmartRatingBar_backgroundDrawable);
-        }
-        if (mRatingDrawable == null && mRatingBackgroundDrawable == null) {
+    private void init(Context context) {
+        int color = context.getResources().getColor(R.color.bright_yellow);
+        if (mRatingDrawable == null || mRatingBackgroundDrawable == null) {
             Resources res = context.getResources();
             mRatingDrawable = ResourcesCompat.getDrawable(res,
-                    R.drawable.smart_ratingbar_rating, null);
+                    R.drawable.star, null);
+
             mRatingBackgroundDrawable = ResourcesCompat.getDrawable(res,
-                    R.drawable.smart_ratingbar_background, null);
+                    R.drawable.star, null);
         }
+        mRatingDrawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        mRatingBackgroundDrawable.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
     }
 
     public void setRatingNum(float ratingNum) {
         mRatingNum = ratingNum;
         postInvalidate();
-    }
-
-    public Drawable getRatingDrawable() {
-        return mRatingDrawable;
-    }
-
-    public Drawable getRatingBackgroundDrawable() {
-        return mRatingBackgroundDrawable;
     }
 
     @Override
