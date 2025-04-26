@@ -22,8 +22,8 @@ public class Config {
     }
 
     public Config(int subLevelNumber, int levelNumber) {
-        sizeX = 4 + levelNumber/2 + subLevelNumber/3;
-        sizeY = 4 + (1 + levelNumber) / 2 + subLevelNumber/3;
+        sizeX = 4 + subLevelNumber/2;
+        sizeY = 4 + (subLevelNumber + 1)/2;
         if (BuildConfig.BUILD_TYPE.equals("debug")) {
             difficulty = 25f * (subLevelNumber / 4f + levelNumber / 10f);
         } else {
@@ -31,7 +31,7 @@ public class Config {
         }
         isWordListSorted = subLevelNumber < 6;
 
-        double letterRatio = difficulty / MAX_DIFFICULTY * 6.0;
+        double letterRatio = difficulty / MAX_DIFFICULTY * 9.0;
         letterRatio = sizeX * Math.sqrt(sizeY) * letterRatio;
         if (letterRatio < 5) {
             letterLimit = 5;
