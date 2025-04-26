@@ -95,7 +95,7 @@ public class GridWidget extends TableLayout {
         int widgetSize = Math.min(measuredHeight, measuredWidth);
         int cellSizeX = widgetSize / tracker.config.sizeX;
         int cellSizeY = widgetSize / tracker.config.sizeY;
-        setMeasuredDimension(measuredWidth, widgetSize);
+        setMeasuredDimension(widgetSize, widgetSize);
         handler.setCellSize(cellSizeX, cellSizeY);
 
         int childCount = getChildCount();

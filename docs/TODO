@@ -1,8 +1,7 @@
 UI:
-* Top section is black
 * Setting buttons legibility
-* Settings top navigation back button doesn't work
-* Colorful background
+* Level activity layouts truncates last item in list
+* Game activity layout messed up in landscape
 
 Gameplay:
 * Finding new words always uses an placeholder cell as a starter
@@ -15,14 +14,10 @@ Monetization / ads:
 Analytics:
 * https://firebase.google.com/docs/analytics/get-started?technology=android&platform=android
 
-Crashlytics:
-* https://console.firebase.google.com/u/9/project/speed-word-search/crashlytics/app/android:com.creationsahead.speedwordsearch/issues?state=open&time=last-seven-days&tag=all&sort=eventCount
-
 Low Priority:
-* Landscape orientation issues with game activity
 * Logo for old devices
 * Intent to select level
-* Colorful background?
+* More colorful background?
 * Show time left bonus award / animation
 * YouTube video
 
