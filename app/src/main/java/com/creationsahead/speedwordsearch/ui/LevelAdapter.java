@@ -37,6 +37,9 @@ public class LevelAdapter extends ArrayAdapter<Level> {
         }
 
         Level level = getItem(position);
+        if (level == null) {
+            return convertView;
+        }
         Button button = convertView.findViewById(R.id.toggleButton);
         button.setText(level.name);
 

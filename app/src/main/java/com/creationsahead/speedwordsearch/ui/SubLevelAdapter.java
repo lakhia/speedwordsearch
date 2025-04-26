@@ -37,6 +37,9 @@ public class SubLevelAdapter extends ArrayAdapter<SubLevel> {
         }
 
         SubLevel subLevel = getItem(position);
+        if (subLevel == null) {
+            return convertView;
+        }
         Button button = convertView.findViewById(R.id.toggleButton);
         button.setText(subLevel.name);
 
