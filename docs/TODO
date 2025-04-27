@@ -1,7 +1,11 @@
 UI:
 * Setting buttons legibility
+
+Landscape issues:
 * Level activity layouts truncates last item in list
-* Game activity layout messed up in landscape
+* Game activity:
+  * grid is sized incorrectly
+  * window inset calc is wrong
 
 Gameplay:
 * Finding new words always uses an placeholder cell as a starter

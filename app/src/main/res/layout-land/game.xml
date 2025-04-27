@@ -6,29 +6,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.creationsahead.speedwordsearch.ui.ScoreBar
-        android:id="@+id/scoreBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <com.creationsahead.speedwordsearch.ui.WordListWidget
-        android:id="@+id/wordList"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
     <com.creationsahead.speedwordsearch.ui.GridWidget
         android:id="@+id/grid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scoreBar"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- Main content container that splits screen into left and right sides -->
+    <LinearLayout
+        android:id="@+id/leftSideContainer"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/grid"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.creationsahead.speedwordsearch.ui.ScoreBar
+            android:id="@+id/scoreBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.creationsahead.speedwordsearch.ui.WordListWidget
+            android:id="@+id/wordList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <com.creationsahead.speedwordsearch.ui.TouchHandler
         android:id="@+id/touchOverlay"
