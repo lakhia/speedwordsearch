@@ -2,7 +2,6 @@ UI:
 * Setting buttons legibility
 
 Landscape issues:
-* Level activity layouts truncates last item in list
 * Game activity:
   * grid is sized incorrectly
   * window inset calc is wrong
