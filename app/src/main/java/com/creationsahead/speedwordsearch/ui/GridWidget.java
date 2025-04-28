@@ -90,16 +90,21 @@ public class GridWidget extends TableLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int measuredHeight = MeasureSpec.getSize(heightMeasureSpec);
-        int measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int widgetSize = Math.min(measuredHeight, measuredWidth);
-        int cellSizeX = widgetSize / tracker.config.sizeX;
-        int cellSizeY = widgetSize / tracker.config.sizeY;
+        final int measuredHeight = MeasureSpec.getSize(heightMeasureSpec);
+        final int measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
+        final int widgetSize = Math.min(measuredHeight, measuredWidth);
+        final boolean isLandscape = measuredHeight < measuredWidth;
+        final int cellSizeX = widgetSize / tracker.config.sizeX;
+        final int cellSizeY = widgetSize / tracker.config.sizeY;
         setMeasuredDimension(widgetSize, widgetSize);
         handler.setCellSize(cellSizeX, cellSizeY);
 
-        int childCount = getChildCount();
+        final int childCount = getChildCount();
         float fontSize = tracker.normalizedFontSize / childCount;
+        if (isLandscape) {
+            // In landscape mode, min(height,width) is smaller than in portrait mode
+            fontSize *= 0.92f;
+        }
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
             TableRow row = (TableRow) child;

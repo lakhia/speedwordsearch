@@ -16,14 +16,14 @@
 
     <com.creationsahead.speedwordsearch.ui.WordListWidget
         android:id="@+id/wordList"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scoreBar"/>
 
     <com.creationsahead.speedwordsearch.ui.GridWidget
         android:id="@+id/grid"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         app:layout_constraintLeft_toLeftOf="parent"
