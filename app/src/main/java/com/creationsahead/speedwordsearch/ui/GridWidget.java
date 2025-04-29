@@ -135,34 +135,16 @@ public class GridWidget extends TableLayout {
     public void animateGuess(@NonNull Guess guess) {
         new GuessAnimator(guess);
         if (guess.last) {
-            {
-                Transition explode = new Explode();
-                explode.setEpicenterCallback(center);
-                explode.setDuration(ANIMATION_DURATION);
-                TransitionManager.beginDelayedTransition(this, explode);
-                removeSomeViews(8);
-            }
-            {
-                Transition explode = new Explode();
-                explode.setEpicenterCallback(center);
-                explode.setDuration(ANIMATION_DURATION);
-                TransitionManager.beginDelayedTransition(this, explode);
-                removeSomeViews(5);
-            }
-            {
-                Transition explode = new Explode();
-                explode.setEpicenterCallback(center);
-                explode.setDuration(ANIMATION_DURATION);
-                TransitionManager.beginDelayedTransition(this, explode);
-                removeSomeViews(3);
-            }
-            {
-                Transition explode = new Explode();
-                explode.setEpicenterCallback(center);
-                explode.setDuration(ANIMATION_DURATION);
-                TransitionManager.beginDelayedTransition(this, explode);
-                removeAllViews();
-            }
+            WinDialog winDialog = new WinDialog(getContext(), 5000, new WinDialog.WinDialogListener() {
+                @Override
+                public void onNextLevelClicked() {
+                }
+                @Override
+                public void onMainMenuClicked() {
+                }
+            });
+            winDialog.setCancelable(false); // Prevent dismissing by tapping outside
+            winDialog.show();
         }
     }
 

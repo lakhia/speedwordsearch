@@ -80,15 +80,6 @@ public class ScoreBar extends LinearLayout implements TickerCallback {
             public void setWidget(int n) {
                 scoreWidget.setText(String.format(Locale.ENGLISH, "%03d", n));
             }
-
-            @Override
-            public void onAnimationEnd(@NonNull Animator animator) {
-                if (guess.last) {
-                    level.won = true;
-                    Activity activity = (Activity) getContext();
-                    activity.onBackPressed();
-                }
-            }
         };
         anim.start(level.score);
     }
