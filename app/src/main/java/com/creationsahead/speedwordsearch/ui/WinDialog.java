@@ -10,23 +10,15 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.creationsahead.speedwordsearch.R;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 public class WinDialog extends Dialog {
 
     private final int score;
     private final WinDialogListener listener;
-    private InterstitialAd mInterstitialAd;
-    
+
     public interface WinDialogListener {
         void onNextLevelClicked();
         void onMainMenuClicked();
@@ -59,26 +51,17 @@ public class WinDialog extends Dialog {
         Button mainMenuButton = findViewById(R.id.main_menu_button);
 
         nextLevelButton.setOnClickListener(v -> {
-            showInterstitialAd(() -> {
-                dismiss();
-                if (listener != null) {
-                    listener.onNextLevelClicked();
-                }
-            });
+            if (listener != null) {
+                listener.onNextLevelClicked();
+            }
         });
-        
+
         mainMenuButton.setOnClickListener(v -> {
             dismiss();
             if (listener != null) {
                 listener.onMainMenuClicked();
             }
         });
-        
-        // Load banner ad
-        loadBannerAd();
-        
-        // Preload interstitial ad
-        loadInterstitialAd();
     }
 
     private void applyCelebrationAnimations() {
@@ -102,57 +85,6 @@ public class WinDialog extends Dialog {
         // Optional: Start confetti particle animation if you're using a custom view
         if (confettiView instanceof ConfettiView) {
             ((ConfettiView) confettiView).startConfetti();
-        }
-    }
-    
-    private void loadBannerAd() {
-        FrameLayout adContainer = findViewById(R.id.ad_container);
-        AdView adView = new AdView(getContext());
-        adView.setAdSize(AdSize.BANNER);
-        adView.setAdUnitId(getContext().getString(R.string.banner_ad_unit_id));
-        
-        adContainer.addView(adView);
-        
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
-    }
-    
-    private void loadInterstitialAd() {
-        AdRequest adRequest = new AdRequest.Builder().build();
-        InterstitialAd.load(
-            getContext(), 
-            getContext().getString(R.string.interstitial_ad_unit_id),
-            adRequest, 
-            new InterstitialAdLoadCallback() {
-                @Override
-                public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                    mInterstitialAd = interstitialAd;
-                }
-                
-                @Override
-                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                    mInterstitialAd = null;
-                }
-            });
-    }
-    
-    private void showInterstitialAd(Runnable onAdClosed) {
-        if (mInterstitialAd != null) {
-            mInterstitialAd.show(((android.app.Activity) getContext()));
-            mInterstitialAd.setFullScreenContentCallback(new com.google.android.gms.ads.FullScreenContentCallback() {
-                @Override
-                public void onAdDismissedFullScreenContent() {
-                    onAdClosed.run();
-                }
-                
-                @Override
-                public void onAdFailedToShowFullScreenContent(com.google.android.gms.ads.AdError adError) {
-                    onAdClosed.run();
-                }
-            });
-        } else {
-            // If ad isn't loaded, just continue with the callback
-            onAdClosed.run();
         }
     }
 }
