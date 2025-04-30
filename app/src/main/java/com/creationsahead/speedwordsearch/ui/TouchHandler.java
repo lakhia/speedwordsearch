@@ -20,6 +20,7 @@ public class TouchHandler extends View implements View.OnTouchListener {
     private float rawX2 = -1;
     private float rawY2 = -1;
     private int lastIndexX, lastIndexY;
+    private int lastLastIndexX, lastLastIndexY;
     private final float cellSizeX, cellSizeY;
     private final Paint paint = new Paint();
     private final GridCallback gridCallback;
@@ -27,6 +28,8 @@ public class TouchHandler extends View implements View.OnTouchListener {
     public TouchHandler(View view, GridCallback callback, int sizeX, int sizeY) {
         super(view.getContext());
         gridCallback = callback;
+        lastLastIndexX = -1;
+        lastLastIndexY = -1;
         cellSizeX = sizeX;
         cellSizeY = sizeY;
         paint.setColor(view.getResources().getColor(R.color.bright_yellow_alpha));
@@ -87,12 +90,24 @@ public class TouchHandler extends View implements View.OnTouchListener {
                 if (!lastSelected) {
                     // First single click, save state and mark selected cell
                     lastSelected = true;
+                    lastLastIndexX = indexX;
+                    lastLastIndexY = indexY;
                     gridCallback.onCellSelected(lastIndexX, lastIndexY);
                     return true;
                 } else {
                     lastSelected = false;
                     gridCallback.onCellDeselected(lastIndexX, lastIndexY);
                 }
+            }
+            if (lastLastIndexX != -1 && lastLastIndexY != -1) {
+                gridCallback.onCellDeselected(lastLastIndexX, lastLastIndexY);
+                if (indexX == lastIndexX && indexY == lastIndexY) {
+                    lastIndexX = lastLastIndexX;
+                    lastIndexY = lastLastIndexY;
+                }
+                lastLastIndexX = -1;
+                lastLastIndexY = -1;
+                lastSelected = false;
             }
 
             if (gridCallback != null) {
