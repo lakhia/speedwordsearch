@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.creationsahead.speedwordsearch.Game;
+import com.creationsahead.speedwordsearch.GridCallback;
 import com.creationsahead.speedwordsearch.Guess;
 import com.creationsahead.speedwordsearch.ProgressTracker;
 import com.creationsahead.speedwordsearch.R;
@@ -17,7 +18,7 @@ import static com.creationsahead.speedwordsearch.mod.Level.TIME_LEFT;
 /**
  * Primary activity for game play
  */
-public class GameActivity extends Activity implements TickerCallback {
+public class GameActivity extends Activity implements TickerCallback, GridCallback {
 
     private SoundManager sound_manager;
     private Ticker ticker;
@@ -41,6 +42,7 @@ public class GameActivity extends Activity implements TickerCallback {
         super.onResume();
         sound_manager.resume();
         ticker.resume();
+        gridWidget.post(() -> gridWidget.setupTouchHandler(this));
     }
 
     @Override
@@ -69,6 +71,17 @@ public class GameActivity extends Activity implements TickerCallback {
         }
     }
 
+    @Override
+    public void onCellSelected(int x, int y) {
+        gridWidget.setCellResource(x, y, R.drawable.cell_selected);
+    }
+
+    @Override
+    public void onCellDeselected(int x, int y) {
+        gridWidget.setCellResource(x, y, R.drawable.cell);
+    }
+
+    @Override
     public void onGuess(int x1, int y1, int x2, int y2) {
         Guess guess = game.guess(x1, y1, x2, y2);
         if (guess != null) {

@@ -10,12 +10,12 @@ import android.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.creationsahead.speedwordsearch.Cell;
 import com.creationsahead.speedwordsearch.Game;
+import com.creationsahead.speedwordsearch.GridCallback;
 import com.creationsahead.speedwordsearch.Guess;
 import com.creationsahead.speedwordsearch.ProgressTracker;
 import com.creationsahead.speedwordsearch.R;
@@ -23,7 +23,6 @@ import java.util.Random;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import static android.util.TypedValue.COMPLEX_UNIT_PX;
 import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATION;
 
@@ -33,7 +32,7 @@ import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DU
 public class GridWidget extends TableLayout {
     @NonNull private final Center center;
     @NonNull private final ProgressTracker tracker;
-    private TouchHandler handler;
+    private int cellSizeX, cellSizeY;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -64,22 +63,16 @@ public class GridWidget extends TableLayout {
         center = new Center(tracker.displayRect);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        View view = this;
-        do {
-            view = (View) view.getParent();
-            handler = view.findViewById(R.id.touchOverlay);
-        } while (handler == null);
-        for (int i = 0; i < getChildCount(); i++) {
-            ViewGroup row = (ViewGroup) getChildAt(i);
-            for (int j = 0; j < row.getChildCount(); j++) {
-                View cell = row.getChildAt(j);
-                cell.setOnTouchListener(handler);
-            }
-        }
-        handler.setActivity((GameActivity) getContext());
+    public void setupTouchHandler(GridCallback gridCallback) {
+        TouchHandler handler = new TouchHandler(this, gridCallback, cellSizeX, cellSizeY);
+        setOnTouchListener(handler);
+        handler.setAsOverlay(this);
+    }
+
+    public void setCellResource(int x, int y, int resource) {
+        TableRow child = (TableRow) getChildAt(y);
+        View view = child.getChildAt(x);
+        view.setBackgroundResource(resource);
     }
 
     @Override
@@ -94,10 +87,9 @@ public class GridWidget extends TableLayout {
         final int measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
         final int widgetSize = Math.min(measuredHeight, measuredWidth);
         final boolean isLandscape = measuredHeight < measuredWidth;
-        final int cellSizeX = widgetSize / tracker.config.sizeX;
-        final int cellSizeY = widgetSize / tracker.config.sizeY;
+        cellSizeX = widgetSize / tracker.config.sizeX;
+        cellSizeY = widgetSize / tracker.config.sizeY;
         setMeasuredDimension(widgetSize, widgetSize);
-        handler.setCellSize(cellSizeX, cellSizeY);
 
         final int childCount = getChildCount();
         float fontSize = tracker.normalizedFontSize / childCount;
