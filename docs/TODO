@@ -1,9 +1,6 @@
 UI:
 * Setting buttons legibility
 
-Landscape issues:
-* Game activity window inset calc is wrong
-
 Gameplay:
 * Finding new words always uses an placeholder cell as a starter
 
