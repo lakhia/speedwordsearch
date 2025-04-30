@@ -39,7 +39,7 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
     }
 
     @Override
-    public void onItemClick(@NonNull AdapterView<?> adapterView, View view, int position, long id) {
+    public void onItemClick(@NonNull AdapterView<?> adapterView, @NonNull View view, int position, long id) {
         clickedLevel = view;
         timeTextView = clickedLevel.findViewById(R.id.time);
         ratingView = clickedLevel.findViewById(R.id.ratingBar);
@@ -92,7 +92,7 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
         anim.start((int) (level.stars * 10));
     }
 
-    protected void createAdapter(Context context) {
+    protected void createAdapter(@NonNull Context context) {
         mAdapter = new LevelAdapter(context, R.layout.single_level,
                 ProgressTracker.getInstance().getCurrentSubLevel().levels);
         ListView listView = new ListView(context);

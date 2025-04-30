@@ -20,8 +20,8 @@ import com.creationsahead.speedwordsearch.mod.SubLevel
 class ProgressTrackerTest {
 
     class Storage : StorageInterface {
-        var map: HashMap<String, Int> = HashMap()
-        var levels : HashMap<String, SubLevel?> = HashMap()
+        private var map: HashMap<String, Int> = HashMap()
+        private var levels : HashMap<String, SubLevel?> = HashMap()
 
         override fun getSubLevel(name: String): SubLevel? {
             return levels[name]

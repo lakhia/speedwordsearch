@@ -16,7 +16,7 @@ public abstract class ListFadeAnimator implements ValueAnimator.AnimatorUpdateLi
     private final ViewGroup parent;
     private final View child;
 
-    public ListFadeAnimator(View child, boolean fadeOut) {
+    public ListFadeAnimator(@NonNull View child, boolean fadeOut) {
         this.child = child;
         parent = (ViewGroup) child.getParent();
         ValueAnimator anim;

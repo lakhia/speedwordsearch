@@ -21,7 +21,7 @@ public class SubLevelListView extends LevelListView {
     }
 
     @Override
-    protected void createAdapter(Context context) {
+    protected void createAdapter(@NonNull Context context) {
         adapter = new SubLevelAdapter(context, R.layout.single_level, LevelTracker.subLevels);
         ListView listView = new ListView(context);
         addView(listView);
@@ -35,6 +35,7 @@ public class SubLevelListView extends LevelListView {
         EventBus.getDefault().post(subLevel);
     }
 
+    @NonNull
     @Override
     protected Class<?> getOnClickClass() {
         return LevelActivity.class;

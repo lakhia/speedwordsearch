@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.view.WindowManager;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceManager;
 import com.creationsahead.speedwordsearch.ProgressTracker;
@@ -22,7 +23,9 @@ public class Loader implements Runnable {
     @NonNull private final Context context;
     @NonNull private final StorageInterface storageInterface;
     public SharedPreferences prefs;
+    @Nullable
     public Typeface wordListTypeface;
+    @Nullable
     public Typeface letterTypeface;
 
     public Loader(@NonNull Context context, @NonNull StorageInterface storageInterface) {

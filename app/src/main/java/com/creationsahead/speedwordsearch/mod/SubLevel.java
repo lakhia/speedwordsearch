@@ -8,7 +8,8 @@ import static com.creationsahead.speedwordsearch.LevelTracker.MAX_LEVEL;
  * A single level
  */
 public final class SubLevel extends Level {
-    public ArrayList<Level> levels;
+    @NonNull
+    public final ArrayList<Level> levels;
 
     public SubLevel() {
         this("", 0, 0);

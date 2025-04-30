@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setAnimation(table);
     }
 
-    private void setAnimation(TableLayout table) {
+    private void setAnimation(@NonNull TableLayout table) {
         table.removeAllViews();
         GameApplication app = (GameApplication) getApplicationContext();
         Typeface typeface = app.loader.letterTypeface;
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(@NonNull View view) {
         Intent intent;
         if (view.getId() == R.id.play) {
             intent = new Intent(this, SubLevelActivity.class);

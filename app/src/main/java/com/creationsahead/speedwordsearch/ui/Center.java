@@ -11,15 +11,17 @@ import java.util.Random;
 public class Center extends Transition.EpicenterCallback {
     private final int width;
     private final int centerY, bottomY;
+    @NonNull
     private final Random mRandom;
 
-    public Center(Rect rect) {
+    public Center(@NonNull Rect rect) {
         width = rect.width();
         centerY = rect.centerY();
         bottomY = centerY + rect.height()/4;
         mRandom = new Random();
     }
 
+    @NonNull
     @Override
     public Rect onGetEpicenter(@NonNull Transition transition) {
         return new Rect(0, centerY,

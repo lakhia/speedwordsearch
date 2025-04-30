@@ -25,7 +25,7 @@ public class TouchHandler extends View implements View.OnTouchListener {
     private final Paint paint = new Paint();
     private final GridCallback gridCallback;
 
-    public TouchHandler(View view, GridCallback callback, int sizeX, int sizeY) {
+    public TouchHandler(@NonNull View view, @NonNull GridCallback callback, int sizeX, int sizeY) {
         super(view.getContext());
         gridCallback = callback;
         lastLastIndexX = -1;
@@ -39,7 +39,7 @@ public class TouchHandler extends View implements View.OnTouchListener {
     }
 
     // Get gridView's position and size and use that to set overlay
-    public void setAsOverlay(View view) {
+    public void setAsOverlay(@NonNull View view) {
         ViewGroup parent = (android.view.ViewGroup) view.getParent();
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(view.getWidth(), view.getHeight());
         int index = parent.indexOfChild(view);
@@ -57,7 +57,7 @@ public class TouchHandler extends View implements View.OnTouchListener {
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent event) {
+    public boolean onTouch(View view, @NonNull MotionEvent event) {
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             rawX1 = event.getX();
@@ -110,9 +110,7 @@ public class TouchHandler extends View implements View.OnTouchListener {
                 lastSelected = false;
             }
 
-            if (gridCallback != null) {
-                gridCallback.onGuess(lastIndexX, lastIndexY, indexX, indexY);
-            }
+            gridCallback.onGuess(lastIndexX, lastIndexY, indexX, indexY);
             return true;
         }
         return false;

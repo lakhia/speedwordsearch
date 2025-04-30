@@ -1,6 +1,7 @@
 package com.creationsahead.speedwordsearch;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import org.greenrobot.eventbus.EventBus;
@@ -178,6 +179,7 @@ public class Game {
      * Validate a guess and mark word from grid as un-used
      * @return Guess object that indicates status of guess or null if selection is invalid
      */
+    @Nullable
     public Guess guess(int x1, int y1, int x2, int y2) {
         Selection selection = getSelection(x1, y1, x2, y2);
         if (selection == null) {
@@ -188,6 +190,7 @@ public class Game {
         return grid.guess(answer, selection, answerMap.isSolved());
     }
 
+    @Nullable
     public Selection getSelection(int x1, int y1, int x2, int y2) {
         if (x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
             return null;

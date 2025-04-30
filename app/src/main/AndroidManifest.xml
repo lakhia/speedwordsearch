@@ -9,7 +9,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.MainActivity"
-            android:screenOrientation="fullSensor"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme"
             android:exported="true">
@@ -21,28 +20,24 @@
         <activity
             android:name=".ui.LevelActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".ui.SubLevelActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".ui.SettingsActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme"
             android:label="@string/title_activity_settings">
         </activity>
         <activity
             android:name=".ui.GameActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme">
         </activity>

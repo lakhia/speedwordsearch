@@ -22,30 +22,22 @@ public class SmartRatingBar extends View {
 
     private final int mMaxStarNum = 4;
     private float mRatingNum = 3.3f;
-    private Drawable mRatingDrawable;
-    private Drawable mRatingBackgroundDrawable;
+    private final Drawable mRatingDrawable;
+    private final Drawable mRatingBackgroundDrawable;
     private final int mOrientation = LinearLayout.HORIZONTAL;
 
-    public SmartRatingBar(Context context) {
-        super(context);
-        init(context);
+    public SmartRatingBar(@NonNull Context context) {
+        this(context, null);
     }
 
-    public SmartRatingBar(Context context, AttributeSet attrs) {
+    public SmartRatingBar(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
-    }
-
-    private void init(Context context) {
         int color = context.getResources().getColor(R.color.bright_yellow);
-        if (mRatingDrawable == null || mRatingBackgroundDrawable == null) {
-            Resources res = context.getResources();
-            mRatingDrawable = ResourcesCompat.getDrawable(res,
-                    R.drawable.star, null);
-
-            mRatingBackgroundDrawable = ResourcesCompat.getDrawable(res,
-                    R.drawable.star, null);
-        }
+        Resources res = context.getResources();
+        mRatingDrawable = ResourcesCompat.getDrawable(res,
+                R.drawable.star, null);
+        mRatingBackgroundDrawable = ResourcesCompat.getDrawable(res,
+                R.drawable.star, null);
         mRatingDrawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         mRatingBackgroundDrawable.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
     }
@@ -138,7 +130,7 @@ public class SmartRatingBar extends View {
         }
     }
 
-    private void translateCanvas(Canvas canvas, Rect rect) {
+    private void translateCanvas(@NonNull Canvas canvas, @NonNull Rect rect) {
         int mGapSize = 0;
         if (mOrientation == LinearLayout.HORIZONTAL) {
             canvas.translate(mGapSize + rect.width(), 0);

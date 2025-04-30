@@ -1,6 +1,7 @@
 package com.creationsahead.speedwordsearch;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,6 +57,7 @@ public class AnswerMap {
         EventBus.getDefault().post(answer);
     }
 
+    @Nullable
     public Answer pop(@NonNull String word) {
         return answerMap.remove(word);
     }

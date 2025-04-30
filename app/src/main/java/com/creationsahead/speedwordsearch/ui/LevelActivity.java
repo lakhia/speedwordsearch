@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.creationsahead.speedwordsearch.R;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -36,6 +37,7 @@ public class LevelActivity extends Activity {
         materialToolbar.setTitle(R.string.app_name);
     }
 
+    @NonNull
     protected LevelListView createLevelListView() {
         return new LevelListView(this, null);
     }
@@ -54,6 +56,7 @@ public class LevelActivity extends Activity {
         startActivity(intent);
     }
 
+    @NonNull
     protected Class<?> getPrevActivityClass() {
         return SubLevelActivity.class;
     }

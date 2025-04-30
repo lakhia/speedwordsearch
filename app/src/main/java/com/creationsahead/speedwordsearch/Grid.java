@@ -1,6 +1,7 @@
 package com.creationsahead.speedwordsearch;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import org.greenrobot.eventbus.EventBus;
 
@@ -207,7 +208,7 @@ public class Grid {
     }
 
     @NonNull
-    public Guess guess(Answer answer, @NonNull Selection selection, boolean solved) {
+    public Guess guess(@Nullable Answer answer, @NonNull Selection selection, boolean solved) {
         if (answer != null) {
             removeWord(answer);
         }

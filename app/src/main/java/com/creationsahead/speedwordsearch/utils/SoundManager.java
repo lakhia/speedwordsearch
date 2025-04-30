@@ -44,7 +44,7 @@ public class SoundManager {
         soundTracks[2] = load(context, "mixkit-deep-urban-623.mp3");
     }
 
-    public void syncSettingsFromStorage(StorageInterface storageInterface) {
+    public void syncSettingsFromStorage(@NonNull StorageInterface storageInterface) {
         float volume = storageInterface.getPreference("special_effects");
         sound_effects_volume = (float) (1.0f - Math.log(101 - volume) / Math.log(101));
         volume = storageInterface.getPreference("music");
@@ -52,7 +52,7 @@ public class SoundManager {
     }
 
     @NonNull
-    private MediaPlayer load(@NonNull Context context, String asset) {
+    private MediaPlayer load(@NonNull Context context, @NonNull String asset) {
         MediaPlayer mp = new MediaPlayer();
         try {
             AssetFileDescriptor afd = context.getAssets().openFd(asset);
