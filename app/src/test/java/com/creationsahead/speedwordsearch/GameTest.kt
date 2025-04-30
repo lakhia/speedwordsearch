@@ -108,28 +108,28 @@ class GameTest {
 
         // Correct direction guessing
         var guess = game.guess(1, 2, 4, 2)
-        assertNull(guess.answer)
+        assertNull(guess!!.answer)
         assertFalse(guess.last)
         guess = game.guess(7, 2, 4, 2)
-        assertNull(guess.answer)
+        assertNull(guess!!.answer)
         assertFalse(guess.last)
         guess = game.guess(2, 0, 2,3)
-        assertNotNull(guess.answer)
+        assertNotNull(guess!!.answer)
         assertFalse(guess.last)
         guess = game.guess(7, 5, 7, 2)
-        assertNotNull(guess.answer)
+        assertNotNull(guess!!.answer)
         assertFalse(guess.last)
         assertEquals(18, totalScore)
 
         // Opposite direction guessing
         guess = game.guess(3, 5, 0, 5)
-        assertNotNull(guess.answer)
+        assertNotNull(guess!!.answer)
         assertFalse(guess.last)
         assertEquals(27, totalScore)
 
         // Palindrome
         guess = game.guess(0, 0, 3, 3)
-        assertNotNull(guess.answer)
+        assertNotNull(guess!!.answer)
         assertFalse(guess.last)
         assertEquals(36, totalScore)
 
