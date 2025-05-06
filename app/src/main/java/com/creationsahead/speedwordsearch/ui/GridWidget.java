@@ -33,6 +33,7 @@ public class GridWidget extends TableLayout {
     @NonNull private final Center center;
     @NonNull private final ProgressTracker tracker;
     private int cellSizeX, cellSizeY;
+    private GridCallback callback;
 
     public GridWidget(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -64,6 +65,7 @@ public class GridWidget extends TableLayout {
     }
 
     public void setupTouchHandler(GridCallback gridCallback) {
+        callback = gridCallback;
         TouchHandler handler = new TouchHandler(this, gridCallback, cellSizeX, cellSizeY);
         setOnTouchListener(handler);
         handler.setAsOverlay(this);
@@ -130,7 +132,8 @@ public class GridWidget extends TableLayout {
             {
                 Transition explode = new Explode();
                 explode.setEpicenterCallback(center);
-                explode.setDuration(ANIMATION_DURATION);
+                explode.setDuration((long) (ANIMATION_DURATION * 1.5f));
+                setEndTransitionCallback(explode);
                 TransitionManager.beginDelayedTransition(this, explode);
                 removeSomeViews(8);
             }
@@ -144,9 +147,16 @@ public class GridWidget extends TableLayout {
             {
                 Transition explode = new Explode();
                 explode.setEpicenterCallback(center);
-                explode.setDuration(ANIMATION_DURATION);
+                explode.setDuration((long) (ANIMATION_DURATION * 0.9f));
                 TransitionManager.beginDelayedTransition(this, explode);
                 removeSomeViews(3);
+            }
+            {
+                Transition explode = new Explode();
+                explode.setEpicenterCallback(center);
+                explode.setDuration(ANIMATION_DURATION);
+                TransitionManager.beginDelayedTransition(this, explode);
+                removeSomeViews(2);
             }
             {
                 Transition explode = new Explode();
@@ -156,6 +166,27 @@ public class GridWidget extends TableLayout {
                 removeAllViews();
             }
         }
+    }
+
+    private void setEndTransitionCallback(@NonNull Transition explode) {
+        explode.addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {}
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                callback.onWin();
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {}
+
+            @Override
+            public void onTransitionPause(Transition transition) {}
+
+            @Override
+            public void onTransitionResume(Transition transition) {}
+        });
     }
 
     private void removeSomeViews(int ratio) {

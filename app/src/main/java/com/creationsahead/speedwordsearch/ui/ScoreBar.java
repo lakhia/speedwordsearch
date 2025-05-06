@@ -85,8 +85,6 @@ public class ScoreBar extends LinearLayout implements TickerCallback {
             public void onAnimationEnd(@NonNull Animator animator) {
                 if (guess.last) {
                     level.won = true;
-                    Activity activity = (Activity) getContext();
-                    activity.onBackPressed();
                 }
             }
         };

@@ -95,4 +95,9 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
             }
         }
     }
+
+    @Override
+    public void onWin() {
+        onBackPressed();
+    }
 }
