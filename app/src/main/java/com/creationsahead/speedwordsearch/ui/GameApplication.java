@@ -2,7 +2,7 @@ package com.creationsahead.speedwordsearch.ui;
 
 import android.app.Activity;
 import android.app.Application;
-import android.os.StrictMode;
+import android.os.Bundle;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +15,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.creationsahead.speedwordsearch.mod.SubLevel;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import org.greenrobot.eventbus.EventBus;
 import java.io.FileInputStream;
@@ -51,6 +53,12 @@ public class GameApplication extends Application implements StorageInterface {
                         "Trial period has expired", Toast.LENGTH_LONG).show();
                 return;
             }
+        } else {
+            // Initialize the Mobile Ads SDK
+            MobileAds.initialize(this, initializationStatus -> {
+                // SDK initialized, load ads
+                //loadBannerAd();
+            });
         }
         if (!BuildConfig.BUILD_TYPE.equals("debug")) {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);

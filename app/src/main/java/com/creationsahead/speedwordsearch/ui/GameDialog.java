@@ -16,6 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.creationsahead.speedwordsearch.R;
 import com.creationsahead.speedwordsearch.mod.Level;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import java.util.Random;
 import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATION;
 
@@ -115,12 +117,27 @@ public class GameDialog extends Dialog {
         view.startAnimation(rotate);
     }
 
+    private void loadBannerAd() {
+        AdView adView = findViewById(R.id.adView);
+        // Create an ad request
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        // Set ad content rating
+        Bundle extras = new Bundle();
+        extras.putString("max_ad_content_rating", "G");
+        //adRequest.getNetworkExtras().putBundle("com.google.ads.mediation.admob.AdMobAdapter", extras);
+
+        // Load the AdView with the ad request
+        adView.loadAd(adRequest);
+    }
+
     private void applyCelebrationAnimations(TextView congratsText, TextView scoreTextView) {
         NumberAnimator anim = new NumberAnimator(congratsText, ANIMATION_DURATION, 3.5f, 0) {
             @Override
             public void setWidget(int n) {}
         };
         anim.start(0);
+        loadBannerAd();
 
         // Rotate animation for star bursts
         View starBurstView = findViewById(R.id.star_burst1);
