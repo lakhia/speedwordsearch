@@ -54,4 +54,8 @@ public class Ticker implements Runnable {
         callback.onTick(timeLeft);
         timeLeft--;
     }
+
+    public int getTimeLeft() {
+        return timeLeft;
+    }
 }

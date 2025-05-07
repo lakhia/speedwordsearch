@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.creationsahead.speedwordsearch.Game;
 import com.creationsahead.speedwordsearch.GridCallback;
@@ -30,11 +31,22 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         game = ProgressTracker.getInstance().getGame();
-        ticker = new Ticker(this, this, TIME_LEFT);
         sound_manager = SoundManager.getInstance();
         setContentView(R.layout.game);
         scoreBar = findViewById(R.id.scoreBar);
         gridWidget = findViewById(R.id.grid);
+
+        int timeLeft = TIME_LEFT;
+        if (savedInstanceState != null) {
+            timeLeft = savedInstanceState.getInt("score", TIME_LEFT);
+        }
+        ticker = new Ticker(this, this, timeLeft);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("score", ticker.getTimeLeft());
     }
 
     @Override

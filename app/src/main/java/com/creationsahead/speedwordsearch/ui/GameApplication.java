@@ -52,9 +52,8 @@ public class GameApplication extends Application implements StorageInterface {
                 return;
             }
         }
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-        if (BuildConfig.BUILD_TYPE.equals("debug")) {
-            StrictMode.enableDefaults();
+        if (!BuildConfig.BUILD_TYPE.equals("debug")) {
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         }
         super.onCreate();
         serializer.register(ArrayList.class, 16);
