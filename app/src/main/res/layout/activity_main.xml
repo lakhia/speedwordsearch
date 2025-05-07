@@ -58,9 +58,6 @@
             android:layout_alignBottom="@+id/main_grid"
             android:layout_marginTop="82dp"
             android:text="@string/play"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/black_overlay"
-            app:cornerRadius="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/main_grid" />
@@ -74,9 +71,6 @@
             android:layout_alignParentBottom="true"
             android:layout_marginTop="24dp"
             android:text="@string/settings"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/black_overlay"
-            app:cornerRadius="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/play" />

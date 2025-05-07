@@ -10,6 +10,13 @@
         <item name="android:textColorHighlight">@color/colorPrimary</item>
         <item name="android:windowEnterAnimation">@anim/trans_left_in</item>
         <item name="android:windowExitAnimation">@anim/trans_right_out</item>
+        <item name="materialButtonStyle">@style/CustomButtonStyle</item>
+    </style>
+
+    <style name="CustomButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@color/black_overlay</item>
+        <item name="cornerRadius">0dp</item>
     </style>
 
     <style name="PuzzleLetter">
