@@ -14,6 +14,7 @@ import com.creationsahead.speedwordsearch.R;
 import com.creationsahead.speedwordsearch.TickerCallback;
 import com.creationsahead.speedwordsearch.utils.SoundManager;
 import org.greenrobot.eventbus.EventBus;
+import static android.view.View.GONE;
 import static com.creationsahead.speedwordsearch.mod.Level.TIME_LEFT;
 
 /**
@@ -25,7 +26,8 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
     private Ticker ticker;
     private ScoreBar scoreBar;
     private GridWidget gridWidget;
-    protected Game game;
+    private Game game;
+    private boolean gameWon;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,24 +39,32 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
         gridWidget = findViewById(R.id.grid);
 
         int timeLeft = TIME_LEFT;
+        gameWon = false;
         if (savedInstanceState != null) {
             timeLeft = savedInstanceState.getInt("score", TIME_LEFT);
+            gameWon = savedInstanceState.getBoolean("won", false);
         }
         ticker = new Ticker(this, this, timeLeft);
+        if (gameWon) {
+            onWin();
+        }
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("score", ticker.getTimeLeft());
+        outState.putBoolean("won", gameWon);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        sound_manager.resume();
-        ticker.resume();
-        gridWidget.post(() -> gridWidget.setupTouchHandler(this));
+        if (!gameWon) {
+            sound_manager.resume();
+            ticker.resume();
+            gridWidget.post(() -> gridWidget.setupTouchHandler(this));
+        }
     }
 
     @Override
@@ -109,8 +119,12 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
     }
 
     @Override
-    public void onWin(int score) {
+    public void onWin() {
+        gridWidget.setVisibility(GONE);
         sound_manager.pause();
+
+        gameWon = true;
+        int score = ProgressTracker.getInstance().currentLevel.score;
         WinDialog winDialog = new WinDialog(this, score, new WinDialog.WinDialogListener() {
             @Override
             public void onNextLevelClicked() {

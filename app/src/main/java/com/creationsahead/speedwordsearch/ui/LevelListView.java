@@ -54,6 +54,7 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
             @Override
             public void onAnimationEnd(@NonNull Animator animator) {
                 Intent intent = new Intent(view.getContext(), getOnClickClass());
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 view.getContext().startActivity(intent);
             }
         };

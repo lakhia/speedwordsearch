@@ -39,10 +39,8 @@ public class Ticker implements Runnable {
      * Pause timer
      */
     public void pause() {
-        if (!stop) {
-            stop = true;
-            handler.removeCallbacks(this);
-        }
+        stop = true;
+        handler.removeCallbacks(this);
     }
 
     @Override
