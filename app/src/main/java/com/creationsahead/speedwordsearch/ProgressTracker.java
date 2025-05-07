@@ -106,7 +106,7 @@ public class ProgressTracker {
      * User has finished current level
      */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void stopLevel(@NonNull Level level) {
+    public void stopLevel(@NonNull Level ignoredLevel) {
         currentSubLevel.score();
         LevelTracker.store(currentSubLevel);
     }

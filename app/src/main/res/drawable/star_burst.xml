@@ -1,0 +1,38 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Starburst rays with varied thickness and transparency -->
+    <path
+        android:strokeColor="#CCCCCC"
+        android:strokeWidth="2"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M100,100 L190,60" />
+
+    <path
+        android:strokeColor="#CCCCCC"
+        android:strokeWidth="1"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M100,100 L25,90" />
+
+    <path
+        android:strokeColor="#CCCCCC"
+        android:strokeWidth="3.2"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M100,100 L70,30" />
+
+    <path
+        android:strokeColor="#CCCCCC"
+        android:strokeWidth="2.2"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M100,100 L140,190" />
+
+    <path
+        android:strokeColor="#CCCCCC"
+        android:strokeWidth="2.8"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M100,100 L20,180" />
+
+</vector>

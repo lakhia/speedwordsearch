@@ -109,7 +109,21 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
     }
 
     @Override
-    public void onWin() {
-        onBackPressed();
+    public void onWin(int score) {
+        sound_manager.pause();
+        WinDialog winDialog = new WinDialog(this, score, new WinDialog.WinDialogListener() {
+            @Override
+            public void onNextLevelClicked() {
+                onBackPressed();
+            }
+            @Override
+            public void onMainMenuClicked() {
+                finish();
+                Intent intent = new Intent(GameActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        winDialog.setCancelable(false); // Prevent dismissing by tapping outside
+        winDialog.show();
     }
 }

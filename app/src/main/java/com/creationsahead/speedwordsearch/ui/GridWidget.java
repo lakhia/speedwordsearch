@@ -173,7 +173,7 @@ public class GridWidget extends TableLayout {
 
             @Override
             public void onTransitionEnd(Transition transition) {
-                callback.onWin();
+                callback.onWin(tracker.currentLevel.score);
             }
 
             @Override

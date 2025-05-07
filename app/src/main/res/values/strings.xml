@@ -10,5 +10,10 @@
     <!-- Buttons and UI -->
     <string name="play">Play</string>
     <string name="settings">Settings</string>
+    <string name="score">"Score: %d"</string>
+    <string name="level_complete">Level Complete!</string>
+    <string name="menu">Menu</string>
+    <string name="next_level">Next Level</string>
+    <string name="star_burst">star burst</string>
 
 </resources>
