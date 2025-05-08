@@ -1,0 +1,28 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Light gray rays as flat cones -->
+    <path
+        android:fillColor="#CCCCCC"
+        android:pathData="M100,100 L102,30 L98,40 Z" />
+
+    <path
+        android:fillColor="#CCCCCC"
+        android:pathData="M100,100 L140,80 L154,56 Z" />
+
+    <path
+        android:fillColor="#CCCCCC"
+        android:pathData="M100,100 L60,160 L34,186 Z" />
+
+    <path
+        android:fillColor="#CCCCCC"
+        android:pathData="M100,100 L140,190 L126,185 Z" />
+
+    <path
+        android:fillColor="#CCCCCC"
+        android:pathData="M100,100 L30,50 L22,34 Z" />
+
+</vector>

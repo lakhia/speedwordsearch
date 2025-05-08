@@ -11,11 +11,11 @@
 
     <!-- Star burst background (place behind congratulation text) -->
     <ImageView
-        android:id="@+id/star_burst"
+        android:id="@+id/star_burst1"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:contentDescription="@string/star_burst"
-        android:src="@drawable/star_burst"
+        android:src="@drawable/star_burst1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,7 +26,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:contentDescription="@string/star_burst"
-        android:src="@drawable/star_burst"
+        android:src="@drawable/star_burst1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +37,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:contentDescription="@string/star_burst"
-        android:src="@drawable/star_burst"
+        android:src="@drawable/star_burst2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

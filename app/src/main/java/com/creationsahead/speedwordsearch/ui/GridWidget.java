@@ -127,10 +127,11 @@ public class GridWidget extends TableLayout {
     public void animateGuess(@NonNull Guess guess) {
         new GuessAnimator(guess);
         if (guess.last) {
+            setOnTouchListener(null);
             {
                 Transition explode = new Explode();
                 explode.setEpicenterCallback(center);
-                explode.setDuration((long) (ANIMATION_DURATION * 1.5f));
+                explode.setDuration((long) (ANIMATION_DURATION * 0.9f));
                 setEndTransitionCallback(explode);
                 TransitionManager.beginDelayedTransition(this, explode);
                 removeSomeViews(8);
@@ -145,7 +146,7 @@ public class GridWidget extends TableLayout {
             {
                 Transition explode = new Explode();
                 explode.setEpicenterCallback(center);
-                explode.setDuration((long) (ANIMATION_DURATION * 0.9f));
+                explode.setDuration((long) (ANIMATION_DURATION * 1.3f));
                 TransitionManager.beginDelayedTransition(this, explode);
                 removeSomeViews(3);
             }

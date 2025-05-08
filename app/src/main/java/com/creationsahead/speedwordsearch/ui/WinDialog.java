@@ -89,7 +89,7 @@ public class WinDialog extends Dialog {
         anim.start(0);
 
         // Rotate animation for star bursts
-        View starBurstView = findViewById(R.id.star_burst);
+        View starBurstView = findViewById(R.id.star_burst1);
         applyRandomRotation(starBurstView);
         starBurstView = findViewById(R.id.star_burst2);
         applyRandomRotation(starBurstView);
