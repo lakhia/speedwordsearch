@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
@@ -99,8 +98,6 @@ public class WinDialog extends Dialog {
 
         // Alpha animation for confetti (fade in)
         ConfettiView confettiView = findViewById(R.id.confetti_view);
-        Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-        confettiView.startAnimation(fadeIn);
         confettiView.startConfetti();
     }
 }
