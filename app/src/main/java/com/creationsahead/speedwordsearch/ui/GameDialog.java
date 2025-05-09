@@ -17,19 +17,30 @@ import com.creationsahead.speedwordsearch.R;
 import java.util.Random;
 import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATION;
 
-public class WinDialog extends Dialog {
+public class GameDialog extends Dialog {
 
     private final int score;
-    @NonNull private final WinDialogListener listener;
+    @NonNull private final GameDialogListener listener;
     @NonNull private final Random random;
+    @NonNull private final DialogType type;
 
-    public interface WinDialogListener {
+    public enum DialogType {
+        NONE,
+        WIN,
+        PAUSE,
+        TIME
+    }
+
+    public interface GameDialogListener {
+        void onResumeGame();
         void onNextLevelClicked();
         void onMainMenuClicked();
     }
 
-    public WinDialog(@NonNull Context context, int score, @NonNull WinDialogListener listener) {
+    public GameDialog(@NonNull Context context, int score, @NonNull GameDialogListener listener,
+                      @NonNull DialogType type) {
         super(context);
+        this.type = type;
         this.score = score;
         this.listener = listener;
         random = new Random();
@@ -50,15 +61,26 @@ public class WinDialog extends Dialog {
         TextView scoreTextView = findViewById(R.id.score_text);
         scoreTextView.setText(getContext().getString(R.string.score, score));
 
-        // Apply celebratory animations
-        applyCelebrationAnimations();
-
         // Set up buttons
         Button nextLevelButton = findViewById(R.id.next_level_button);
         Button mainMenuButton = findViewById(R.id.main_menu_button);
 
         nextLevelButton.setOnClickListener(v -> listener.onNextLevelClicked());
         mainMenuButton.setOnClickListener(v -> listener.onMainMenuClicked());
+
+        String heading;
+        TextView headingView = findViewById(R.id.congrats_text);
+        if (type == DialogType.WIN) {
+            heading = "Level Won!";
+            applyCelebrationAnimations();
+        } else if (type == DialogType.PAUSE) {
+            heading = "Game Paused!";
+            nextLevelButton.setText("Resume Game");
+            nextLevelButton.setOnClickListener(v -> listener.onResumeGame());
+        } else {
+            heading = "Time Finished!";
+        }
+        headingView.setText(heading);
     }
 
     private void applyRandomRotation(View view) {

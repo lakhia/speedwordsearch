@@ -13,21 +13,22 @@ import com.creationsahead.speedwordsearch.ProgressTracker;
 import com.creationsahead.speedwordsearch.R;
 import com.creationsahead.speedwordsearch.TickerCallback;
 import com.creationsahead.speedwordsearch.utils.SoundManager;
-import org.greenrobot.eventbus.EventBus;
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.creationsahead.speedwordsearch.mod.Level.TIME_LEFT;
 
 /**
  * Primary activity for game play
  */
-public class GameActivity extends Activity implements TickerCallback, GridCallback {
+public class GameActivity extends Activity implements TickerCallback, GridCallback, GameDialog.GameDialogListener {
 
     private SoundManager sound_manager;
     private Ticker ticker;
     private ScoreBar scoreBar;
     private GridWidget gridWidget;
     private Game game;
-    private boolean gameWon;
+    private GameDialog.DialogType dialog_state;
+    private GameDialog gameDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,31 +40,31 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
         gridWidget = findViewById(R.id.grid);
 
         int timeLeft = TIME_LEFT;
-        gameWon = false;
+        dialog_state = GameDialog.DialogType.NONE;
         if (savedInstanceState != null) {
-            timeLeft = savedInstanceState.getInt("score", TIME_LEFT);
-            gameWon = savedInstanceState.getBoolean("won", false);
+            timeLeft = savedInstanceState.getInt("score");
+            int state = savedInstanceState.getInt("state");
+            dialog_state = GameDialog.DialogType.values()[state];
         }
         ticker = new Ticker(this, this, timeLeft);
-        if (gameWon) {
-            onWin();
-        }
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("score", ticker.getTimeLeft());
-        outState.putBoolean("won", gameWon);
+        outState.putInt("state", dialog_state.ordinal());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (!gameWon) {
+        if (dialog_state == GameDialog.DialogType.NONE) {
             sound_manager.resume();
             ticker.resume();
             gridWidget.post(() -> gridWidget.setupTouchHandler(this));
+        } else {
+            createGameDialog(dialog_state);
         }
     }
 
@@ -76,18 +77,16 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-        EventBus.getDefault().post(ProgressTracker.getInstance().currentLevel);
-        Intent intent = new Intent(this, LevelActivity.class);
-        startActivity(intent);
+        if (dialog_state == GameDialog.DialogType.NONE) {
+            createGameDialog(GameDialog.DialogType.PAUSE);
+        }
     }
 
     @Override
     public void onTick(int tickCount) {
         scoreBar.onTick(tickCount);
         if (tickCount <= 0) {
-            onBackPressed();
+            createGameDialog(GameDialog.DialogType.TIME);
         } else {
             game.onTick(tickCount);
         }
@@ -118,26 +117,44 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
         }
     }
 
+    public void createGameDialog(@NonNull GameDialog.DialogType type) {
+        dialog_state = type;
+        gridWidget.setVisibility(GONE);
+        ticker.pause();
+        sound_manager.pause();
+        int score = ProgressTracker.getInstance().currentLevel.score;
+        gameDialog = new GameDialog(this, score, this, type);
+        gameDialog.setCancelable(false); // Prevent dismissing by tapping outside
+        gameDialog.show();
+    }
+
     @Override
     public void onWin() {
-        gridWidget.setVisibility(GONE);
-        sound_manager.pause();
+        createGameDialog(GameDialog.DialogType.WIN);
+    }
 
-        gameWon = true;
-        int score = ProgressTracker.getInstance().currentLevel.score;
-        WinDialog winDialog = new WinDialog(this, score, new WinDialog.WinDialogListener() {
-            @Override
-            public void onNextLevelClicked() {
-                onBackPressed();
-            }
-            @Override
-            public void onMainMenuClicked() {
-                finish();
-                Intent intent = new Intent(GameActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-        winDialog.setCancelable(false); // Prevent dismissing by tapping outside
-        winDialog.show();
+    @Override
+    public void onResumeGame() {
+        gameDialog.dismiss();
+        dialog_state = GameDialog.DialogType.NONE;
+        gridWidget.setVisibility(VISIBLE);
+        ticker.resume();
+        sound_manager.resume();
+    }
+
+    @Override
+    public void onNextLevelClicked() {
+        gameDialog.dismiss();
+        finish();
+        Intent intent = new Intent(GameActivity.this, LevelActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onMainMenuClicked() {
+        gameDialog.dismiss();
+        finish();
+        Intent intent = new Intent(GameActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 }
