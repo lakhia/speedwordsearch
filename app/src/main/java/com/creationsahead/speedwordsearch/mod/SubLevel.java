@@ -43,7 +43,7 @@ public final class SubLevel extends Level {
             timeUsed += level.timeUsed;
         }
         stars = stars / MAX_LEVEL;
-        stars = Math.max(Math.min(stars, 3.95f), 0f);
+        stars = Math.max(Math.min(stars, 2.95f), 0f);
         won = levels.size() >= MAX_LEVEL;
     }
 }

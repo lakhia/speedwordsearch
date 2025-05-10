@@ -20,8 +20,8 @@ import com.creationsahead.speedwordsearch.R;
  */
 public class SmartRatingBar extends View {
 
-    private final int mMaxStarNum = 4;
-    private float mRatingNum = 3.3f;
+    private final int mMaxStarNum = 3;
+    private float mRatingNum = 2f;
     private final Drawable mRatingDrawable;
     private final Drawable mRatingBackgroundDrawable;
     private final int mOrientation = LinearLayout.HORIZONTAL;

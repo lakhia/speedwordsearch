@@ -60,27 +60,8 @@ public class GameDialog extends Dialog {
         }
 
         // Set up the score display
-        TextView scoreTextView = findViewById(R.id.score_text);
-        NumberAnimator anim = new NumberAnimator(scoreTextView, ANIMATION_DURATION, 1, 0) {
-            @Override
-            public void setWidget(int n) {
-                scoreTextView.setText(getContext().getString(R.string.score, n));
-            }
-
-            @Override
-            public void onAnimationEnd(@NonNull Animator animator) {
-                if (level.bonus > 0) {
-                    NumberAnimator anim = new NumberAnimator(scoreTextView, ANIMATION_DURATION, 1.2f, 0) {
-                        @Override
-                        public void setWidget(int n) {
-                            scoreTextView.setText(getContext().getString(R.string.score_bonus, level.score, n));
-                        }
-                    };
-                    anim.start(level.bonus);
-                }
-            }
-        };
-        anim.start(level.score);
+        SmartRatingBar rating = findViewById(R.id.ratingBar);
+        rating.setRatingNum(level.stars);
 
         // Set up buttons
         Button nextLevelButton = findViewById(R.id.next_level_button);
@@ -91,10 +72,14 @@ public class GameDialog extends Dialog {
 
         String heading;
         TextView headingView = findViewById(R.id.congrats_text);
+        TextView scoreTextView = findViewById(R.id.score_text);
+
         if (type == DialogType.WIN) {
             heading = "Level won!";
-            applyCelebrationAnimations();
+            applyCelebrationAnimations(headingView, scoreTextView);
         } else if (type == DialogType.PAUSE) {
+            rating.setVisibility(View.GONE);
+            scoreTextView.setVisibility(View.INVISIBLE);
             heading = "Game paused!";
             nextLevelButton.setText("Quit");
             mainMenuButton.setText("Resume Game");
@@ -102,9 +87,10 @@ public class GameDialog extends Dialog {
         } else if (level.won) {
             // Time ran out but user scored enough points
             heading = "That was close!";
-            applyCelebrationAnimations();
+            applyCelebrationAnimations(headingView, scoreTextView);
         } else {
             heading = "Try again!";
+            scoreTextView.setText(getContext().getString(R.string.score, level.score));
         }
         headingView.setText(heading);
     }
@@ -128,8 +114,7 @@ public class GameDialog extends Dialog {
         view.startAnimation(rotate);
     }
 
-    private void applyCelebrationAnimations() {
-        TextView congratsText = findViewById(R.id.congrats_text);
+    private void applyCelebrationAnimations(TextView congratsText, TextView scoreTextView) {
         NumberAnimator anim = new NumberAnimator(congratsText, ANIMATION_DURATION, 3.5f, 0) {
             @Override
             public void setWidget(int n) {}
@@ -147,5 +132,26 @@ public class GameDialog extends Dialog {
         // Alpha animation for confetti (fade in)
         ConfettiView confettiView = findViewById(R.id.confetti_view);
         confettiView.startConfetti();
+
+        anim = new NumberAnimator(scoreTextView, ANIMATION_DURATION, 1, 0) {
+            @Override
+            public void setWidget(int n) {
+                scoreTextView.setText(getContext().getString(R.string.score, n));
+            }
+
+            @Override
+            public void onAnimationEnd(@NonNull Animator animator) {
+                if (level.bonus > 0) {
+                    NumberAnimator anim = new NumberAnimator(scoreTextView, ANIMATION_DURATION, 1.2f, 0) {
+                        @Override
+                        public void setWidget(int n) {
+                            scoreTextView.setText(getContext().getString(R.string.score_bonus, level.score, n));
+                        }
+                    };
+                    anim.start(level.bonus);
+                }
+            }
+        };
+        anim.start(level.score);
     }
 }

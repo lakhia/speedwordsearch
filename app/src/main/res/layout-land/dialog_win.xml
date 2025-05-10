@@ -54,6 +54,7 @@
         app:layout_constraintEnd_toEndOf="@id/guideline_mid"
         app:tint="@color/colorPrimaryDark"
         android:alpha="0.15" />
+
     <ImageView
         android:id="@+id/star_burst3"
         android:layout_width="200dp"
@@ -65,6 +66,16 @@
         app:layout_constraintEnd_toEndOf="@id/guideline_mid"
         app:tint="@color/colorPrimaryDark"
         android:alpha="0.15" />
+
+    <!-- Confetti view -->
+    <com.creationsahead.speedwordsearch.ui.ConfettiView
+        android:id="@+id/confetti_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Congratulations Text -->
     <TextView
@@ -80,6 +91,16 @@
         app:layout_constraintEnd_toEndOf="@id/guideline_mid"
         android:layout_marginTop="24dp" />
 
+    <com.creationsahead.speedwordsearch.ui.SmartRatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="22dp"
+        android:focusable="false"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/congrats_text"
+        app:layout_constraintEnd_toEndOf="@id/guideline_mid"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <!-- Score display -->
     <TextView
         android:id="@+id/score_text"
@@ -89,20 +110,11 @@
         android:gravity="center"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/congrats_text"
+        app:layout_constraintTop_toBottomOf="@id/ratingBar"
         app:layout_constraintStart_toStartOf="@id/guideline_start"
         app:layout_constraintEnd_toEndOf="@id/guideline_mid"
         android:layout_marginTop="16dp" />
 
-    <!-- Confetti view - customize this based on your animation approach -->
-    <com.creationsahead.speedwordsearch.ui.ConfettiView
-        android:id="@+id/confetti_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Ad container -->
     <FrameLayout

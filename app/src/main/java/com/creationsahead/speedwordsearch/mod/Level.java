@@ -34,9 +34,13 @@ public class Level {
      * Score level based on max score and time used
      */
     public void score() {
-        stars = 4f * score / maxScore;
-        stars = Math.max(Math.min(stars, 3.95f), 0f);
-        won = stars >= 2.5f;
-        bonus = (TIME_LEFT - timeUsed) / 10;
+        stars = 3f * score / maxScore;
+        stars = Math.max(Math.min(stars, 2.95f), 0f);
+        won = stars >= 2f;
+        if (won) {
+            bonus = (TIME_LEFT - timeUsed) / 10;
+        } else {
+            bonus = 0;
+        }
     }
 }
