@@ -65,7 +65,6 @@ public class LevelListView extends FrameLayout implements AdapterView.OnItemClic
             return;
         }
         Level level = getLevel();
-        level.score();
         new ListFadeAnimator(clickedLevel, false) {
             @Override
             public void onAnimationStart(@NonNull Animator animator) {}

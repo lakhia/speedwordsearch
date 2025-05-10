@@ -14,21 +14,22 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.creationsahead.speedwordsearch.R;
+import com.creationsahead.speedwordsearch.mod.Level;
 import java.util.Random;
 import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DURATION;
 
 public class GameDialog extends Dialog {
 
-    private final int score;
     @NonNull private final GameDialogListener listener;
     @NonNull private final Random random;
     @NonNull private final DialogType type;
+    @NonNull private final Level level;
 
     public enum DialogType {
         NONE,
-        WIN,
         PAUSE,
-        TIME
+        WIN,
+        TIME,
     }
 
     public interface GameDialogListener {
@@ -37,11 +38,11 @@ public class GameDialog extends Dialog {
         void onMainMenuClicked();
     }
 
-    public GameDialog(@NonNull Context context, int score, @NonNull GameDialogListener listener,
+    public GameDialog(@NonNull Context context, @NonNull Level level, @NonNull GameDialogListener listener,
                       @NonNull DialogType type) {
         super(context);
         this.type = type;
-        this.score = score;
+        this.level = level;
         this.listener = listener;
         random = new Random();
     }
@@ -59,7 +60,7 @@ public class GameDialog extends Dialog {
 
         // Set up the score display
         TextView scoreTextView = findViewById(R.id.score_text);
-        scoreTextView.setText(getContext().getString(R.string.score, score));
+        scoreTextView.setText(getContext().getString(R.string.score, level.score));
 
         // Set up buttons
         Button nextLevelButton = findViewById(R.id.next_level_button);
@@ -71,14 +72,19 @@ public class GameDialog extends Dialog {
         String heading;
         TextView headingView = findViewById(R.id.congrats_text);
         if (type == DialogType.WIN) {
-            heading = "Level Won!";
+            heading = "Level won!";
             applyCelebrationAnimations();
         } else if (type == DialogType.PAUSE) {
-            heading = "Game Paused!";
-            nextLevelButton.setText("Resume Game");
-            nextLevelButton.setOnClickListener(v -> listener.onResumeGame());
+            heading = "Game paused!";
+            nextLevelButton.setText("Quit");
+            mainMenuButton.setText("Resume Game");
+            mainMenuButton.setOnClickListener(v -> listener.onResumeGame());
+        } else if (level.won) {
+            // Time ran out but user scored enough points
+            heading = "That was close!";
+            applyCelebrationAnimations();
         } else {
-            heading = "Time Finished!";
+            heading = "Try again!";
         }
         headingView.setText(heading);
     }

@@ -12,6 +12,7 @@ import com.creationsahead.speedwordsearch.Guess;
 import com.creationsahead.speedwordsearch.ProgressTracker;
 import com.creationsahead.speedwordsearch.R;
 import com.creationsahead.speedwordsearch.TickerCallback;
+import com.creationsahead.speedwordsearch.mod.Level;
 import com.creationsahead.speedwordsearch.utils.SoundManager;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -118,12 +119,13 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
     }
 
     public void createGameDialog(@NonNull GameDialog.DialogType type) {
+        Level level = ProgressTracker.getInstance().currentLevel;
+        level.score();
         dialog_state = type;
         gridWidget.setVisibility(GONE);
         ticker.pause();
         sound_manager.pause();
-        int score = ProgressTracker.getInstance().currentLevel.score;
-        gameDialog = new GameDialog(this, score, this, type);
+        gameDialog = new GameDialog(this, level, this, type);
         gameDialog.setCancelable(false); // Prevent dismissing by tapping outside
         gameDialog.show();
     }
