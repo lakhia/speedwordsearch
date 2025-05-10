@@ -116,7 +116,7 @@ public class ProgressTracker {
      */
     public void createGame(@NonNull Level level) {
         currentLevel = level;
-        level.totalScore = 0;
+        level.maxScore = 0;
         level.score = 0;
         level.timeUsed = 0;
         config = new Config(currentSubLevel.number, level.number);
@@ -136,6 +136,6 @@ public class ProgressTracker {
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void addAnswer(@NonNull Answer answer) {
-        currentLevel.totalScore += answer.score;
+        currentLevel.maxScore += answer.score;
     }
 }

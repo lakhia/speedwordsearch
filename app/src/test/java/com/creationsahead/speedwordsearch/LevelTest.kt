@@ -14,9 +14,10 @@ class LevelTest {
     fun test_01_score() {
         val level = Level("Name", 1)
         level.score = 2
-        level.totalScore = 2
+        level.maxScore = 2
         level.timeUsed = 60
         level.score()
-        assertEquals(3f, level.stars)
+        assertEquals(3.95f, level.stars)
+        assertEquals(6, level.bonus)
     }
 }

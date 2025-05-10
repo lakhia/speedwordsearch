@@ -29,20 +29,21 @@ public final class SubLevel extends Level {
     }
 
     /**
-     * Score level based on total score and time used
+     * Score level based on average of leave levels
      */
     public void score() {
         stars = 0.0f;
         score = 0;
         timeUsed = 0;
+        bonus = 0;
         for (Level level : levels) {
             stars += level.stars;
             score += level.score;
+            bonus += level.bonus;
             timeUsed += level.timeUsed;
         }
-        score = score / MAX_LEVEL;
         stars = stars / MAX_LEVEL;
-        stars = Math.max(Math.min(stars, 4f), 0f);
-        won = levels.size() >= MAX_LEVEL ;
+        stars = Math.max(Math.min(stars, 3.95f), 0f);
+        won = levels.size() >= MAX_LEVEL;
     }
 }

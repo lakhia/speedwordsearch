@@ -1,5 +1,6 @@
 package com.creationsahead.speedwordsearch.ui;
 
+import android.animation.Animator;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -60,7 +61,26 @@ public class GameDialog extends Dialog {
 
         // Set up the score display
         TextView scoreTextView = findViewById(R.id.score_text);
-        scoreTextView.setText(getContext().getString(R.string.score, level.score));
+        NumberAnimator anim = new NumberAnimator(scoreTextView, ANIMATION_DURATION, 1, 0) {
+            @Override
+            public void setWidget(int n) {
+                scoreTextView.setText(getContext().getString(R.string.score, n));
+            }
+
+            @Override
+            public void onAnimationEnd(@NonNull Animator animator) {
+                if (level.bonus > 0) {
+                    NumberAnimator anim = new NumberAnimator(scoreTextView, ANIMATION_DURATION, 1.2f, 0) {
+                        @Override
+                        public void setWidget(int n) {
+                            scoreTextView.setText(getContext().getString(R.string.score_bonus, level.score, n));
+                        }
+                    };
+                    anim.start(level.bonus);
+                }
+            }
+        };
+        anim.start(level.score);
 
         // Set up buttons
         Button nextLevelButton = findViewById(R.id.next_level_button);

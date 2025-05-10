@@ -69,8 +69,8 @@ class ProgressTrackerTest {
     @Test
     fun test_02_progress() {
         // Initialize storage
-        val subLevel = SubLevel("name", 1, 1)
-        subLevel.levels[0].totalScore = 150
+        val subLevel = SubLevel("name", 1, 2)
+        subLevel.levels[0].maxScore = 150
         subLevel.levels[0].score = 150
         subLevel.levels[0].timeUsed = 90
 
@@ -79,10 +79,28 @@ class ProgressTrackerTest {
         subLevel.score()
 
         // Assert
-        assertEquals(2.5f, subLevel.levels[0].stars, 0.005f)
+        assertEquals(3.95f, subLevel.levels[0].stars, 0.005f)
+        assertEquals(3, subLevel.levels[0].bonus)
         assertEquals(true, subLevel.levels[0].won)
-        assertEquals(0.25f, subLevel.stars)
-        assertEquals(15, subLevel.score)
+        assertEquals(0.295f, subLevel.stars, 0.005f)
+        assertEquals(3, subLevel.bonus)
+        assertEquals(150, subLevel.score)
+        assertEquals(false, subLevel.won)
+
+        // Act
+        subLevel.levels[1].maxScore = 100
+        subLevel.levels[1].score = 50
+        subLevel.levels[1].timeUsed = 110
+        subLevel.levels[1].score()
+        subLevel.score()
+
+        // Assert
+        assertEquals(2f, subLevel.levels[1].stars, 0.005f)
+        assertEquals(1, subLevel.levels[1].bonus)
+        assertEquals(false, subLevel.levels[1].won)
+        assertEquals(0.595f, subLevel.stars, 0.005f)
+        assertEquals(4, subLevel.bonus)
+        assertEquals(200, subLevel.score)
         assertEquals(false, subLevel.won)
     }
 }

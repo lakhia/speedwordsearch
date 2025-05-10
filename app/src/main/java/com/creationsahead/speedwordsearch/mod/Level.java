@@ -13,7 +13,8 @@ public class Level {
     public int score;
     public boolean won;
     public int timeUsed;
-    public int totalScore;
+    public int maxScore;
+    public int bonus;
 
     public Level() {
         this("", 0);
@@ -24,17 +25,18 @@ public class Level {
         number = levelNumber;
         stars = -1;
         timeUsed = 0;
-        totalScore = 0;
+        bonus = 0;
+        maxScore = 0;
         won = false;
     }
 
     /**
-     * Score level based on total score and time used
+     * Score level based on max score and time used
      */
     public void score() {
-        stars = 2.1f + 1.9f * (TIME_LEFT - timeUsed) / TIME_LEFT;
-        stars *= (float) score / totalScore;
-        stars = Math.max(Math.min(stars, 4f), 0f);
-        won = stars >= 1.95f;
+        stars = 4f * score / maxScore;
+        stars = Math.max(Math.min(stars, 3.95f), 0f);
+        won = stars >= 2.5f;
+        bonus = (TIME_LEFT - timeUsed) / 10;
     }
 }
