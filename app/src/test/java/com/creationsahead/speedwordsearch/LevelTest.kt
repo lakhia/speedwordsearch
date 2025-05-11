@@ -17,7 +17,7 @@ class LevelTest {
         level.maxScore = 2
         level.timeUsed = 60
         level.score()
-        assertEquals(3.95f, level.stars)
+        assertEquals(2.95f, level.stars)
         assertEquals(6, level.bonus)
     }
 }

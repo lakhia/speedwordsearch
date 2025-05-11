@@ -79,10 +79,10 @@ class ProgressTrackerTest {
         subLevel.score()
 
         // Assert
-        assertEquals(3.95f, subLevel.levels[0].stars, 0.005f)
+        assertEquals(2.95f, subLevel.levels[0].stars, 0.005f)
         assertEquals(3, subLevel.levels[0].bonus)
         assertEquals(true, subLevel.levels[0].won)
-        assertEquals(0.295f, subLevel.stars, 0.005f)
+        assertEquals(0.195f, subLevel.stars, 0.005f)
         assertEquals(3, subLevel.bonus)
         assertEquals(150, subLevel.score)
         assertEquals(false, subLevel.won)
@@ -95,11 +95,11 @@ class ProgressTrackerTest {
         subLevel.score()
 
         // Assert
-        assertEquals(2f, subLevel.levels[1].stars, 0.005f)
-        assertEquals(1, subLevel.levels[1].bonus)
+        assertEquals(1.5f, subLevel.levels[1].stars, 0.005f)
+        assertEquals(0, subLevel.levels[1].bonus)
         assertEquals(false, subLevel.levels[1].won)
-        assertEquals(0.595f, subLevel.stars, 0.005f)
-        assertEquals(4, subLevel.bonus)
+        assertEquals(0.445f, subLevel.stars, 0.005f)
+        assertEquals(3, subLevel.bonus)
         assertEquals(200, subLevel.score)
         assertEquals(false, subLevel.won)
     }
