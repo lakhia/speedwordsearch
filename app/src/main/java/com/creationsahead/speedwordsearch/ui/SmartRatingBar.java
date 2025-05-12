@@ -21,7 +21,7 @@ import com.creationsahead.speedwordsearch.R;
 public class SmartRatingBar extends View {
 
     private final int mMaxStarNum = 3;
-    private float mRatingNum = 2f;
+    private float mRatingNum = 0f;
     private final Drawable mRatingDrawable;
     private final Drawable mRatingBackgroundDrawable;
     private final int mOrientation = LinearLayout.HORIZONTAL;
@@ -86,10 +86,9 @@ public class SmartRatingBar extends View {
 
         final Drawable ratingDrawable = mRatingDrawable;
         final Drawable backgroundDrawable = mRatingBackgroundDrawable;
-        final float ratingNum = mRatingNum;
         final Rect drawableBounds = ratingDrawable.getBounds();
 
-        final int ratingNumInt = (int) Math.floor(ratingNum);
+        final int ratingNumInt = (int) Math.floor(mRatingNum);
         canvas.translate(getPaddingLeft(), getPaddingTop());
         int i = 0;
         for (; i < ratingNumInt; i++) {
@@ -97,7 +96,7 @@ public class SmartRatingBar extends View {
             translateCanvas(canvas, drawableBounds);
         }
 
-        float ratingPart = ratingNum - ratingNumInt;
+        float ratingPart = mRatingNum - ratingNumInt;
         int partWidth, partHeight;
         if (mOrientation == LinearLayout.HORIZONTAL) {
             partWidth = (int) (drawableBounds.width() * ratingPart);

@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         table.removeAllViews();
         GameApplication app = (GameApplication) getApplicationContext();
         Typeface typeface = app.loader.letterTypeface;
-        float fontSize = ProgressTracker.getInstance().normalizedFontSize / 8;
+        float fontSize = ProgressTracker.getInstance().normalizedFontSize / 7;
 
         int rowIndex = 1;
         for (Character[] letters : lettersArray) {

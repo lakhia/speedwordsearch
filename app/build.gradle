@@ -48,7 +48,7 @@ android {
         targetCompatibility JavaVersion.VERSION_21
     }
     namespace 'com.creationsahead.speedwordsearch'
-    buildToolsVersion '35.0.0'
+    buildToolsVersion '36.0.0'
     buildFeatures {
         buildConfig true
     }
