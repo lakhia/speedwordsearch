@@ -36,16 +36,18 @@ public class LevelTracker {
         if (levels.isEmpty() || (levels.get(levels.size() - 1).won)) {
             if (levels.size() < MAX_LEVEL) {
                 subLevel.addLevel(levels.size());
-            } else if (subLevels.size() < MAX_SUB_LEVEL) {
-                createSubLevel();
             }
         }
     }
 
-    private static void createSubLevel() {
-        if (subLevels.isEmpty() || (subLevels.get(subLevels.size() - 1).won &&
-                subLevels.size() < MAX_SUB_LEVEL)) {
-            subLevels.add(new SubLevel(LEVEL_NAMES[subLevels.size()], subLevels.size(), 1));
+    public static void createSubLevel() {
+        int subLevelSize = subLevels.size();
+        if (subLevelSize >= MAX_SUB_LEVEL) {
+            return;
+        }
+        if (subLevelSize == 0 || subLevels.get(subLevelSize - 1).won) {
+            SubLevel subLevel = new SubLevel(LEVEL_NAMES[subLevelSize], subLevelSize, 1);
+            subLevels.add(subLevel);
         }
     }
 

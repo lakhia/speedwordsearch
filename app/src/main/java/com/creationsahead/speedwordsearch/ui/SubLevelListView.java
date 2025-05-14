@@ -44,6 +44,7 @@ public class SubLevelListView extends LevelListView {
     @Override
     protected void notifyDataSetChanged() {
         super.notifyDataSetChanged();
+        LevelTracker.createSubLevel();
         adapter.notifyDataSetChanged();
     }
 
