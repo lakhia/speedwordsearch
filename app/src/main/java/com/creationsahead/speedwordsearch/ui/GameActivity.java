@@ -3,6 +3,7 @@ package com.creationsahead.speedwordsearch.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,8 +15,6 @@ import com.creationsahead.speedwordsearch.R;
 import com.creationsahead.speedwordsearch.TickerCallback;
 import com.creationsahead.speedwordsearch.mod.Level;
 import com.creationsahead.speedwordsearch.utils.SoundManager;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static com.creationsahead.speedwordsearch.mod.Level.TIME_LEFT;
 
 /**
@@ -63,10 +62,11 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
         if (dialog_state == GameDialog.DialogType.NONE) {
             sound_manager.resume();
             ticker.resume();
-            gridWidget.post(() -> gridWidget.setupTouchHandler(this));
         } else {
             createGameDialog(dialog_state);
         }
+        // Hack that ensures that the gridWidget has been measured before we setup the touch handler
+        gridWidget.postDelayed(() -> gridWidget.setupTouchHandler(this), 500);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
         Level level = ProgressTracker.getInstance().currentLevel;
         level.score();
         dialog_state = type;
-        gridWidget.setVisibility(GONE);
+        gridWidget.setVisibility(View.INVISIBLE);
         ticker.pause();
         sound_manager.pause();
         gameDialog = new GameDialog(this, level, this, type);
@@ -139,7 +139,7 @@ public class GameActivity extends Activity implements TickerCallback, GridCallba
     public void onResumeGame() {
         gameDialog.dismiss();
         dialog_state = GameDialog.DialogType.NONE;
-        gridWidget.setVisibility(VISIBLE);
+        gridWidget.setVisibility(View.VISIBLE);
         ticker.resume();
         sound_manager.resume();
     }
