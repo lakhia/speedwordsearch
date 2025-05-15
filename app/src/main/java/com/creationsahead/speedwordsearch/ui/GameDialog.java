@@ -90,6 +90,7 @@ public class GameDialog extends Dialog {
             applyCelebrationAnimations(headingView, scoreTextView);
         } else {
             heading = "Try again!";
+            nextLevelButton.setText("Try Again");
             scoreTextView.setText(getContext().getString(R.string.score, level.score));
         }
         headingView.setText(heading);
