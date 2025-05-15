@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public class AnswerMap {
@@ -23,12 +24,14 @@ public class AnswerMap {
     }
 
     @NonNull private final HashMap<String, Answer> answerMap;
+    @NonNull private final HashSet<String> previousAnswers;
     @NonNull private final LinkedList<OneLetter> hiddenLetters = new LinkedList<>();
     private Answer lastHiddenAnswer;
     private final static Comparator<Answer> comparator = (a, b) -> a.word.compareTo(b.word);
 
     public AnswerMap() {
         answerMap = new HashMap<>();
+        previousAnswers = new HashSet<>(0);
     }
 
     public boolean validate(@NonNull String word) {
@@ -37,19 +40,14 @@ public class AnswerMap {
             return false;
         }
 
-        // Reject substring words
-        for (String ans : answerMap.keySet()) {
-            if (ans.startsWith(word) || word.startsWith(ans)) {
-                return false;
-            }
-        }
-        if (lastHiddenAnswer == null) {
-            return true;
-        }
-        if (lastHiddenAnswer.word.contains(word)) {
+        // Reject previous words that were solved
+        if (previousAnswers.contains(word)) {
             return false;
         }
-        return !word.contains(lastHiddenAnswer.word);
+        if (lastHiddenAnswer != null && word.equals(lastHiddenAnswer.word) ) {
+            return false;
+        }
+        return true;
     }
 
     public void add(@NonNull Answer answer) {
@@ -59,7 +57,11 @@ public class AnswerMap {
 
     @Nullable
     public Answer pop(@NonNull String word) {
-        return answerMap.remove(word);
+        Answer result = answerMap.remove(word);
+        if (result != null) {
+            previousAnswers.add(word);
+        }
+        return result;
     }
 
     public boolean isSolved() {

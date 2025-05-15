@@ -11,9 +11,9 @@ class AnswerMapTest {
         answerMap.add(Answer(selection, "test"))
 
         assertFalse(answerMap.validate("test"))
-        assertFalse(answerMap.validate("tests"))
-        assertFalse(answerMap.validate("testing"))
-        assertFalse(answerMap.validate("tes"))
+        assertTrue(answerMap.validate("tests"))
+        assertTrue(answerMap.validate("testing"))
+        assertTrue(answerMap.validate("tes"))
         assertTrue(answerMap.validate("tee"))
     }
 
@@ -23,9 +23,18 @@ class AnswerMapTest {
         val answerMap = AnswerMap()
         answerMap.addHiddenAnswer(Answer(selection, "generic"))
         assertFalse(answerMap.validate("generic"))
-        assertFalse(answerMap.validate("gene"))
-        assertFalse(answerMap.validate("generics"))
+        assertTrue(answerMap.validate("gene"))
+        assertTrue(answerMap.validate("generics"))
         assertTrue(answerMap.validate("test"))
+    }
+
+    @Test
+    fun test_validate_with_answered() {
+        val selection = Selection(0, 0, Direction.EAST, 4)
+        val answerMap = AnswerMap()
+        answerMap.add(Answer(selection, "banana"))
+        answerMap.pop("banana")
+        assertFalse(answerMap.validate("banana"))
     }
 
     @Test
