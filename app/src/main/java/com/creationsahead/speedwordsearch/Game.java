@@ -130,7 +130,7 @@ public class Game {
         grid.findUnusedSelection(config.sizeX - lenOffset, (selection, contents) -> {
             dictionary.searchWithWildcards(contents, sequencer, result -> {
                 int len = result.length();
-                if (len >= config.sizeX - lenOffset) {
+                if (answerMap.validate(result) && len >= config.sizeX - lenOffset) {
                     ans.set(new Answer(selection, result));
                     return true;
                 }

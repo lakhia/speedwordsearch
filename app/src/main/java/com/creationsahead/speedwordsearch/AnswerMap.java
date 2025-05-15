@@ -86,11 +86,11 @@ public class AnswerMap {
         if (!hiddenAnswersEmpty()) {
             throw new RuntimeException("Adding an answer while another answer is in flight");
         }
-        Selection selct = ans.selection;
-        for (int x = selct.position.x, y = selct.position.y, i = 0; i < ans.word.length(); i++) {
+        Selection select = ans.selection;
+        for (int x = select.position.x, y = select.position.y, i = 0; i < ans.word.length(); i++) {
             hiddenLetters.add(new OneLetter(new Position(x, y), ans.word.charAt(i)));
-            x += selct.direction.x;
-            y += selct.direction.y;
+            x += select.direction.x;
+            y += select.direction.y;
         }
         Collections.shuffle(hiddenLetters);
         lastHiddenAnswer = ans;
