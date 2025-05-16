@@ -32,6 +32,7 @@ import static com.creationsahead.speedwordsearch.ui.GameApplication.ANIMATION_DU
 public class GridWidget extends TableLayout {
     @NonNull private final Center center;
     @NonNull private final ProgressTracker tracker;
+    private TouchHandler handler;
     private int cellSizeX, cellSizeY;
     private GridCallback callback;
 
@@ -64,7 +65,7 @@ public class GridWidget extends TableLayout {
 
     public void setupTouchHandler(GridCallback gridCallback) {
         callback = gridCallback;
-        TouchHandler handler = new TouchHandler(this, gridCallback, cellSizeX, cellSizeY);
+        handler = new TouchHandler(this, gridCallback, cellSizeX, cellSizeY);
         setOnTouchListener(handler);
         handler.setAsOverlay(this);
     }
@@ -200,5 +201,11 @@ public class GridWidget extends TableLayout {
                 }
             }
         }
+    }
+
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        handler.setVisibility(visibility);
     }
 }
