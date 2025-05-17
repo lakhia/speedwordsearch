@@ -149,6 +149,27 @@ public class Grid {
     }
 
     /**
+     * Find any selection of target length
+     * @param length length of potential word
+     * @param callback called for each assignment that is possible
+     */
+    public void findAnySelection(final int length, @NonNull final SelectionCallback callback) {
+        SequenceIterator<Direction> dirs = mSequencer.getDirectionSequence();
+        findCells((Cell c) -> true,
+                (position) -> {
+                    while (dirs.hasNext()) {
+                        Direction dir = dirs.next();
+                        // If position can accommodate length, process it
+                        if (Selection.inBounds(position, dir, sizeX, sizeY, length)) {
+                            Selection selection = new Selection(position, dir, length);
+                            return callback.onUpdate(selection, findContents(selection, true));
+                        }
+                    }
+                    dirs.shuffle();
+                    return false;
+                });
+    }
+    /**
      * Returns content stored in grid at specified selection
      * @param searchValue if true, placeholders become blanks
      * @return String with blanks and letters

@@ -125,12 +125,17 @@ public class Game {
         return success.get();
     }
 
-    public Answer findWordToAdd(int lenOffset) {
+    /**
+     * Add one word that does not need any unused letters
+     * @param lenOfWord desired minimum length of word
+     * @return Answer if find was successful
+     */
+    public Answer findWordToAdd(int lenOfWord) {
         AtomicReference<Answer> ans = new AtomicReference<>();
-        grid.findUnusedSelection(config.sizeX - lenOffset, (selection, contents) -> {
+        grid.findAnySelection(lenOfWord, (selection, contents) -> {
             dictionary.searchWithWildcards(contents, sequencer, result -> {
                 int len = result.length();
-                if (answerMap.validate(result) && len >= config.sizeX - lenOffset) {
+                if (answerMap.validate(result) && len >= lenOfWord) {
                     ans.set(new Answer(selection, result));
                     return true;
                 }
@@ -142,11 +147,25 @@ public class Game {
     }
 
     public void incrementallyAddWord(int letterCount) {
+        // Adjust heuristics because bigger words are harder to find
+        int maxDim = Math.max(config.sizeX, config.sizeY);
+        int minDim;
+        if (maxDim < 6) {
+            minDim = 3;
+        } else if (maxDim < 10) {
+            maxDim--;
+            minDim = (int) (maxDim * 0.66);
+        } else {
+            maxDim = (int) (maxDim * 0.8);
+            minDim = (int) (maxDim * 0.5);
+        }
+
+        // Start the search
         int count = 0;
-        for (int lenOffset = 1; lenOffset < 3; lenOffset++) {
+        for (int lenOfWord = maxDim; lenOfWord > minDim; lenOfWord--) {
             while (count < letterCount) {
                 if (answerMap.hiddenAnswersEmpty()) {
-                    Answer ans = findWordToAdd(lenOffset);
+                    Answer ans = findWordToAdd(lenOfWord);
                     if (ans != null) {
                         answerMap.addHiddenAnswer(ans);
                     }
