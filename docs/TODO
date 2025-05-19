@@ -1,9 +1,6 @@
 UI:
 * Setting buttons legibility
 
-Gameplay:
-* Finding new words always uses an placeholder cell as a starter
-
 Monetization / ads:
 * https://support.google.com/googleplay/android-developer/answer/12955712?visit_id=638549065174201471-3133538509&rd=2
 * https://developers.google.com/admob/android/banner
@@ -13,12 +10,11 @@ Analytics:
 * https://firebase.google.com/docs/analytics/get-started?technology=android&platform=android
 
 Low Priority:
-* Logo for old devices
-* Save level in state bundle
 * More colorful background?
 * YouTube video
 
 Future:
+* Show word list before grid is shown and timer starts
 * Leader board
 * Advance to next level automatically rather than going to level screen
 * Challenge and coop
