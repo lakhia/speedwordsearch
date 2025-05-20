@@ -206,6 +206,8 @@ public class GridWidget extends TableLayout {
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
-        handler.setVisibility(visibility);
+        if (handler != null) {
+            handler.setVisibility(visibility);
+        }
     }
 }
